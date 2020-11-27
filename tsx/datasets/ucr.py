@@ -52,6 +52,12 @@ class UCR_UEA_Dataset:
                 features.append(pd.Series(feature))
                 labels.append(label)
 
+        if len(np.unique([len(x) for x in features])) == 1:
+            features = np.array(features)
+        else:
+            features = np.array(features, dtype=object)
+
+        labels = np.array(labels).astype(float).astype(int)
         return np.array(features), np.array(labels).astype(float).astype(int)
 
 def load_ecg200(**kwargs):
