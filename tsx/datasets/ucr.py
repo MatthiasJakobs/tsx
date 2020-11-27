@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import zipfile
 import tempfile
+import torch
 
 from os.path import join, basename, dirname, exists
 from urllib.request import urlretrieve
@@ -52,7 +53,8 @@ class UCR_UEA_Dataset:
                 features.append(pd.Series(feature))
                 labels.append(label)
 
-        if len(np.unique([len(x) for x in features])) == 1:
+        self.same_length = len(np.unique([len(x) for x in features])) == 1
+        if self.same_length:
             features = np.array(features)
         else:
             features = np.array(features, dtype=object)
@@ -60,10 +62,28 @@ class UCR_UEA_Dataset:
         labels = np.array(labels).astype(float).astype(int)
         return np.array(features), np.array(labels).astype(float).astype(int)
 
+    def torch(self, train=True):
+        if self.same_length:
+            if train:
+                return torch.tensor(self.x_train).float(), torch.tensor(self.y_train).long() 
+            else:
+                return torch.tensor(self.x_test).float(), torch.tensor(self.y_test).long() 
+        else:
+            raise ValueError("Dataset {} contains time-series data with different length. Conversion to pytorch failed".format(self.name))
+            if train:
+                return self.x_train, self.y_train
+            else:
+                return self.x_test, self.y_test 
+
+
 def load_ecg200(**kwargs):
     name = "ECG200"
     return UCR_UEA_Dataset(name, **kwargs)
 
 def load_ecg5000(**kwargs):
     name = "ECG5000"
+    return UCR_UEA_Dataset(name, **kwargs)
+
+def load_dodgerloop_day(**kwargs):
+    name = "DodgerLoopDay"
     return UCR_UEA_Dataset(name, **kwargs)
