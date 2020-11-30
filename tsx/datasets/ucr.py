@@ -10,8 +10,9 @@ from shutil import rmtree as remove_dir
 
 class UCR_UEA_Dataset:
 
-    def __init__(self, name, path=None, download=True):
+    def __init__(self, name, path=None, download=True, transforms=None):
         self.name = name
+        self.transforms = transforms
         self.download = download
         self.path = path
 
@@ -22,6 +23,11 @@ class UCR_UEA_Dataset:
 
         self.x_train, self.y_train = self.parseData(self.train_path)
         self.x_test, self.y_test = self.parseData(self.test_path)
+
+        if transforms is not None:
+            for t in transforms:
+                self.x_train = t(self.x_train)
+                self.x_test = t(self.x_test)
 
     def download_or_load(self):
         # based on code from https://github.com/alan-turing-institute/sktime/blob/master/sktime/datasets/base.py
