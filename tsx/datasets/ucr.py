@@ -10,11 +10,12 @@ from shutil import rmtree as remove_dir
 
 class UCR_UEA_Dataset:
 
-    def __init__(self, name, path=None, download=True, transforms=None):
+    def __init__(self, name, path=None, download=True, transforms=None, remap_labels=True):
         self.name = name
         self.transforms = transforms
         self.download = download
         self.path = path
+        self.remap_labels = remap_labels
 
         if self.path is None and self.download == False:
             raise ValueError("If you do not want to download the dataset, you need to provide a path!")
@@ -67,6 +68,15 @@ class UCR_UEA_Dataset:
             features = np.array(features, dtype=object)
 
         labels = np.array(labels).astype(float).astype(int)
+
+        # make sure all labels are enumerated, starting from 0
+        if self.remap_labels:
+            old_labels = np.unique(labels)
+            new_labels = np.arange(len(old_labels))
+
+            for i, old_label in enumerate(old_labels):
+                labels[labels == old_label] = new_labels[i]
+
         return np.array(features), np.array(labels).astype(float).astype(int)
 
     def torch(self, train=True):
