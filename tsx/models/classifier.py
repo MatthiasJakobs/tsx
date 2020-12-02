@@ -87,12 +87,13 @@ class ROCKET(BaseClassifier):
 
     # TODO: Only for equal-length datasets?
     # TODO: Pytorch version appears to be very unstable. Needs more work
-    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, **kwargs):
+    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=False, **kwargs):
         super(ROCKET, self).__init__(**kwargs)
         self.k = k
         self.ridge = ridge
         self.input_length = input_length
         self.ppv_only = ppv_only
+        self.use_sigmoid = False
 
         self.kernels = []
         self.inform("Start building kernels")
@@ -178,6 +179,9 @@ class ROCKET(BaseClassifier):
                 return torch.cat((features_ppv, features_max), -1)
 
     def _ppv(self, x, dim=-1):
+        # use sigmoid as a soft approximation for ">" activation
+        if self.use_sigmoid:
+            return torch.mean(torch.sigmoid(x), dim=-1)
         return torch.mean((x > 0).float(), dim=-1)
 
     def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
