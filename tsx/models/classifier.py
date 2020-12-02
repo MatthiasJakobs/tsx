@@ -1,12 +1,15 @@
 import torch
+import pickle
 import torch.nn as nn
 import numpy as np
+
+from os.path import join
 
 from sklearn.linear_model import RidgeClassifierCV
 
 class BaseClassifier(nn.Module):
 
-    def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=True, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
+    def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=False, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
         super(BaseClassifier, self).__init__()
         self.loss = loss
         self.n_classes = n_classes
@@ -19,6 +22,16 @@ class BaseClassifier(nn.Module):
 
     def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
         return X_train, y_train, X_test, y_test
+
+    def inform(self, string):
+        if self.verbose:
+            print(string)
+
+    def save(self):
+        pass
+
+    def load(self, path):
+        pass
 
     def fit(self, X_train, y_train, X_test=None, y_test=None):
         # Expects X, y to be Pytorch tensors 
@@ -74,19 +87,40 @@ class ROCKET(BaseClassifier):
 
     # TODO: Only for equal-length datasets?
     # TODO: Pytorch version appears to be very unstable. Needs more work
-    def __init__(self, input_length=10, k=10_000, ridge=True, **kwargs):
+    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, **kwargs):
         super(ROCKET, self).__init__(**kwargs)
         self.k = k
         self.ridge = ridge
         self.input_length = input_length
+        self.ppv_only = ppv_only
 
         self.kernels = []
+        self.inform("Start building kernels")
         self.build_kernels()
+        self.inform("Finished building kernels")
 
         if self.ridge:
             self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10), normalize = True)
         else:
-            self.classifier = nn.Sequential(nn.Linear(2*self.k, self.n_classes), nn.Softmax(dim=-1))
+            if ppv_only:
+                self.classifier = nn.Sequential(nn.Linear(self.k, self.n_classes), nn.Softmax(dim=-1))
+            else:
+                self.classifier = nn.Sequential(nn.Linear(2*self.k, self.n_classes), nn.Softmax(dim=-1))
+
+    def save(self):
+        torch.save(self.kernels, 'rocket.kernels')
+        if self.ridge:
+            pickle.dump(self.classifier, open('rocket.classifier', 'wb'))
+        else:
+            torch.save(self.classifier.state_dict(), 'rocket.classifier')
+
+    def load(self, path):
+        self.kernels = torch.load(join(path, 'rocket.kernels'))
+        if self.ridge:
+            with open(join(path, 'rocket.classifier'), 'rb') as fp:
+                self.classifier = pickle.load(fp)
+        else:
+            self.classifier.load_state_dict(torch.load(join(path, 'rocket.classifier')))
 
     def build_kernels(self):
         for i in range(self.k):
@@ -112,6 +146,7 @@ class ROCKET(BaseClassifier):
             self.kernels.append(kernel)
 
     def fit(self, X_train, y_train, X_test=None, y_test=None):
+        self.inform("Start fitting")
         if self.ridge:
             # Custom `fit` for Ridge regression
             X_train, y_train, X_test, y_test = self.preprocessing(X_train, y_train, X_test=X_test, y_test=y_test)
@@ -122,25 +157,37 @@ class ROCKET(BaseClassifier):
         else:
             super().fit(X_train, y_train, X_test=X_test, y_test=y_test)
 
+        self.inform("Finished fitting")
+
     def apply_kernels(self, X):
-        transformed = []
+        features_ppv = []
+        features_max = []
         with torch.no_grad():
             for i in range(self.k):
-                transformed.append(self.kernels[i](X))
+                transformed_data = self.kernels[i](X)
 
-            features_ppv = torch.cat([self._ppv(x, dim=-1) for x in transformed], -1).float()
-            features_max = torch.cat([torch.max(x, dim=-1)[0] for x in transformed], -1).float()
-            return torch.cat((features_ppv, features_max), -1)
+                features_ppv.append(self._ppv(transformed_data, dim=-1))
+                if not self.ppv_only:
+                    features_max.append(torch.max(transformed_data, dim=-1)[0])
+
+            features_ppv = torch.cat(features_ppv, -1)
+            if self.ppv_only:
+                return features_ppv
+            else:
+                features_max = torch.cat(features_max, -1)
+                return torch.cat((features_ppv, features_max), -1)
 
     def _ppv(self, x, dim=-1):
         return torch.mean((x > 0).float(), dim=-1)
 
     def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
+        self.inform("Start preprocessing")
         X_train = self.apply_kernels(X_train)
 
         if X_test is not None:
             X_test = self.apply_kernels(X_test)
 
+        self.inform("Finished preprocessing")
         return X_train, y_train, X_test, y_test
 
     def forward(self, x):
@@ -148,3 +195,16 @@ class ROCKET(BaseClassifier):
             return self.classifier.predict(x)
         else:
             return self.classifier(x)
+    
+    def accuracy(self, X, y, batch_size=None):
+        X, y, _, _ = self.preprocessing(X, y)
+        prediction = self.forward(X)
+        print(prediction.shape)
+        if self.ridge:
+            prediction = np.argmax(prediction, axis=-1)
+            return np.mean(prediction == y.numpy())
+        else:
+            prediction = torch.argmax(prediction, dim=-1)
+            return torch.mean(prediction == y)
+
+
