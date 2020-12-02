@@ -200,15 +200,15 @@ class ROCKET(BaseClassifier):
         else:
             return self.classifier(x)
     
-    def accuracy(self, X, y, batch_size=None):
-        X, y, _, _ = self.preprocessing(X, y)
-        prediction = self.forward(X)
-        print(prediction.shape)
-        if self.ridge:
-            prediction = np.argmax(prediction, axis=-1)
-            return np.mean(prediction == y.numpy())
-        else:
-            prediction = torch.argmax(prediction, dim=-1)
-            return torch.mean(prediction == y)
+    # def accuracy(self, X, y, batch_size=None):
+    #     X, y, _, _ = self.preprocessing(X, y)
+    #     prediction = self.forward(X)
+    #     print(prediction.shape)
+    #     if self.ridge:
+    #         prediction = np.argmax(prediction, axis=-1)
+    #         return np.mean(prediction == y.numpy())
+    #     else:
+    #         prediction = torch.argmax(prediction, dim=-1)
+    #         return torch.mean(prediction == y)
 
 
