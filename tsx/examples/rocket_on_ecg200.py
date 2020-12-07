@@ -1,5 +1,5 @@
 from tsx.models.classifier import ROCKET
-from tsx.datasets.ucr import load_ecg200
+from tsx.datasets import load_ecg200
 from tsx.datasets.utils import normalize
 import torch
 

@@ -6,82 +6,7 @@ import numpy as np
 from os.path import join
 
 from sklearn.linear_model import RidgeClassifierCV
-
-class BaseClassifier(nn.Module):
-
-    def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=False, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
-        super(BaseClassifier, self).__init__()
-        self.loss = loss
-        self.n_classes = n_classes
-        self.optimizer = optimizer
-        self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.verbose = verbose
-        self.epochs = epochs
-        self.fitted = False
-
-    def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
-        return X_train, y_train, X_test, y_test
-
-    def inform(self, string):
-        if self.verbose:
-            print(string)
-
-    def save(self):
-        pass
-
-    def load(self, path):
-        pass
-
-    def fit(self, X_train, y_train, X_test=None, y_test=None):
-        # Expects X, y to be Pytorch tensors 
-        X_train, y_train, X_test, y_test = self.preprocessing(X_train, y_train, X_test=X_test, y_test=y_test)
-
-        ds = torch.utils.data.TensorDataset(X_train, y_train)
-        dl = torch.utils.data.DataLoader(ds, batch_size=self.batch_size, shuffle=True)
-
-        loss_fn = self.loss()
-        optim = self.optimizer(self.parameters(), lr=self.learning_rate)
-
-        for epoch in range(self.epochs):
-            print_epoch = epoch + 1
-            epoch_loss = 0.0
-            for i, (X, y) in enumerate(dl):
-                optim.zero_grad()
-                prediction = self.forward(X)
-                loss = loss_fn(prediction, y)
-                loss.backward()
-                epoch_loss += loss.item()
-                optim.step()
-
-            train_accuracy = self.accuracy(X_train, y_train)
-            if X_test is not None and y_test is not None:
-                test_accuracy = self.accuracy(X_test, y_test)
-                print("Epoch {} train_loss {} train_accuracy {} test_accuracy {}".format(print_epoch, epoch_loss, train_accuracy, test_accuracy))
-            else:
-                print("Epoch {} train_loss {} train_accuracy {}".format(print_epoch, epoch_loss, train_accuracy))
-
-        self.fitted = True
-
-    def predict(self, X):
-        # Expects X to be Pytorch tensors 
-        return self.forward(X)
-
-    def accuracy(self, X, y, batch_size=None):
-        # Expects X, y to be Pytorch tensors
-        number_y = len(y)
-        if batch_size is None:
-            batch_size = self.batch_size
-
-        ds = torch.utils.data.TensorDataset(X, y)
-        dl = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=False)
-        running_correct = 0
-        for i, (X, y) in enumerate(dl):
-            prediction = self.forward(X)
-            prediction = torch.argmax(prediction, dim=-1)
-            running_correct += torch.sum((prediction == y).float())
-
-        return running_correct / number_y
+from tsx.models.classifier import BaseClassifier
 
 class ROCKET(BaseClassifier):
 
@@ -146,6 +71,12 @@ class ROCKET(BaseClassifier):
 
             self.kernels.append(kernel)
 
+    def transform(self, X):
+        if isinstance(X, type(np.zeros(1))):
+            X = torch.from_numpy(X)
+
+        return self.apply_kernels(X)
+
     def fit(self, X_train, y_train, X_test=None, y_test=None):
         self.inform("Start fitting")
         if self.ridge:
@@ -165,6 +96,9 @@ class ROCKET(BaseClassifier):
         features_max = []
         with torch.no_grad():
             for i in range(self.k):
+                if len(X.shape) == 2:
+                    X = X.unsqueeze(1) # missing channel information
+
                 transformed_data = self.kernels[i](X)
 
                 features_ppv.append(self._ppv(transformed_data, dim=-1))
