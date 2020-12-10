@@ -6,4 +6,4 @@ TODO: incomplete
 
 First: Install PyTorch
 
-`pip install sklearn tqdm matplotlib numpy`
+`pip install sklearn tqdm matplotlib numpy fastdtw`
