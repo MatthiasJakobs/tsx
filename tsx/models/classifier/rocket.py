@@ -6,9 +6,9 @@ import numpy as np
 from os.path import join
 
 from sklearn.linear_model import RidgeClassifierCV
-from tsx.models.classifier import BaseClassifier
+from tsx.models.classifier import BasePyTorchClassifier
 
-class ROCKET(BaseClassifier):
+class ROCKET(BasePyTorchClassifier):
 
     # TODO: Only for equal-length datasets?
     # TODO: Pytorch version appears to be very unstable. Needs more work
@@ -29,9 +29,11 @@ class ROCKET(BaseClassifier):
             self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10), normalize = True)
         else:
             if ppv_only:
-                self.classifier = nn.Sequential(nn.Linear(self.k, self.n_classes), nn.Softmax(dim=-1))
+                self.logits = nn.Linear(self.k, self.n_classes)
             else:
-                self.classifier = nn.Sequential(nn.Linear(2*self.k, self.n_classes), nn.Softmax(dim=-1))
+                self.logits = nn.Linear(2*self.k, self.n_classes)
+
+            self.classifier = nn.Sequential(self.logits, nn.Softmax(dim=-1))
 
     def save(self):
         torch.save(self.kernels, 'rocket.kernels')
@@ -73,9 +75,27 @@ class ROCKET(BaseClassifier):
 
     def transform(self, X):
         if isinstance(X, type(np.zeros(1))):
-            X = torch.from_numpy(X)
+            X = torch.from_numpy(X).float()
+
+        multiplier = 1 if self.ppv_only else 2
+        if X.shape[-1] == self.k * multiplier:
+            return X
 
         return self.apply_kernels(X)
+
+    def proba(self, x):
+        x = self.transform(x)
+        if self.ridge:
+            return self.classifier.decision_function(x)
+        else:
+            return self.logits(x)
+
+    def predict(self, x):
+        x = self.transform(x)
+        if self.ridge:
+            return self.classifier.predict(x)
+        else:
+            return self.classifier(x)
 
     def fit(self, X_train, y_train, X_test=None, y_test=None):
         self.inform("Start fitting")
@@ -130,7 +150,6 @@ class ROCKET(BaseClassifier):
 
     def forward(self, x):
         if self.ridge:
-            return self.classifier.predict(x)
-        else:
-            return self.classifier(x)
+            raise ValueError("'forward' should not be called if not a neural network model!")
+        return self.classifier(x)
     

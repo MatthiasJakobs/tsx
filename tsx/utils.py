@@ -10,12 +10,15 @@ class NSGA2:
     # based on implementation from https://github.com/haris989/NSGA-II/blob/master/NSGA%20II.py
     # NSGA2 is configured to always minimize (with 0 being optimal), so make sure to configure your criteria functions accordingly
 
-    def __init__(self, criterias, parent_size=10, offspring_size=10, dimensions=3, generations=10):
-        self.criterias = criterias
+    def __init__(self, parent_size=10, offspring_size=10, dimensions=3, generations=10):
         self.parent_size = parent_size
         self.offspring_size = offspring_size
         self.dimensions = dimensions
         self.generations = generations
+
+
+    def set_criterias(self, criterias):
+        self.criterias = criterias
 
     def _random_individuals(self, n):
         return np.random.binomial(1, p=0.5, size=3*n).reshape(n, 3)
@@ -62,12 +65,13 @@ class NSGA2:
     def mutation(self, x):
         return self._random_individuals(len(x))
 
-    def run(self):
-        parents = self._random_individuals(self.parent_size)
-        offspring = self._random_individuals(self.offspring_size)
+    def run(self, guide=None):
+        parents = self._random_individuals(self.parent_size, guide=guide)
+        offspring = self._random_individuals(self.offspring_size, guide=guide)
 
         for g in trange(self.generations):
-            offspring = self.recombination(self.mutation(parents))
+            offspring = self.mutation(parents)
+            offspring = self.recombination(offspring)
             population = np.concatenate((parents, offspring))
 
             evaluation = self._apply_functions(population)
@@ -75,20 +79,22 @@ class NSGA2:
 
             parent_indices = []
             last_complete_front = -1
-            for f in fronts:
-                if len(f) + len(parent_indices) <= self.parent_size:
+            for i, f in enumerate(fronts):
+                if (len(f) + len(parent_indices)) <= self.parent_size:
                     parent_indices.extend(list(f))
                     last_complete_front += 1
-
-            # need to do crowding_distanc:
-            individuals_left = self.parent_size - len(parent_indices)
-            if individuals_left != 0 and last_complete_front != len(fronts)-1:
-                if last_complete_front == -1:
-                    individuals = evaluation[np.concatenate(fronts)]
-                    parent_indices = self.crowding_distance(individuals, n=individuals_left)
                 else:
-                    individuals = evaluation[np.concatenate(fronts[last_complete_front + 1 :])]
-                    parent_indices.extend(self.crowding_distance(individuals, n=individuals_left))
+                    break
+
+            individuals_left = self.parent_size - len(parent_indices)
+
+            # need to do crowding_distance:
+            if individuals_left != 0:
+                front = fronts[last_complete_front + 1]
+                individuals_to_sort = evaluation[front]
+                cd_sorted = self.crowding_distance(individuals_to_sort)
+                first_n_indices = front[cd_sorted][:individuals_left]
+                parent_indices += [x for x in first_n_indices]
 
             parents = population[parent_indices]
             evaluation = evaluation[parent_indices]
@@ -96,8 +102,8 @@ class NSGA2:
         return evaluation, parents
 
                     
-    # n is the number of individuals to extract from remaining fronts
-    def crowding_distance(self, individuals, n):
+    def crowding_distance(self, individuals):
+        eps = 1e-9 # to prevent possible division by zero
         distances = np.zeros(len(individuals))
         distances[0] = 1e20
         distances[-1] = 1e20
@@ -106,14 +112,12 @@ class NSGA2:
             sorted_indices = np.argsort(individuals[:, i])
 
             for j in range(1, len(distances)-1):
-                distances[j] = distances[j] + (individuals[sorted_indices[j+1]][i] - individuals[sorted_indices[j-1]][i]) / (np.max(individuals[:, i]) - np.min(individuals[:, i]))
+                distances[j] = distances[j] + (individuals[sorted_indices[j+1]][i] - individuals[sorted_indices[j-1]][i]) / (eps + (np.max(individuals[:, i]) - np.min(individuals[:, i])))
 
-        return np.argsort(distances)[-n:]
+        return np.argsort(-1 * distances).tolist()
         
-
-    # a, b shape = (f_1, f_2, ...)
     def _dominates(self, a, b):
-        return np.all(a <= b)
+        return np.all(a <= b) and np.any(a < b)
 
 def to_numpy(x):
     if isinstance(x, type(torch.zeros(1))):
@@ -127,3 +131,6 @@ def to_numpy(x):
         return x
 
     raise ValueError("Input of type {} cannot be converted to numpy array".format(type(x)))
+
+def sigmoid(x):
+    return 1/(1 + np.exp(-x)) 

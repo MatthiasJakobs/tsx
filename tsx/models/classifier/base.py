@@ -5,12 +5,35 @@ import numpy as np
 
 from os.path import join
 
-from sklearn.linear_model import RidgeClassifierCV
+class BaseClassifier:
 
-class BaseClassifier(nn.Module):
+    def fit(self, X, y):
+        raise NotImplementedError()
+
+    def transform(self, X):
+        raise NotImplementedError()
+
+    def predict(self, X):
+        raise NotImplementedError()
+
+    def save(self):
+        raise NotImplementedError()
+
+    def load(self):
+        raise NotImplementedError()
+
+    def inform(self, string):
+        if self.verbose:
+            print(string)
+
+    def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
+        raise NotImplementedError()
+
+    
+class BasePyTorchClassifier(nn.Module, BaseClassifier):
 
     def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=False, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
-        super(BaseClassifier, self).__init__()
+        super(BasePyTorchClassifier, self).__init__()
         self.classifier = True
         self.loss = loss
         self.n_classes = n_classes
@@ -21,18 +44,6 @@ class BaseClassifier(nn.Module):
         self.epochs = epochs
         self.fitted = False
 
-    def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
-        return X_train, y_train, X_test, y_test
-
-    def inform(self, string):
-        if self.verbose:
-            print(string)
-
-    def save(self):
-        pass
-
-    def load(self, path):
-        pass
 
     def fit(self, X_train, y_train, X_test=None, y_test=None):
         # Expects X, y to be Pytorch tensors 
@@ -64,12 +75,9 @@ class BaseClassifier(nn.Module):
 
         self.fitted = True
 
-    def transform(self, x):
-        return x
-
-    def predict(self, X):
-        # Expects X to be Pytorch tensors 
-        return self.forward(self.transform(X))
+    # def predict(self, X):
+    #     # Expects X to be Pytorch tensors 
+    #     return self.forward(self.transform(X))
 
     def accuracy(self, X, y, batch_size=None):
         # Expects X, y to be Pytorch tensors
