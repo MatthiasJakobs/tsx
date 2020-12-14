@@ -51,6 +51,9 @@ class ROCKET(BasePyTorchClassifier):
             self.classifier.load_state_dict(torch.load(join(path, 'rocket.classifier')))
 
     def build_kernels(self):
+        grouped_kernels = np.zeros((self.k, 3), dtype=int)
+        kernel_weights = []
+        kernel_biases = []
         for i in range(self.k):
             kernel_length = [7, 9, 11][np.random.randint(0, 3)]
 
@@ -63,14 +66,23 @@ class ROCKET(BasePyTorchClassifier):
             # Parameter for dilation
             A = np.log2((self.input_length-1) / (float(kernel_length)-1))
             dilation = torch.floor(2**(torch.rand(1)*A)).long().item()
-
             padding = 0 if torch.rand(1)>0.5 else 1
 
-            kernel = nn.Conv1d(1, 1, kernel_size=kernel_length, stride=1, padding=padding, dilation=dilation, bias=True)
-            kernel.weight = nn.Parameter(weights, requires_grad=False)
-            kernel.bias = nn.Parameter(bias, requires_grad=False)
-            kernel.require_grad = False
+            grouped_kernels[i][0] = kernel_length
+            grouped_kernels[i][1] = padding
+            grouped_kernels[i][2] = dilation
 
+            kernel_weights.append(weights)
+            kernel_biases.append(bias)
+
+        unique_configs = np.unique(grouped_kernels, axis=0)
+        for u in unique_configs:
+            indices = np.prod(np.equal(grouped_kernels, u), axis=1)
+            kernel = nn.Conv1d(1, np.sum(indices), kernel_size=u[0], stride=1, padding=u[1], dilation=u[2], bias=True)
+            indices = indices.nonzero()[0]
+            kernel.weight = nn.Parameter(torch.cat([kernel_weights[i] for i in indices], axis=0), requires_grad=False)
+            kernel.bias = nn.Parameter(torch.cat([kernel_biases[i] for i in indices], axis=0), requires_grad=False)
+            kernel.require_grad = False
             self.kernels.append(kernel)
 
     def transform(self, X):
@@ -115,11 +127,11 @@ class ROCKET(BasePyTorchClassifier):
         features_ppv = []
         features_max = []
         with torch.no_grad():
-            for i in range(self.k):
+            for k in self.kernels:
                 if len(X.shape) == 2:
                     X = X.unsqueeze(1) # missing channel information
 
-                transformed_data = self.kernels[i](X)
+                transformed_data = k(X)
 
                 features_ppv.append(self._ppv(transformed_data, dim=-1))
                 if not self.ppv_only:
