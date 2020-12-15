@@ -20,6 +20,10 @@ class MOC(NSGA2):
         self.nr_classes = len(np.unique(y))
         self.knn = KNeighborsClassifier(n_neighbors=3, algorithm="ball_tree", metric=dtw, n_jobs=4)
         self.knn.fit(self.X, self.y)
+
+        self.mutation_rate = 0.5 # how many individuals to mutate (on average)
+        self.mutation_strength = 0.4 # how many points in each individual to mutate (on average)
+
         super().__init__(**kwargs)
 
     def generate(self, x_star, target=None):
@@ -48,9 +52,9 @@ class MOC(NSGA2):
         # just copy initial point
         if guide is not None:
             if guide.ndim == 1:
-                return np.tile(np.expand_dims(guide, 0), (n, 1))
+                return self.mutation(np.tile(np.expand_dims(guide, 0), (n, 1)), override_mutation_rate=1.0)
             if guide.ndim == 2 and guide.shape[0] == 1:
-                return np.tile(guide, (n, 1))
+                return self.mutation(np.tile(guide, (n, 1)), override_mutation_rate=1.0)
             raise Exception("guide has unsuported shape {}".format(guide.shape))
 
         # cumsum
@@ -72,10 +76,22 @@ class MOC(NSGA2):
 
         return to_return 
 
-    def mutation(self, x):
+    def mutation(self, x, override_mutation_rate=None):
         ind_length = len(self.X[0])
         assert self.parent_size == self.offspring_size
-        return x + np.random.binomial(1, p=0.1, size=ind_length) * np.random.normal(size=ind_length * self.offspring_size).reshape(self.offspring_size, ind_length)
+
+        # mask to choose individuals to mutate
+        if override_mutation_rate is not None:
+            rate_mask = np.random.binomial(1, p=override_mutation_rate, size=len(x))
+        else:
+            rate_mask = np.random.binomial(1, p=self.mutation_rate, size=len(x))
+
+        for idx in rate_mask.nonzero()[0]:
+            # mask to choose features to mutate
+            strength_mask = np.random.binomial(1, p=self.mutation_strength, size=ind_length)
+            x[idx] = x[idx] + strength_mask * np.random.normal(size=ind_length) * 0.6
+
+        return x
 
     # prediction close to desired outcome
     def generate_obj_1(self, nr_classes, out_class_index, targeted):
@@ -98,7 +114,7 @@ class MOC(NSGA2):
             predictions[mask] = 0
             predictions[inv_mask] = np.abs(predictions[inv_mask]-threshold)
 
-            return predictions.reshape(len(x))
+            return predictions.squeeze()
 
         return obj_1
 
@@ -107,7 +123,12 @@ class MOC(NSGA2):
     def generate_obj_2(self, x_star, distance):
 
         def obj_2(x):
-            return distance(x, x_star)
+            n_elements = x.shape[0]
+            distances = np.zeros(n_elements)
+            for i in range(n_elements):
+                distances[i] = distance(np.expand_dims(x[i], 0), x_star)
+
+            return distances
 
         return obj_2
 

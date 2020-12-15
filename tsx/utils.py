@@ -1,6 +1,7 @@
 import torch
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tqdm import trange
 from itertools import combinations
@@ -10,12 +11,12 @@ class NSGA2:
     # based on implementation from https://github.com/haris989/NSGA-II/blob/master/NSGA%20II.py
     # NSGA2 is configured to always minimize (with 0 being optimal), so make sure to configure your criteria functions accordingly
 
-    def __init__(self, parent_size=10, offspring_size=10, dimensions=3, generations=10):
+    def __init__(self, parent_size=10, offspring_size=10, dimensions=3, generations=10, log_generations=False):
         self.parent_size = parent_size
         self.offspring_size = offspring_size
         self.dimensions = dimensions
         self.generations = generations
-
+        self.log_generations = log_generations
 
     def set_criterias(self, criterias):
         self.criterias = criterias
@@ -24,11 +25,11 @@ class NSGA2:
         return np.random.binomial(1, p=0.5, size=3*n).reshape(n, 3)
 
     def _apply_functions(self, X):
-        result = np.zeros((len(self.criterias), len(X)))
+        result = np.zeros((len(X), len(self.criterias)))
         for i, f in enumerate(self.criterias):
-            result[i] = f(X)
+            result[:, i] = f(X)
 
-        return result.T
+        return result
 
     # input: (batch_size, len(self.criterias))
     def fast_non_dominated_sort(self, individual_performs):
@@ -69,52 +70,79 @@ class NSGA2:
         parents = self._random_individuals(self.parent_size, guide=guide)
         offspring = self._random_individuals(self.offspring_size, guide=guide)
 
-        for g in trange(self.generations):
-            offspring = self.mutation(parents)
-            offspring = self.recombination(offspring)
+        mean_metrics = np.zeros((self.generations, len(self.criterias)))
+        var_metrics = np.zeros((self.generations, len(self.criterias)))
+
+        range_generations = range(self.generations)
+        if not self.log_generations:
+            range_generations = trange(self.generations)
+
+        for g in range_generations:
+            offspring = self.recombination(parents.copy())
+            offspring = self.mutation(offspring)
             population = np.concatenate((parents, offspring))
+
+            population = np.unique(population, axis=0)
+            assert len(population) >= self.parent_size
 
             evaluation = self._apply_functions(population)
             fronts = self.fast_non_dominated_sort(evaluation)
 
             parent_indices = []
-            last_complete_front = -1
-            for i, f in enumerate(fronts):
-                if (len(f) + len(parent_indices)) <= self.parent_size:
-                    parent_indices.extend(list(f))
-                    last_complete_front += 1
+            for i, front in enumerate(fronts):
+
+                if (len(front) + len(parent_indices)) <= self.parent_size:
+                    # take entire front
+                    parent_indices.extend(list(front))
                 else:
-                    break
+                    # do selection
+                    cd = self.crowding_distance(evaluation[front])
 
-            individuals_left = self.parent_size - len(parent_indices)
+                    # randomized argsort descending
+                    perm = np.random.permutation(len(cd))
+                    sorted_indices = np.argsort(cd[perm])
+                    sorted_indices = np.flip(perm[sorted_indices])
+                    sorted_indices = sorted_indices[:(self.parent_size - len(parent_indices))]
+                    parent_indices.extend(list(front[sorted_indices]))
 
-            # need to do crowding_distance:
-            if individuals_left != 0:
-                front = fronts[last_complete_front + 1]
-                individuals_to_sort = evaluation[front]
-                cd_sorted = self.crowding_distance(individuals_to_sort)
-                first_n_indices = front[cd_sorted][:individuals_left]
-                parent_indices += [x for x in first_n_indices]
+                    # because of duplicate removal: maybe needs another round
+                    if len(parent_indices) == self.parent_size:
+                        break
+                    if len(parent_indices) > self.parent_size:
+                        raise RuntimeError("Cannot have more parents than specified")
 
             parents = population[parent_indices]
             evaluation = evaluation[parent_indices]
 
+            mean_metrics[g] = np.mean(evaluation, axis=0)
+            var_metrics[g] = np.var(evaluation, axis=0)
+
+            if self.log_generations:
+                print("GENERATION {}".format(g+1))
+                print(evaluation)
+                print("-"*20)
         return evaluation, parents
 
-                    
     def crowding_distance(self, individuals):
+        n_ind, n_obj = individuals.shape
+
         eps = 1e-9 # to prevent possible division by zero
-        distances = np.zeros(len(individuals))
-        distances[0] = 1e20
-        distances[-1] = 1e20
+        distances = np.zeros(n_ind)
 
-        for i in range(len(self.criterias)):
-            sorted_indices = np.argsort(individuals[:, i])
+        for c in range(n_obj):
 
-            for j in range(1, len(distances)-1):
-                distances[j] = distances[j] + (individuals[sorted_indices[j+1]][i] - individuals[sorted_indices[j-1]][i]) / (eps + (np.max(individuals[:, i]) - np.min(individuals[:, i])))
+            sorted_indices = np.argsort(individuals[:, c])
+            distances[sorted_indices[0]] += np.inf
+            distances[sorted_indices[-1]] += np.inf
+            normalization = np.max(individuals[:, c]) - np.min(individuals[:, c])
+            normalization = eps if normalization == 0 else normalization
 
-        return np.argsort(-1 * distances).tolist()
+            for j in range(1, n_ind-1):
+                dist = individuals[sorted_indices[j+1]][c] - individuals[sorted_indices[j-1]][c]
+                dist /= normalization
+                distances[sorted_indices[j]] += dist
+
+        return distances
         
     def _dominates(self, a, b):
         return np.all(a <= b) and np.any(a < b)
