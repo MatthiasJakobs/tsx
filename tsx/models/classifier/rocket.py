@@ -177,14 +177,22 @@ class WAVEROCKET(ROCKET):
     def build_kernels(self):
         # pywt_wavelets = list(itertools.chain.from_iterable([pywt.wavelist(fam, kind='continuous') for fam in pywt.families()]))
         pywt_wavelets = pywt.wavelist(kind='continuous')
-        for _ in range(self.k):
-            idx = np.random.randint(0, len(pywt_wavelets))
-            scale = np.random.choice([1, 2, 3, 4, 10, 15, 20])
-            self.kernels.append((pywt.ContinuousWavelet(pywt_wavelets[idx]), scale))
+        found = False
+        iters = 0
+        while not found and iters < 1000:
+            iters += 1
+            _, nr_scales = np.unique(np.random.randint(0, len(pywt_wavelets), self.k), return_counts=True)
+            if nr_scales.size == len(pywt_wavelets):
+                found = True
+        if found is False:
+            raise RuntimeError('Could not sample wavelet scales, maybe try to increase k.')
+        for idx, wavelet in enumerate(pywt_wavelets):
+            scales = np.random.choice(range(1, self.input_length), nr_scales[idx])
+            self.kernels.append((pywt.ContinuousWavelet(wavelet), scales))
 
-    def apply_wavelet(self, X, wavelet, scale):
-        coeff, _ = pywt.cwt(X, scale, wavelet)
-        return np.abs(coeff[0])
+    def apply_wavelet(self, X, wavelet, scales):
+        coeff, _ = pywt.cwt(X, scales, wavelet)
+        return np.abs(coeff)
 
     def apply_kernels(self, X):
         features_ppv = [] # percentage of positive (>.5) values
@@ -194,14 +202,16 @@ class WAVEROCKET(ROCKET):
         features_ppv = torch.Tensor(X.shape[0], self.k)
         features_max = torch.Tensor(X.shape[0], self.k)
         with torch.no_grad():
-            for idx, (wavelet, scale) in enumerate(self.kernels):
-                coeff = np.apply_along_axis(lambda x: self.apply_wavelet(x, wavelet, scale), 0, X_npy)
+            start = 0
+            for wavelet, scales in self.kernels:
+                coeff = np.apply_along_axis(lambda x: self.apply_wavelet(x, wavelet, scales), 1, X_npy)
+                end = start + coeff.shape[1]
                 coeff = torch.from_numpy(coeff)
 
-                features_ppv[:, idx] = self._ppv(coeff, dim=-1)
+                features_ppv[:, start:end] = self._ppv(coeff, dim=-1)
                 if not self.ppv_only:
-                    features_max[:, idx] = torch.max(coeff, dim=-1)[0]
-
+                    features_max[:, start:end] = torch.max(coeff, dim=-1)[0]
+                start = end
             if self.ppv_only:
                 return features_ppv
             else:
