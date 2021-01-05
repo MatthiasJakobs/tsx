@@ -4,6 +4,9 @@ import torch.nn as nn
 import numpy as np
 
 from os.path import join
+import itertools
+
+import pywt
 
 from sklearn.linear_model import RidgeClassifierCV
 from tsx.models.classifier import BasePyTorchClassifier
@@ -18,7 +21,7 @@ class ROCKET(BasePyTorchClassifier):
         self.ridge = ridge
         self.input_length = input_length
         self.ppv_only = ppv_only
-        self.use_sigmoid = False
+        self.use_sigmoid = use_sigmoid
 
         self.kernels = []
         self.inform("Start building kernels")
@@ -165,3 +168,41 @@ class ROCKET(BasePyTorchClassifier):
             raise ValueError("'forward' should not be called if not a neural network model!")
         return self.classifier(x)
     
+class WAVEROCKET(ROCKET):
+    # TODO: Only for equal-length datasets?
+    # TODO: Pytorch version appears to be very unstable. Needs more work
+    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=False, **kwargs):
+        super(WAVEROCKET, self).__init__(input_length=input_length, k=k, ridge=ridge, ppv_only=ppv_only, use_sigmoid=use_sigmoid, **kwargs)
+
+    def build_kernels(self):
+        # pywt_wavelets = list(itertools.chain.from_iterable([pywt.wavelist(fam, kind='continuous') for fam in pywt.families()]))
+        pywt_wavelets = pywt.wavelist(kind='continuous')
+        for _ in range(self.k):
+            idx = np.random.randint(0, len(pywt_wavelets))
+            scale = np.random.choice([1, 2, 3, 4, 10, 15, 20])
+            self.kernels.append((pywt.ContinuousWavelet(pywt_wavelets[idx]), scale))
+
+    def apply_wavelet(self, X, wavelet, scale):
+        coeff, _ = pywt.cwt(X, scale, wavelet)
+        return np.abs(coeff[0])
+
+    def apply_kernels(self, X):
+        features_ppv = [] # percentage of positive (>.5) values
+        features_max = []
+        X_npy = X.squeeze().numpy()
+
+        features_ppv = torch.Tensor(X.shape[0], self.k)
+        features_max = torch.Tensor(X.shape[0], self.k)
+        with torch.no_grad():
+            for idx, (wavelet, scale) in enumerate(self.kernels):
+                coeff = np.apply_along_axis(lambda x: self.apply_wavelet(x, wavelet, scale), 0, X_npy)
+                coeff = torch.from_numpy(coeff)
+
+                features_ppv[:, idx] = self._ppv(coeff, dim=-1)
+                if not self.ppv_only:
+                    features_max[:, idx] = torch.max(coeff, dim=-1)[0]
+
+            if self.ppv_only:
+                return features_ppv
+            else:
+                return features_ppv, features_max
