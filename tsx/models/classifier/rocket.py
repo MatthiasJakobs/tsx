@@ -1,14 +1,14 @@
 import torch
 import pickle
-import torch.nn as nn
-import numpy as np
-
+from math import floor, ceil
 from os.path import join
 import itertools
 
+import numpy as np
+import torch.nn as nn
 import pywt
-
 from sklearn.linear_model import RidgeClassifierCV
+
 from tsx.models.classifier import BasePyTorchClassifier
 
 class ROCKET(BasePyTorchClassifier):
@@ -167,16 +167,17 @@ class ROCKET(BasePyTorchClassifier):
         if self.ridge:
             raise ValueError("'forward' should not be called if not a neural network model!")
         return self.classifier(x)
-    
+
+
 class WAVEROCKET(ROCKET):
     # TODO: Only for equal-length datasets?
     # TODO: Pytorch version appears to be very unstable. Needs more work
-    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=False, **kwargs):
+    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=True, **kwargs):
         super(WAVEROCKET, self).__init__(input_length=input_length, k=k, ridge=ridge, ppv_only=ppv_only, use_sigmoid=use_sigmoid, **kwargs)
 
     def build_kernels(self):
         # pywt_wavelets = list(itertools.chain.from_iterable([pywt.wavelist(fam, kind='continuous') for fam in pywt.families()]))
-        pywt_wavelets = pywt.wavelist(kind='continuous')
+        pywt_wavelets = [wvlt for wvlt in pywt.wavelist(kind='continuous') if wvlt not in ['fbsp', 'shan', 'cmor']]
         found = False
         iters = 0
         while not found and iters < 1000:
@@ -205,6 +206,139 @@ class WAVEROCKET(ROCKET):
             start = 0
             for wavelet, scales in self.kernels:
                 coeff = np.apply_along_axis(lambda x: self.apply_wavelet(x, wavelet, scales), 1, X_npy)
+                end = start + coeff.shape[1]
+                coeff = torch.from_numpy(coeff)
+
+                features_ppv[:, start:end] = self._ppv(coeff, dim=-1)
+                if not self.ppv_only:
+                    features_max[:, start:end] = torch.max(coeff, dim=-1)[0]
+                start = end
+            if self.ppv_only:
+                return features_ppv
+            else:
+                return features_ppv, features_max
+
+
+class WaveletKernel:
+
+    def __init__(self, wavelet_name, scales):
+        dt = 'float32'
+        wavelet = pywt.ContinuousWavelet(wavelet_name)
+        if not isinstance(wavelet, (pywt.ContinuousWavelet, pywt.Wavelet)):
+            wavelet = pywt.DiscreteContinuousWavelet(wavelet)
+        self.scales = scales
+        self.wavelet_name = wavelet_name
+        
+        precision = 10
+        self.int_psi, self.x = pywt.integrate_wavelet(wavelet, precision=precision)
+        self.int_psi = np.conj(self.int_psi) if wavelet.complex_cwt else self.int_psi
+
+        dt_cplx = np.result_type(dt, np.complex64)
+        dt_psi = dt_cplx if self.int_psi.dtype.kind == 'c' else dt
+        self.int_psi = np.asarray(self.int_psi, dtype=dt_psi)
+        self.x = np.asarray(self.x, dtype=dt)
+        self.dt_out = dt_cplx if wavelet.complex_cwt else dt
+        self.step = self.x[1] - self.x[0]
+
+    def apply_for_scale(self, data, scale):
+        j = (np.arange(scale * (self.x[-1] - self.x[0]) + 1) / (scale * self.step)).astype(int) # floor
+        if j[-1] >= self.int_psi.size:
+            j = np.extract(j < self.int_psi.size, j)
+        int_psi_scale = self.int_psi[j][::-1]
+
+        if data.ndim == 1:
+            conv = np.convolve(data, int_psi_scale)
+        else:
+            # batch convolution via loop
+            conv_shape = list(data.shape)
+            conv_shape[-1] += int_psi_scale.size - 1
+            conv_shape = tuple(conv_shape)
+            conv = np.empty(conv_shape, dtype=self.dt_out)
+            for n in range(data.shape[0]):
+                conv[n, :] = np.convolve(data[n], int_psi_scale)
+
+        coef = - np.sqrt(scale) * np.diff(conv, axis=-1)
+        if self.dt_out.kind != 'c':
+            coef = coef.real
+        d = (coef.shape[-1] - data.shape[-1]) / 2.
+        if d > 0:
+            coef = coef[..., floor(d):-ceil(d)]
+        elif d < 0:
+            raise ValueError(
+                "Selected scale of {} too small.".format(scale))
+        return coef
+
+    def apply(self, data, axis=-1):
+        out = np.empty((np.size(self.scales),) + data.shape, dtype=self.dt_out)
+
+        if data.ndim > 1:
+            # move axis to be transformed last (so it is contiguous)
+            data = data.swapaxes(-1, axis)
+
+            # reshape to (n_batch, data.shape[-1])
+            data_shape_pre = data.shape
+            data = data.reshape((-1, data.shape[-1]))
+
+        for i, scale in enumerate(self.scales):
+            j = (np.arange(scale * (self.x[-1] - self.x[0]) + 1) / (scale * self.step)).astype(int) # floor
+            if j[-1] >= self.int_psi.size:
+                j = np.extract(j < self.int_psi.size, j)
+            int_psi_scale = self.int_psi[j][::-1]
+
+            if data.ndim == 1:
+                conv = np.convolve(data, int_psi_scale)
+            else:
+                conv = np.apply_along_axis(lambda x : np.convolve(x, int_psi_scale), 1, data)
+
+            coef = - np.sqrt(scale) * np.diff(conv, axis=-1)
+            if out.dtype.kind != 'c':
+                coef = coef.real
+            d = (coef.shape[-1] - data.shape[-1]) / 2.
+            if d > 0:
+                coef = coef[..., floor(d):-ceil(d)]
+            elif d < 0:
+                raise ValueError(
+                    "Selected scale of {} too small.".format(scale))
+            if data.ndim > 1:
+                coef = coef.reshape(data_shape_pre)
+                coef = coef.swapaxes(axis, -1)
+            out[i, ...] = coef
+
+        return np.abs(out)
+
+
+class WAVEROCKET_FAST(ROCKET):
+    # TODO: Only for equal-length datasets?
+    # TODO: Pytorch version appears to be very unstable. Needs more work
+    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=True, **kwargs):
+        super(WAVEROCKET_FAST, self).__init__(input_length=input_length, k=k, ridge=ridge, ppv_only=ppv_only, use_sigmoid=use_sigmoid, **kwargs)
+
+    def build_kernels(self):
+        # pywt_wavelets = list(itertools.chain.from_iterable([pywt.wavelist(fam, kind='continuous') for fam in pywt.families()]))
+        pywt_wavelets = [wvlt for wvlt in pywt.wavelist(kind='continuous') if wvlt not in ['fbsp', 'shan', 'cmor']]
+        found = False
+        iters = 0
+        while not found and iters < 1000:
+            iters += 1
+            _, nr_scales = np.unique(np.random.randint(0, len(pywt_wavelets), self.k), return_counts=True)
+            if nr_scales.size == len(pywt_wavelets):
+                found = True
+        if found is False:
+            raise RuntimeError('Could not sample wavelet scales, maybe try to increase k.')
+        for idx, wavelet_name in enumerate(pywt_wavelets):
+            scales = np.random.choice(range(1, self.input_length), nr_scales[idx], False)
+            self.kernels.append(WaveletKernel(wavelet_name, scales))
+
+    def apply_kernels(self, X):
+        X_npy = X.squeeze().numpy()
+
+        features_ppv = torch.Tensor(X.shape[0], self.k)
+        features_max = torch.Tensor(X.shape[0], self.k)
+        with torch.no_grad():
+            start = 0
+            for wavelet in self.kernels:
+                coeff = wavelet.apply(X_npy)
+                coeff = np.moveaxis(coeff, 1, 0)
                 end = start + coeff.shape[1]
                 coeff = torch.from_numpy(coeff)
 
