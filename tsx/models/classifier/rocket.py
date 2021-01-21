@@ -102,6 +102,13 @@ class ROCKET(BasePyTorchClassifier):
         else:
             return self.logits(x)
 
+    def score(self, x, y):
+        x = self.transform(x)
+        if self.ridge:
+            return self.classifier.score(x, y)
+        else:
+            return self.classifier(x)
+
     def predict(self, x):
         x = self.transform(x)
         if self.ridge:
