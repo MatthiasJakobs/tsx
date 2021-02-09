@@ -26,7 +26,7 @@ class NativeGuide:
         self.batch_size = batch_size
 
         self.model = model
-        self.X = to_numpy(X)
+        self.X = np.squeeze(to_numpy(X))
         self.y = to_numpy(y)
 
         self.knn = KNeighborsClassifier(metric=self.d)
@@ -36,7 +36,7 @@ class NativeGuide:
     # x.shape == (batch_size, ...)
     # TODO: 100 is just used for testing. Needs to depend on n 
     def generate(self, x, y, n=1, steps=1000):
-        x = to_numpy(x)
+        x = np.squeeze(to_numpy(x))
         y = to_numpy(y)
         dists, inds = self.knn.kneighbors(x, min(100, len(self.X)), True)
 

@@ -162,3 +162,16 @@ def to_numpy(x):
 
 def sigmoid(x):
     return 1/(1 + np.exp(-x)) 
+
+def prepare_for_pytorch(x, batch=True, channel=True):
+    if isinstance(x, type(np.zeros(0))):
+        x = torch.from_numpy(x)
+    
+    # Missing batch and channel information
+    if batch and len(x.shape) == 1:
+        x = x.unsqueeze(0)
+
+    if channel and len(x.shape) == 2:
+        x = x.unsqueeze(1)
+
+    return x
