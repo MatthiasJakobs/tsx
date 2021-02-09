@@ -7,6 +7,7 @@ import torch
 from os.path import join, basename, dirname, exists
 from urllib.request import urlretrieve
 from shutil import rmtree as remove_dir
+from tsx.utils import prepare_for_pytorch
 
 class UCR_UEA_Dataset:
 
@@ -82,9 +83,17 @@ class UCR_UEA_Dataset:
     def torch(self, train=True):
         if self.same_length:
             if train:
-                return torch.tensor(self.x_train).float(), torch.tensor(self.y_train).long() 
+                #return prepare_for_pytorch(self.x_train).float(), torch.from_numpy(self.y_train).long()
+                #return torch.tensor(self.x_train).float(), torch.tensor(self.y_train).long() 
+                x_1, y_1 = prepare_for_pytorch(self.x_train).float(), torch.from_numpy(self.y_train).long()
+                x_2, y_2 = torch.tensor(self.x_train).float(), torch.tensor(self.y_train).long() 
+                return x_1, y_1
             else:
-                return torch.tensor(self.x_test).float(), torch.tensor(self.y_test).long() 
+                #return prepare_for_pytorch(self.x_test).float(), torch.from_numpy(self.y_test).long()
+                #return torch.tensor(self.x_test).float(), torch.tensor(self.y_test).long() 
+                x_1, y_1 = prepare_for_pytorch(self.x_test).float(), torch.from_numpy(self.y_test).long()
+                x_2, y_2 = torch.tensor(self.x_test).float(), torch.tensor(self.y_test).long() 
+                return x_1, y_1
         else:
             raise ValueError("Dataset {} contains time-series data with different length. Conversion to pytorch failed".format(self.name))
             if train:
