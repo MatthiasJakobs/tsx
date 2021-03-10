@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import pandas as pd
 
-from tsx.metrics import smape
+from tsx.metrics import smape, mae
+from collections import OrderedDict
 
 class BaseForecaster:
 
@@ -33,10 +34,10 @@ class BaseForecaster:
 
 class BasePyTorchForecaster(nn.Module, BaseForecaster):
 
-    def __init__(self, loss=torch.nn.MSELoss, optimizer=torch.optim.Adam, batch_size=5, learning_rate=1e-3, verbose=False, epochs=5):
+    def __init__(self, optimizer=torch.optim.Adam, batch_size=5, learning_rate=1e-3, verbose=False, epochs=5):
         super(BasePyTorchForecaster, self).__init__()
         self.classifier = False
-        self.loss = loss
+        self.forecaster = True
         self.optimizer = optimizer
         self.batch_size = batch_size
         self.learning_rate = learning_rate
@@ -44,49 +45,73 @@ class BasePyTorchForecaster(nn.Module, BaseForecaster):
         self.epochs = epochs
         self.fitted = False
 
-    def fit(self, X_train, y_train, X_val=None, y_val=None):
+    def fit(self, X_train, y_train, X_val=None, y_val=None, losses=None, model_save_path=None):
+        if losses is None:
+            losses = OrderedDict(mse=torch.nn.MSELoss(), smape=smape, mae=mae)
+
         # Expects X, y to be Pytorch tensors 
         X_train, y_train, X_val, y_val = self.preprocessing(X_train, y_train, X_test=X_val, y_test=y_val)
 
         ds = torch.utils.data.TensorDataset(X_train, y_train)
         dl = torch.utils.data.DataLoader(ds, batch_size=self.batch_size, shuffle=True)
 
-        loss_fn = self.loss()
-        optim = self.optimizer(self.parameters(), lr=self.learning_rate)
+        # Convention: Use first metric in `losses` for training
+        loss_fn = losses[list(losses.keys())[0]]
+        optim = self.optimizer(self.parameters(), lr=self.learning_rate, weight_decay=1e-1)
 
+        log_cols = ["train_" + k for k in losses.keys()]
         if X_val is not None and y_val is not None:
-            logs = pd.DataFrame(columns=["train_loss", "val_loss", "val_smape"])
-        else:
-            logs = pd.DataFrame(columns=["train_loss"])
+            log_cols += ["val_" + k for k in losses.keys()]
 
+        if model_save_path is not None:
+            best_validation = 1e12
+            best_epoch = 0
+
+        logs = pd.DataFrame(columns=log_cols)
         for epoch in range(self.epochs):
+            train_predictions = []
+            train_labels = []
             print_epoch = epoch + 1
             epoch_loss = 0.0
             for i, (X, y) in enumerate(dl):
-                # reset repackage hidden states of RNN before next batch
-                if hasattr(self, 'reset_hidden_states'):
-                    self.reset_hidden_states(batch_size=len(X))
+                self.train()
                 optim.zero_grad()
                 prediction = self.forward(X)
                 loss = loss_fn(prediction, y)
                 loss.backward()
                 epoch_loss += loss.item()
                 optim.step()
+                train_predictions.append(prediction.detach())
+                train_labels.append(y.clone().detach())
 
-            if X_val is not None and y_val is not None:
-                with torch.no_grad():
-                    if hasattr(self, 'reset_hidden_states'):
-                        self.reset_hidden_states(batch_size=len(X_val))
-                    val_precition = self.forward(X_val)
-                    val_loss = loss_fn(val_precition, y_val).item()
-                    val_smape = smape(val_precition, y_val).item()
+            with torch.no_grad():
+                self.eval()
+                log_values = []
+                # Evaluate train
+                train_predictions = torch.cat(train_predictions, dim=0)
+                train_labels = torch.cat(train_labels, dim=0)
+                for k, L in losses.items():
+                    log_values.append(L(train_predictions, train_labels).item())
 
-                logs.loc[epoch] = [epoch_loss, val_loss, val_smape]
+                # Evaluate val (if present)
+                if X_val is not None and y_val is not None:
+                    val_prediction = self.forward(X_val)
+                    for k, L in losses.items():
+                        loss_value = L(val_prediction, y_val).item()
 
-                print("Epoch {} train_loss {} val_loss {}".format(print_epoch, epoch_loss, val_loss))
-            else:
-                print("Epoch {} train_loss {} ".format(print_epoch, epoch_loss))
-                logs.loc[epoch] = [epoch_loss]
+                        if k == "mse" and model_save_path is not None and epoch > 0:
+                            if loss_value <= best_validation:
+                                best_epoch = epoch
+                                best_validation = loss_value
+                                torch.save(self.state_dict(), model_save_path)
+
+                        log_values.append(loss_value)
+                logs.loc[epoch] = log_values
+                print(epoch, *zip(log_cols, [format(v, '.5f') for v in log_values]))
 
         self.fitted = True
+        if model_save_path is not None:
+            print("{} was best epoch with val_mse {}".format(best_epoch, best_validation))
+            return logs, best_epoch
+
         return logs

@@ -4,8 +4,8 @@ from torch.autograd import grad
 from tsx.utils import prepare_for_pytorch
 
 def Grad_CAM(x, class_id, model, normalize=True):
-    if not hasattr(model, 'get_features'):
-        raise Exception("Model {} needs function `get_features` to calculate Grad_CAM".format(model.__class__.__name__))
+    # if not hasattr(model, 'get_features'):
+    #     raise Exception("Model {} needs function `get_features` to calculate Grad_CAM".format(model.__class__.__name__))
     if not hasattr(model, 'reset_gradients'):
         raise Exception("Model {} needs function `reset_gradients` to calculate Grad_CAM".format(model.__class__.__name__))
 
@@ -19,7 +19,12 @@ def Grad_CAM(x, class_id, model, normalize=True):
         feats = out['feats']
         logits = out['logits']
 
-        grads = grad(logits[..., class_id[i]], feats)[0]
+        if model.forecaster:
+            grads = grad(logits, feats)[0].squeeze()
+        elif model.classifier:
+            grads = grad(logits[..., class_id[i]], feats)[0]
+        else:
+            raise RuntimeError("Model {} is of unsupported type (needs to be classifier or forecaster".format(model))
 
         a = grads.detach()
         A = feats.detach()
@@ -31,7 +36,10 @@ def Grad_CAM(x, class_id, model, normalize=True):
         cams = cams.squeeze()
 
     if normalize:
-        cams = (cams.T / torch.max(cams, axis=1)[0]).T
+        if len(cams.shape) == 1:
+            cams = cams / torch.max(cams)
+        else:
+            cams = (cams.T / torch.max(cams, axis=1)[0]).T
 
     return cams
 
