@@ -45,7 +45,10 @@ class BasePyTorchForecaster(nn.Module, BaseForecaster):
         self.epochs = epochs
         self.fitted = False
 
-    def fit(self, X_train, y_train, X_val=None, y_val=None, losses=None, model_save_path=None):
+    def save(self, path):
+        torch.save(self.state_dict(), path)
+
+    def fit(self, X_train, y_train, X_val=None, y_val=None, losses=None, model_save_path=None, verbose=True):
         if losses is None:
             losses = OrderedDict(mse=torch.nn.MSELoss(), smape=smape, mae=mae)
 
@@ -107,7 +110,8 @@ class BasePyTorchForecaster(nn.Module, BaseForecaster):
 
                         log_values.append(loss_value)
                 logs.loc[epoch] = log_values
-                print(epoch, *zip(log_cols, [format(v, '.5f') for v in log_values]))
+                if verbose:
+                    print(epoch, *zip(log_cols, [format(v, '.5f') for v in log_values]))
 
         self.fitted = True
         if model_save_path is not None:
