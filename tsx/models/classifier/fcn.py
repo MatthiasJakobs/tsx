@@ -22,17 +22,34 @@ class TimeSeries1DNet(BasePyTorchClassifier):
             nn.ReLU()
         )
 
+    def reset_gradients(self):
+        self.conv1[0].zero_grad()
+        self.conv1[1].zero_grad()
+        self.conv2[0].zero_grad()
+        self.conv2[1].zero_grad()
+        self.conv3[0].zero_grad()
+        self.conv3[1].zero_grad()
+        self.dense.zero_grad()
+
     def preprocessing(self, x_train, y_train, X_test=None, y_test=None):
         return x_train, y_train, X_test, y_test
 
-    def forward(self, x):
-        x = self.get_features(x)
+    def forward(self, x, return_intermediate=False):
+        feats = self.get_features(x)
 
-        x = self.avg_pool(x)
+        x = self.avg_pool(feats)
         x = self.flatten(x)
 
         x = self.dense(x)
-        return x
+
+        if return_intermediate:
+            to_return = {}
+            to_return["feats"] = feats
+            to_return["logits"] = x
+            to_return["prediction"] = x
+            return to_return
+        else:
+            return x
 
     def predict(self, X):
         prediction = nn.functional.softmax(self.forward(X), dim=-1)
@@ -43,6 +60,12 @@ class TimeSeries1DNet(BasePyTorchClassifier):
         if numpy:
             return features.detach().numpy()
         return features
+
+    def get_logits(self, x, numpy=False):
+        if numpy:
+            return self.forward(x).detach().numpy()
+        else:
+            return self.forward(x)
 
     def get_class_weights(self, numpy=False):
         w = self.dense.weight.clone()
