@@ -25,13 +25,15 @@ class TimeSeries1DNet(BasePyTorchClassifier):
     def preprocessing(self, x_train, y_train, X_test=None, y_test=None):
         return x_train, y_train, X_test, y_test
 
-    def forward(self, x):
-        x = self.get_features(x)
+    def forward(self, x, return_features=False):
+        feats = self.get_features(x)
 
-        x = self.avg_pool(x)
+        x = self.avg_pool(feats)
         x = self.flatten(x)
 
         x = self.dense(x)
+        if return_features:
+            return x, feats
         return x
 
     def predict(self, X):

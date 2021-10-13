@@ -4,16 +4,11 @@ import torch.nn as nn
 import numpy as np
 
 from os.path import join
+from tsx.models import BaseCNN
 
-class BaseClassifier:
-
-    def fit(self, X, y):
-        raise NotImplementedError()
+class BaseClassifier(BaseCNN):
 
     def transform(self, X):
-        raise NotImplementedError()
-
-    def predict(self, X):
         raise NotImplementedError()
 
     def save(self):
@@ -30,7 +25,7 @@ class BaseClassifier:
         raise NotImplementedError()
 
     
-class BasePyTorchClassifier(nn.Module, BaseClassifier):
+class BasePyTorchClassifier(BaseClassifier):
 
     def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=False, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
         super(BasePyTorchClassifier, self).__init__()
