@@ -22,6 +22,15 @@ class TimeSeries1DNet(BasePyTorchClassifier):
             nn.ReLU()
         )
 
+    def reset_gradients(self):
+        self.conv1[0].zero_grad()
+        self.conv1[1].zero_grad()
+        self.conv2[0].zero_grad()
+        self.conv2[1].zero_grad()
+        self.conv3[0].zero_grad()
+        self.conv3[1].zero_grad()
+        self.dense.zero_grad()
+
     def preprocessing(self, x_train, y_train, X_test=None, y_test=None):
         return x_train, y_train, X_test, y_test
 
@@ -45,6 +54,12 @@ class TimeSeries1DNet(BasePyTorchClassifier):
         if numpy:
             return features.detach().numpy()
         return features
+
+    def get_logits(self, x, numpy=False):
+        if numpy:
+            return self.forward(x).detach().numpy()
+        else:
+            return self.forward(x)
 
     def get_class_weights(self, numpy=False):
         w = self.dense.weight.clone()

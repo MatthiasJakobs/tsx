@@ -8,6 +8,7 @@ from os.path import join, basename, dirname, exists
 from urllib.request import urlretrieve
 from shutil import rmtree as remove_dir
 from tsx.utils import prepare_for_pytorch
+from scipy.io import arff
 
 class UCR_UEA_Dataset:
 
@@ -47,8 +48,17 @@ class UCR_UEA_Dataset:
                 zipfile.ZipFile(zip_file_name, "r").extractall(self.path)
                 remove_dir(dl_dir)
 
-        self.train_path = join(self.path, self.name + "_TRAIN.txt")
-        self.test_path = join(self.path, self.name + "_TEST.txt")
+        if exists(join(self.path, self.name + "_TRAIN.txt")):
+            self.train_path = join(self.path, self.name + "_TRAIN.txt")
+            self.test_path = join(self.path, self.name + "_TEST.txt")
+        elif exists(join(self.path, self.name + "_TRAIN.arff")):
+            self.train_path = join(self.path, self.name + "_TRAIN.arff")
+            self.test_path = join(self.path, self.name + "_TEST.arff")
+        elif exists(join(self.path, self.name, self.name + "_TRAIN.arff")):
+            self.train_path = join(self.path, self.name, self.name + "_TRAIN.arff")
+            self.test_path = join(self.path, self.name, self.name + "_TEST.arff")
+        else:
+            raise NotImplementedError("No .arff or .txt files found for dataset {}".format(self.name))
 
     def parseData(self, path):
         features = []

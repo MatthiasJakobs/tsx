@@ -30,6 +30,7 @@ class BasePyTorchClassifier(BaseClassifier):
     def __init__(self, n_classes=10, epochs=5, batch_size=10, verbose=False, optimizer=torch.optim.Adam, loss=nn.CrossEntropyLoss, learning_rate=1e-3):
         super(BasePyTorchClassifier, self).__init__()
         self.classifier = True
+        self.forecaster = False
         self.loss = loss
         self.n_classes = n_classes
         self.optimizer = optimizer
