@@ -37,19 +37,3 @@ class ETTSmall:
 
     def numpy(self):
         return self.X
-
-
-ds = ETTSmall(name="h1")
-print(ds.numpy().shape)
-print(ds.torch().shape)
-print(ds.columns)
-
-ds = ETTSmall(name="h2")
-print(ds.torch().shape)
-print(ds.columns)
-ds = ETTSmall(name="m1")
-print(ds.torch().shape)
-print(ds.columns)
-ds = ETTSmall(name="m2")
-print(ds.torch().shape)
-print(ds.columns)
