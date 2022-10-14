@@ -300,6 +300,6 @@ def convert_tsf_to_dataframe(
 
 
 if __name__ == "__main__":
-    for name in ["nn5_daily_missing"]:
-        np_array = load_monash(name, return_numpy=True)
-        d = load_monash(name, return_pytorch=True)
+    name = "nn5_daily_missing"
+    np_array = load_monash(name, return_numpy=True)
+    d = load_monash(name, return_pytorch=True)
