@@ -21,7 +21,7 @@ def possible_datasets() -> List[str]:
     return list(get_links_dict().keys())
 
 
-def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False) -> pd.DataFrame | np.ndarray:
+def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False) -> pd.DataFrame | np.ndarray | torch.Tensor:
     """
     loads datasets from Monash Time Series Forecasting Repository.
     :param dataset: name of the dataset to be downloaded. Consists of the name of the dataset as well as the "version"
@@ -40,17 +40,17 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
         raise Exception("multiple .tsf files found!")
 
     frame, frequency, forecast_horizon, contain_missing_values, contain_equal_length = convert_tsf_to_dataframe(os.path.join(path, files[0]))
-    if return_numpy:
+    series_value = frame["series_value"]
+    if return_numpy or return_pytorch:
         if contain_equal_length:
-            return frame.to_numpy()
-        else:
-            raise RuntimeError("series don't have equal length, so conversion to numpy array is not possible!")
-    if return_pytorch:
-        if contain_equal_length:
-            #todo: numpy_array will have dtype obejct --> cant be converted to tensor
-            return torch.from_numpy(frame.to_numpy())
-        else:
-            raise RuntimeError("series don't have equal length, so conversion to PyTorch tensor is not possible!")
+            array = series_value.to_numpy()
+            for i, p_array in enumerate(array):
+                array[i] = p_array.to_numpy()
+            array = np.stack(array).astype("float64")
+            if return_numpy:
+                return array
+            else:
+                return torch.from_numpy(array)
     return frame
 
 
@@ -302,4 +302,8 @@ def convert_tsf_to_dataframe(
 if __name__ == "__main__":
     name = "nn5_daily_missing"
     np_array = load_monash(name, return_numpy=True)
+    print(np_array.shape)
+    print(np_array.dtype)
+
     d = load_monash(name, return_pytorch=True)
+    print(d.shape)
