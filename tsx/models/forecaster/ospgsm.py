@@ -10,24 +10,6 @@ from tsx.metrics import mse
 from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
 
-def roc_matrix(rocs, z=1):
-    lag = rocs.shape[-1]
-    m = np.ones((len(rocs), lag + len(rocs) * z - z)) * np.nan
-
-    offset = 0
-    for i, roc in enumerate(rocs):
-        m[i, offset:(offset+lag)] = roc
-        offset += z
-
-    return m
-
-def roc_mean(roc_matrix):
-    summation_matrix = roc_matrix.copy()
-    summation_matrix[np.where(np.isnan(roc_matrix))] = 0
-    sums = np.sum(summation_matrix, axis=0)
-    nonzeros = np.sum(np.logical_not(np.isnan(roc_matrix)), axis=0)
-    return sums / nonzeros
-
 class OS_PGSM:
 
     def __init__(self, models, config, random_state=0, device='cpu'):
@@ -73,9 +55,6 @@ class OS_PGSM:
             "random_state": self.random_state,
             "test_forecasters": self.test_forecasters,
             "drifts_detected": self.drifts_detected,
-            "ensemble_ambiguity": self.ensemble_ambiguities,
-            "padded_ambiguity": self.padded_ambiguities,
-            "distance_ambiguity": self.distance_ambiguities,
         }
 
         with open(path, "w") as fp:
@@ -92,39 +71,8 @@ class OS_PGSM:
         comp.rocs = obj["rocs"]
         comp.test_forecasters = obj["test_forecasters"]
         comp.drifts_detected = obj["drifts_detected"]
-        comp.ensemble_ambiguities=obj["ensemble_ambiguity"] 
-        comp.distance_ambiguities=obj["distance_ambiguity"] 
-        comp.padded_ambiguities=obj["padded_ambiguity"] 
 
         return comp
-
-    # Meassure \sum_i^k (dtw(r_i, x) - \overbar{dtw(r, x)})^2
-    def distance_ambiguity(self, distances):
-        mean_distance = np.mean(distances)
-        return np.sum((distances-mean_distance)**2)
-
-    # Meassure \sum_i^k (f_i - f)^2
-    def ensemble_ambiguity(self, ensemble_models, x):
-        ambiguity = 0
-        f = self.ensemble_predict(x, subset=ensemble_models)
-        for m in ensemble_models:
-            ambiguity += (self.ensemble_predict(x, subset=[m]) - f)**2
-        return ambiguity
-
-    def padded_ambiguity(self, rocs, x):
-        x_length = max([len(r) for r in rocs])
-        #x_length = len(x.squeeze())
-
-        padded_rocs = torch.zeros((len(rocs), x_length))
-        for i, r in enumerate(rocs):
-            padded_rocs[i] = pad_vector(r, x_length)
-
-        mean_r = torch.mean(padded_rocs, axis=0)
-        ambiguity = 0
-        for r in padded_rocs:
-            ambiguity += torch.sum((r - mean_r)**2)
-        
-        return ambiguity.item()
 
     def ensemble_predict(self, x, subset=None):
         if subset is None:
@@ -328,10 +276,6 @@ class OS_PGSM:
         self.drifts_type_1_detected = []
         self.drifts_type_2_detected = []
 
-        self.ensemble_ambiguities = []
-        self.padded_ambiguities = []
-        self.distance_ambiguities = []
-
         self.random_selection = []
         self.topm_empty = []
 
@@ -429,9 +373,6 @@ class OS_PGSM:
             self.rebuild_rocs(X_val)
             self.shrink_rocs()        
 
-            self.ensemble_ambiguities = []
-            self.padded_ambiguities = []
-            self.distance_ambiguities = []
             self.drifts_detected = []
 
             if self.concept_drift_detection is None:
@@ -517,6 +458,24 @@ class OS_PGSM:
         return windowing(X, self.lag, z=self.small_z, use_torch=True)
 
     def evaluate_on_validation(self, x_val, y_val):
+        def roc_matrix(rocs, z=1):
+            lag = rocs.shape[-1]
+            m = np.ones((len(rocs), lag + len(rocs) * z - z)) * np.nan
+
+            offset = 0
+            for i, roc in enumerate(rocs):
+                m[i, offset:(offset+lag)] = roc
+                offset += z
+
+            return m
+
+        def roc_mean(roc_matrix):
+            summation_matrix = roc_matrix.copy()
+            summation_matrix[np.where(np.isnan(roc_matrix))] = 0
+            sums = np.sum(summation_matrix, axis=0)
+            nonzeros = np.sum(np.logical_not(np.isnan(roc_matrix)), axis=0)
+            return sums / nonzeros
+
         losses = np.zeros((len(self.models)))
 
         if self.roc_mean:

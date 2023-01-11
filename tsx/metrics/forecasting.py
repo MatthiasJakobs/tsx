@@ -24,4 +24,8 @@ def mae(a, b):
     return torch.mean(torch.abs(a - b))
 
 def mse(a, b):
+    if isinstance(a, np.ndarray):
+        a = torch.from_numpy(a)
+    if isinstance(b, np.ndarray):
+        b = torch.from_numpy(b)
     return torch.mean((a-b)**2, axis=0)
