@@ -22,3 +22,6 @@ def smape(a, b, axis=None):
 # TODO: Make pytorch-independent
 def mae(a, b):
     return torch.mean(torch.abs(a - b))
+
+def mse(a, b):
+    return torch.mean((a-b)**2, axis=0)

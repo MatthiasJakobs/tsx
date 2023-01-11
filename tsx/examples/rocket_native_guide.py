@@ -12,7 +12,7 @@ x_test, y_test = ds.torch(train=False)
 model = ROCKET(input_length=x_train.shape[-1], batch_size=100, n_classes=len(np.unique(y_train)))
 model.fit(x_train, y_train, x_test, y_test)
 
-cf = NativeGuide(model, x_train, y_train, distance='euclidian', batch_size=1000)
+cf = NativeGuide(model, x_train, y_train, distance='euclidean', batch_size=1000)
 
 print("Original classes of input: {}".format(y_test[0:2]))
 

@@ -1,2 +1,2 @@
 from .dtw import dtw
-from .lp import manhattan, euclidian, linf
+from .lp import manhattan, euclidean, linf

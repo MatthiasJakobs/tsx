@@ -3,7 +3,7 @@ import numpy as np
 from itertools import permutations
 from random import shuffle
 from tsx.utils import NSGA2
-from tsx.distances import euclidian, dtw
+from tsx.distances import euclidean, dtw
 from tsx.utils import to_numpy, sigmoid
 from sklearn.neighbors import KNeighborsClassifier
 

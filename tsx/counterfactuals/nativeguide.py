@@ -6,14 +6,14 @@ import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
 from tsx.utils import to_numpy
-from tsx.distances import dtw, euclidian
+from tsx.distances import dtw, euclidean
 
 class NativeGuide:
 
     # TODO: Should work with non-classifiers as well
-    def __init__(self, model, X, y, distance='euclidian', batch_size=100):
+    def __init__(self, model, X, y, distance='euclidean', batch_size=100):
         self.supported_distances = {
-            'euclidian': euclidian,
+            'euclidean': euclidean,
             'dtw': dtw
         }
 
@@ -61,7 +61,7 @@ class NativeGuide:
 
             local_counterfactuals = []
             for guide in guides:
-                if self.distance == 'euclidian':
+                if self.distance == 'euclidean':
                     betas = np.linspace(0, 1, num=steps)
                     candidates = np.array([beta * x[i] + (1-beta) * guide for beta in betas])
                     batches_needed = int(np.ceil(len(candidates) / self.batch_size))
@@ -77,7 +77,7 @@ class NativeGuide:
                     local_counterfactuals = [(betas[idx], candidates[idx]) for idx, hit in enumerate(hits) if hit]
                     
                 else:
-                    raise NotImplementedError("Only euclidian supported right now")
+                    raise NotImplementedError("Only euclidean supported right now")
 
             counterfactuals.append(local_counterfactuals[-n:])
         
