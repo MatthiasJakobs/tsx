@@ -175,3 +175,9 @@ def prepare_for_pytorch(x, batch=True, channel=True):
         x = x.unsqueeze(1)
 
     return x
+
+def to_random_state(rs):
+    if not isinstance(rs, np.random.RandomState):
+        rs = np.random.RandomState(rs)
+
+    return rs
