@@ -517,7 +517,7 @@ class OS_PGSM:
 
             if 'sax' in self.explanation_method:
                 # Convert shap values into saliency, because we explain the loss
-                r = np.maximum(shap_values, 0)
+                r = np.maximum(r, 0)
 
         return r, l
 
