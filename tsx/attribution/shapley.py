@@ -79,7 +79,7 @@ class ExpectedFunctionValue:
         self.density_sampler = density_sampler
 
     # Calculate E[f(x) | X_S = x_S]
-    def get_value(self, S, X):
+    def get_value(self, S, X, Y):
         S = np.array(S)
         values = np.zeros((len(X)))
         for idx, x in enumerate(X):
@@ -126,18 +126,19 @@ class KernelShap(ShapleyValues):
 
 class SAXDependentSampler:
 
-    def __init__(self, background, mean_y=0, sax=None, random_state=None):
+    def __init__(self, background, mean_y=0, sax=None, normalize=False, random_state=None):
         self.rng = to_random_state(random_state)
-        self.dist = EmpiricalQuantized(sax.encode(z_norm(background)))
+        if normalize:
+            self.dist = EmpiricalQuantized(sax.encode(z_norm(background)))
+        else:
+            self.dist = EmpiricalQuantized(sax.encode(background))
         self.mean_y = mean_y
 
     def get_samples(self, _x, S):
         samples = self.dist.get_samples(_x, S, replace=True, random_state=self.rng)
         if len(samples) == 0:
-            # For now, return mean prediction over background if no dependence found
-            # TODO: Maybe make the S smaller and see if samples get returned?
-            #       [0, 1, 3] -> [0, 1] for example, should be more hits in general
-            return self.mean_y
+            # For now, return mean prediction over background if no (partial) dependence found
+            return np.array(self.mean_y).reshape(1, -1)
         return samples
 
 class SAXIndependentSampler:
@@ -153,6 +154,7 @@ class SAXIndependentSampler:
         n_features = _x.shape[-1]
         not_S = np.array([i for i in range(n_features) if i not in S])
 
+        # TODO:
         max_nr_samples = 100
         total_possible_samples = len(self.tokens)**len(not_S)
 
@@ -169,10 +171,10 @@ class SAXIndependentSampler:
             for _ in range(max_nr_samples):
                 # Sample how many notS indices to sample
                 nr_not_S = self.rng.randint(1, len(not_S)+1)
-                not_S = self.rng.choice(not_S, size=nr_not_S, replace=False)
+                _not_S = self.rng.choice(not_S, size=nr_not_S, replace=False)
                 sample = _x.copy()
                 not_S_values = self.rng.choice(self.tokens, nr_not_S, replace=False)
-                sample[not_S] = not_S_values
+                sample[_not_S] = not_S_values
                 samples.append(sample)
 
             samples = np.vstack(samples)
@@ -197,22 +199,52 @@ class SAXLossValueFunction:
             X, mu, std = z_norm(X, return_mean_std=True)
 
         _X = self.sax.encode(X)
-
+        
+        all_samples = []
         for idx, _x in enumerate(_X):
+            all_samples.append(self.sampler.get_samples(_x, S))
 
-            samples = self.sampler.get_samples(_x, S)
-            if isinstance(samples, np.float32):
-                _b = np.array(samples).reshape(1, -1)
+        sample_indices = [idx for idx in range(len(_X)) if not all_samples[idx].shape[-1] == 1]
+        _X_decoded = self.sax.decode(np.vstack([all_samples[idx] for idx in sample_indices]), n_samples=20, random_state=self.rng)
+        
+        # TODO: This needs work and cannot be done this way
+        if self.normalize:
+            _X_decoded = std * _X_decoded + mu
+
+        preds = self.f(_X_decoded)
+
+        _bs = np.zeros((len(Y)))
+        prev_endpoint = 0
+        for idx in range(len(_X)):
+            segment = all_samples[idx]
+            length_segment = len(segment)
+            if length_segment == 1 and segment.shape[-1] == 1:
+                _bs[idx] = segment[0][0]
             else:
-                samples = self.sax.decode(samples, random_state=self.rng)
+                segment_preds = preds[prev_endpoint:(prev_endpoint + length_segment)]
+                _bs[idx] = segment_preds.mean()
+                prev_endpoint += length_segment
 
-                if self.normalize:
-                    samples = (std * samples) + mu
+        _as = np.array(Y)
 
-                _b = np.array(self.f(samples).mean()).reshape(1, -1)
+        #values = mse(_as, _bs)
+        values = (_as - _bs)**2
 
-            _a = np.array(Y[idx]).reshape(1, -1)
-            values[idx] = mse(_a, _b)
+        # for idx, _x in enumerate(_X):
+
+        #     samples = self.sampler.get_samples(_x, S)
+        #     if isinstance(samples, np.float32):
+        #         _b = np.array(samples).reshape(1, -1)
+        #     else:
+        #         samples = self.sax.decode(samples, random_state=self.rng)
+
+        #         if self.normalize:
+        #             samples = (std * samples) + mu
+
+        #         _b = np.array(self.f(samples).mean()).reshape(1, -1)
+
+        #     _a = np.array(Y[idx]).reshape(1, -1)
+        #     values[idx] = mse(_a, _b)
         
         return values
 
@@ -249,7 +281,7 @@ class SAXEmpiricalDependent(ShapleyValues):
             f,
             sax=sax,
             random_state=rng,
-            sampler=SAXDependentSampler(background, mean_y=f(background).mean(), sax=sax, random_state=rng),
+            sampler=SAXDependentSampler(background, mean_y=f(background).mean(), sax=sax, normalize=normalize, random_state=rng),
             normalize=normalize,
         )
 

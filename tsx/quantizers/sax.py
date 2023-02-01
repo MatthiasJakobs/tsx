@@ -72,8 +72,8 @@ def z_norm(X, return_mean_std=False):
     if len(X.shape) == 1:
         X = X.reshape(1, -1)
 
-    mu = np.mean(X, axis=1)
-    std = np.std(X, axis=1)
+    mu = X.mean(axis=1)
+    std = X.std(axis=1)
 
     # Dirty hack for when all values are identical
     std[np.where(std == 0)] = 1

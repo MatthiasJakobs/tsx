@@ -1,11 +1,13 @@
 import numpy as np
 import torch
+import shap
 
 from seedpy import fixedseed
 from tslearn.clustering import TimeSeriesKMeans
 from tslearn.utils import to_time_series_dataset
 
 from tsx.attribution import simple_gradcam as gradcam
+from tsx.attribution import SAXEmpiricalDependent, SAXIndependent, KernelShap
 from tsx.metrics import mse
 from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
@@ -39,6 +41,11 @@ class OS_PGSM:
         self.skip_type2 = config.get("skip_type2", False)
         self.distance_measure = config.get("distance_measure", "euclidean")
         self.nr_select = config.get("nr_select", None)
+        self.explanation_method = config.get("explanation_method", "gradcam")
+        # SAX
+        self.sax_alphabet_size = config.get("sax_alphabet_size", 5)
+        self.sax_max_coalition_samples = config.get('sax_max_coalition_samples', 50)
+        self.sax_normalize = config.get('sax_normalize', False)
 
     def save(self, path):
         roc_list = []
@@ -367,9 +374,14 @@ class OS_PGSM:
 
         return np.concatenate([X_test[:self.lag].numpy(), np.array(predictions)])
 
+    def prepare_explainability_methods(self, X_val, X_test):
+        if self.explanation_method == 'kernelshap' or self.explanation_method == 'sax_dependent':
+            self.X_val_windowed = windowing(X_val, self.lag)[0]
+
     # TODO: No runtime reports
     def run(self, X_val, X_test, reuse_prediction=False):
         with fixedseed(torch, seed=self.random_state):
+            self.prepare_explainability_methods(X_val, X_test)
             self.rebuild_rocs(X_val)
             self.shrink_rocs()        
 
@@ -457,6 +469,69 @@ class OS_PGSM:
     def small_split(self, X):
         return windowing(X, self.lag, z=self.small_z, use_torch=True)
 
+    ###
+    #       x: Input (shape (batch, channels, features))
+    #       y: Label 
+    #   model: Single model
+    ###
+    def compute_explanation(self, x, y, model):
+        if self.explanation_method == 'gradcam':
+            loss = 0
+            cams = []
+            for _x, _y in zip(x, y):
+                res = model.forward(_x.unsqueeze(0).unsqueeze(0), return_intermediate=True)
+                logits = res['logits'].squeeze()
+                feats = res['feats']
+                l = mse(logits, _y)
+                r = np.expand_dims(gradcam(l, feats), 0)
+                l = l.detach().item()
+                loss += l
+                cams.append(r)
+
+            r = np.concatenate(cams, axis=0)
+            l = loss
+
+        elif self.explanation_method == 'kernelshap':
+            explainer = KernelShap(model.predict, self.X_val_windowed, random_state=self.rng)
+            r = explainer.shap_values(x, y, verbose=False)
+            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
+
+        elif self.explanation_method == 'sax_independent':
+            sax_explainer = SAXIndependent(
+                model.predict, 
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                random_state=self.rng,
+            )
+            shap_values = sax_explainer.shap_values(x, y, verbose=False)
+            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
+
+            # Convert shap values into saliency
+            r = np.maximum(shap_values, 0)
+
+        elif self.explanation_method == 'sax_dependent':
+            background = self.X_val_windowed
+
+            sax_explainer = SAXEmpiricalDependent(
+                model.predict, 
+                background,
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                random_state=self.rng,
+            )
+            
+            shap_values = sax_explainer.shap_values(x, y, verbose=False)
+            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
+
+            # Convert shap values into saliency
+            r = np.maximum(shap_values, 0)
+        else:
+            raise NotImplementedError()
+
+        return r, l
+
     def evaluate_on_validation(self, x_val, y_val):
         def roc_matrix(rocs, z=1):
             lag = rocs.shape[-1]
@@ -485,18 +560,8 @@ class OS_PGSM:
 
         X, y = self.small_split(x_val)
         for n_m, m in enumerate(self.models):
-            cams = []
-            for idx in range(len(X)):
-                test = X[idx].unsqueeze(0)
-                res = m.forward(test.unsqueeze(1), return_intermediate=True)
-                logits = res['logits'].squeeze()
-                feats = res['feats']
-                #l = smape(logits, y[idx])
-                l = mse(logits, y[idx])
-                r = gradcam(l, feats)
-                cams.append(np.expand_dims(r, 0))
-                losses[n_m] += l.detach().item()
-            cams = np.concatenate(cams, axis=0)
+            cams, loss = self.compute_explanation(X, y, m)
+            losses[n_m] = loss
 
             if self.roc_mean:
                 all_cams[n_m] = roc_mean(roc_matrix(cams, z=1))
