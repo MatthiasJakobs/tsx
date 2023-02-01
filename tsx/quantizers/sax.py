@@ -59,15 +59,6 @@ def plot_sax_encoding(x, sax):
 
     plt.savefig('saxplot.png')
 
-# TODO: May be numerically instable for small |b1-b2|
-def sample_from_range(size, b1, b2, random_state=None):
-    t1, t2 = norm.cdf(b1), norm.cdf(b2)
-
-    rv = uniform(t1, t2-t1)
-    ys = rv.rvs(size=size, random_state=random_state)
-    return norm.ppf(ys)
-
-
 def z_norm(X, return_mean_std=False):
     if len(X.shape) == 1:
         X = X.reshape(1, -1)
@@ -116,7 +107,23 @@ class SAX:
         # Get alpha percentiles
         percentile_numbers = np.linspace(0, 1, self.n_alphabet+1)[1:][:-1]
         self.boundaries = [np.float32('-inf')] + [norm.ppf(p) for p in percentile_numbers] + [np.float32('inf')]
+        self.boundary_samples = { key: None for key in zip(self.boundaries[:-1], self.boundaries[1:]) }
 
+    # TODO: May be numerically instable for small |b1-b2|
+    def sample_from_range(self,size, b1, b2, random_state=None):
+        t1, t2 = norm.cdf(b1), norm.cdf(b2)
+
+        rv = uniform(t1, t2-t1)
+        ys = rv.rvs(size=size, random_state=random_state)
+        return norm.ppf(ys)
+
+    def fast_sample_from_range(self, size, b1, b2, random_state=None):
+        # If the buffer is not build up already, create it
+        if self.boundary_samples[(b1, b2)] is None:
+            self.boundary_samples[(b1, b2)] = self.sample_from_range(10_000, b1, b2, random_state=random_state)
+
+        rng = to_random_state(random_state)
+        return rng.choice(self.boundary_samples[(b1, b2)], size=size)
 
     def encode(self, X):
         enced = np.digitize(X, self.boundaries[1:], right=True)
@@ -142,7 +149,7 @@ class SAX:
             token_index = np.argmax(self.tokens == token)
             lb = self.boundaries[token_index]
             ub = self.boundaries[token_index+1]
-            decoded[np.where(tokens == token)] = sample_from_range((count, n_samples), lb, ub, random_state=random_state).mean(axis=1)
+            decoded[np.where(tokens == token)] = self.fast_sample_from_range((count, n_samples), lb, ub, random_state=random_state).mean(axis=1)
 
         return decoded
 
@@ -159,7 +166,7 @@ class SAX:
             token_index = np.argmax(self.tokens == token)
             lb = self.boundaries[token_index]
             ub = self.boundaries[token_index+1]
-            _d[token] = sample_from_range(count*size, lb, ub, random_state=random_state).reshape(count, size)
+            _d[token] = self.fast_sample_from_range(count*size, lb, ub, random_state=random_state).reshape(count, size)
 
         # Populate the samples array per encoding literal
         samples = np.zeros((size, len(encoding)))

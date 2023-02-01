@@ -190,6 +190,7 @@ class OS_PGSM:
                     current_val = X_complete[val_start:val_stop]
                     residuals = []
                     means = [torch.mean(current_val).numpy()]
+                    self.prepare_explainability_methods(current_val, X_complete[val_stop:])
                     self.rebuild_rocs(current_val)
 
             best_model = self.find_best_forecaster(x)
@@ -357,6 +358,7 @@ class OS_PGSM:
                 current_val = X_complete[val_start:val_stop]
                 mean_residuals = []
                 means = [torch.mean(current_val).numpy()]
+                self.prepare_explainability_methods(current_val, X_complete[val_stop:])
                 self.rebuild_rocs(current_val)
                 self.roc_rejection_sampling()
 
@@ -375,8 +377,27 @@ class OS_PGSM:
         return np.concatenate([X_test[:self.lag].numpy(), np.array(predictions)])
 
     def prepare_explainability_methods(self, X_val, X_test):
-        if self.explanation_method == 'kernelshap' or self.explanation_method == 'sax_dependent':
+        if self.explanation_method == 'kernelshap':
             self.X_val_windowed = windowing(X_val, self.lag)[0]
+            self.explainer = KernelShap(self.X_val_windowed, random_state=self.rng)
+            
+        if self.explanation_method == 'sax_dependent':
+            self.X_val_windowed = windowing(X_val, self.lag)[0]
+            self.explainer = SAXEmpiricalDependent(
+                self.X_val_windowed,
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                random_state=self.rng,
+            )
+
+        if self.explanation_method == 'sax_independent':
+            self.explainer = SAXIndependent(
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                random_state=self.rng,
+            )
 
     # TODO: No runtime reports
     def run(self, X_val, X_test, reuse_prediction=False):
@@ -492,37 +513,36 @@ class OS_PGSM:
             l = loss
 
         elif self.explanation_method == 'kernelshap':
-            explainer = KernelShap(model.predict, self.X_val_windowed, random_state=self.rng)
-            r = explainer.shap_values(x, y, verbose=False)
+            #explainer = KernelShap(self.X_val_windowed, random_state=self.rng)
+
+            r = self.explainer.shap_values(model.predict, x, y, verbose=False)
             l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
 
         elif self.explanation_method == 'sax_independent':
-            sax_explainer = SAXIndependent(
-                model.predict, 
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                random_state=self.rng,
-            )
-            shap_values = sax_explainer.shap_values(x, y, verbose=False)
+            # sax_explainer = SAXIndependent(
+            #     self.sax_alphabet_size, 
+            #     self.sax_max_coalition_samples,
+            #     normalize=self.sax_normalize,
+            #     random_state=self.rng,
+            # )
+            shap_values = self.explainer.shap_values(model.predict, x, y, verbose=False)
             l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
 
             # Convert shap values into saliency
             r = np.maximum(shap_values, 0)
 
         elif self.explanation_method == 'sax_dependent':
-            background = self.X_val_windowed
+            # background = self.X_val_windowed
 
-            sax_explainer = SAXEmpiricalDependent(
-                model.predict, 
-                background,
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                random_state=self.rng,
-            )
+            # sax_explainer = SAXEmpiricalDependent(
+            #     background,
+            #     self.sax_alphabet_size, 
+            #     self.sax_max_coalition_samples,
+            #     normalize=self.sax_normalize,
+            #     random_state=self.rng,
+            # )
             
-            shap_values = sax_explainer.shap_values(x, y, verbose=False)
+            shap_values = self.explainer.shap_values(model.predict, x, y, verbose=False)
             l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
 
             # Convert shap values into saliency

@@ -25,7 +25,7 @@ class ShapleyValues:
             self.wf = weight_function
 
     # TODO: Use Y correctly
-    def shap_values(self, X, Y, verbose=True):
+    def shap_values(self, f, X, Y, verbose=True):
         need_squeeze = False
         if len(X.shape) == 1:
             X = X.reshape(1, -1)
@@ -41,9 +41,9 @@ class ShapleyValues:
             # Determine which features can be used with S
             feature_indices = np.array([idx for idx in range(N) if idx not in S])
             w = self.wf.w(len(S), N)
-            vS = self.vfe.get_value(S, X, Y)
+            vS = self.vfe.get_value(f, S, X, Y)
             for f_idx in feature_indices:
-                vSi = self.vfe.get_value((*S, f_idx), X, Y)
+                vSi = self.vfe.get_value(f, (*S, f_idx), X, Y)
                 shaps[:, f_idx] += w * (vSi - vS)
 
         if need_squeeze:
@@ -73,20 +73,19 @@ class IndependentSampler:
 
 class ExpectedFunctionValue:
 
-    def __init__(self, f, background, density_sampler=None):
-        self.f = f
+    def __init__(self, background, density_sampler=None):
         self.background = background
         self.density_sampler = density_sampler
 
     # Calculate E[f(x) | X_S = x_S]
-    def get_value(self, S, X, Y):
+    def get_value(self, f, S, X, Y):
         S = np.array(S)
         values = np.zeros((len(X)))
         for idx, x in enumerate(X):
             samples = self.density_sampler.sample(self.background)
             if len(S) != 0:
                 samples[:, S] = x[S]
-            values[idx] = self.f(samples).mean()
+            values[idx] = f(samples).mean()
         
         return values
 
@@ -111,11 +110,11 @@ class SampleCoalitions:
 
 class KernelShap(ShapleyValues):
 
-    def __init__(self, f, background, random_state=None):
+    def __init__(self, background, random_state=None):
         self.rng = to_random_state(random_state)
 
         density_sampler = IndependentSampler(n_samples=None, random_state=self.rng)
-        value_function = ExpectedFunctionValue(f, background, density_sampler)
+        value_function = ExpectedFunctionValue(background, density_sampler)
         coalition_sampler = AllCoalitions()
 
         super().__init__(coalition_sampler=coalition_sampler, value_function_estimator=value_function)
@@ -137,8 +136,9 @@ class SAXDependentSampler:
     def get_samples(self, _x, S):
         samples = self.dist.get_samples(_x, S, replace=True, random_state=self.rng)
         if len(samples) == 0:
+            raise NotImplementedError()
             # For now, return mean prediction over background if no (partial) dependence found
-            return np.array(self.mean_y).reshape(1, -1)
+            #return np.array(self.mean_y).reshape(1, -1)
         return samples
 
 class SAXIndependentSampler:
@@ -148,7 +148,6 @@ class SAXIndependentSampler:
         self.tokens = tokens
 
     def get_samples(self, _x, S):
-        from itertools import product
         # SAX with blind, independent perturbations
         samples = []
         n_features = _x.shape[-1]
@@ -184,14 +183,13 @@ class SAXIndependentSampler:
 
 class SAXLossValueFunction:
 
-    def __init__(self, f, sampler=None, normalize=False, sax=None, random_state=None):
-        self.f = f
+    def __init__(self, sampler=None, normalize=False, sax=None, random_state=None):
         self.rng = to_random_state(random_state)
         self.sax = sax
         self.sampler = sampler
         self.normalize = normalize
 
-    def get_value(self, S, X, Y=None):
+    def get_value(self, f, S, X, Y=None):
         S = np.array(S)
         values = np.zeros((len(X)))
 
@@ -211,7 +209,7 @@ class SAXLossValueFunction:
         if self.normalize:
             _X_decoded = std * _X_decoded + mu
 
-        preds = self.f(_X_decoded)
+        preds = f(_X_decoded)
 
         _bs = np.zeros((len(Y)))
         prev_endpoint = 0
@@ -226,38 +224,19 @@ class SAXLossValueFunction:
                 prev_endpoint += length_segment
 
         _as = np.array(Y)
-
-        #values = mse(_as, _bs)
         values = (_as - _bs)**2
 
-        # for idx, _x in enumerate(_X):
-
-        #     samples = self.sampler.get_samples(_x, S)
-        #     if isinstance(samples, np.float32):
-        #         _b = np.array(samples).reshape(1, -1)
-        #     else:
-        #         samples = self.sax.decode(samples, random_state=self.rng)
-
-        #         if self.normalize:
-        #             samples = (std * samples) + mu
-
-        #         _b = np.array(self.f(samples).mean()).reshape(1, -1)
-
-        #     _a = np.array(Y[idx]).reshape(1, -1)
-        #     values[idx] = mse(_a, _b)
-        
         return values
 
 
 class SAXIndependent(ShapleyValues):
 
-    def __init__(self, f, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
+    def __init__(self, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
         rng = to_random_state(random_state)
         
         # Value function
         tokens = np.arange(n_alphabet)
         lvf = SAXLossValueFunction(
-            f, 
             random_state=rng,
             sax=SAX(tokens),
             sampler=SAXIndependentSampler(tokens, random_state=rng),
@@ -271,17 +250,16 @@ class SAXIndependent(ShapleyValues):
 
 class SAXEmpiricalDependent(ShapleyValues):
     
-    def __init__(self, f, background, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
+    def __init__(self, background, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
         rng = to_random_state(random_state)
         
         # Value function
         tokens = np.arange(n_alphabet)
         sax = SAX(tokens)
         lvf = SAXLossValueFunction(
-            f,
             sax=sax,
             random_state=rng,
-            sampler=SAXDependentSampler(background, mean_y=f(background).mean(), sax=sax, normalize=normalize, random_state=rng),
+            sampler=SAXDependentSampler(background, sax=sax, normalize=normalize, random_state=rng),
             normalize=normalize,
         )
 
