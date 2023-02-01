@@ -511,44 +511,13 @@ class OS_PGSM:
 
             r = np.concatenate(cams, axis=0)
             l = loss
-
-        elif self.explanation_method == 'kernelshap':
-            #explainer = KernelShap(self.X_val_windowed, random_state=self.rng)
-
+        else:
             r = self.explainer.shap_values(model.predict, x, y, verbose=False)
             l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
 
-        elif self.explanation_method == 'sax_independent':
-            # sax_explainer = SAXIndependent(
-            #     self.sax_alphabet_size, 
-            #     self.sax_max_coalition_samples,
-            #     normalize=self.sax_normalize,
-            #     random_state=self.rng,
-            # )
-            shap_values = self.explainer.shap_values(model.predict, x, y, verbose=False)
-            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
-
-            # Convert shap values into saliency
-            r = np.maximum(shap_values, 0)
-
-        elif self.explanation_method == 'sax_dependent':
-            # background = self.X_val_windowed
-
-            # sax_explainer = SAXEmpiricalDependent(
-            #     background,
-            #     self.sax_alphabet_size, 
-            #     self.sax_max_coalition_samples,
-            #     normalize=self.sax_normalize,
-            #     random_state=self.rng,
-            # )
-            
-            shap_values = self.explainer.shap_values(model.predict, x, y, verbose=False)
-            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
-
-            # Convert shap values into saliency
-            r = np.maximum(shap_values, 0)
-        else:
-            raise NotImplementedError()
+            if 'sax' in self.explanation_method:
+                # Convert shap values into saliency, because we explain the loss
+                r = np.maximum(shap_values, 0)
 
         return r, l
 
