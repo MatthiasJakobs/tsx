@@ -1,10 +1,21 @@
-#import torch
+import torch
 import numpy as np
-#from torch.utils.data import Dataset
+from torch.utils.data import TensorDataset
 
-# Helper functions
+# loading dataset
+def load_piecewise_sinusoidal(t0=96, n=1000, return_numpy=False, return_torch=False, random_state=0):
+    ps = piecewiese_sinusoidal(t0, n, return_numpy, return_torch, random_state)
 
+    if ps.return_numpy and ps.return_torch:
+        raise Exception("can't return numpy and torch, choose one of both")
+    if ps.return_numpy:
+        return ps.x, ps.fx, ps.masks
+    if ps.return_torch:
+        return TensorDataset(torch.from_numpy(ps.x[0,:]), torch.from_numpy(ps.fx[0,:]), torch.from_numpy(ps.masks))
+        #return torch.from_numpy(ps.x[0,:]), torch.from_numpy(ps.fx[0,:]), torch.from_numpy(ps.masks)
+    raise Exception("return type needed, set return_numpy oder return_torch on true depending which type is needed")
 
+# class for generatig dataset
 class piecewiese_sinusoidal():
 
     def __init__(self, t0=96, n=1000, return_numpy=False, return_torch=False, random_state=0):
@@ -15,7 +26,7 @@ class piecewiese_sinusoidal():
         self.rng = self.to_random_state(random_state)
 
         #timepoints
-        self.x = np.vstack(self.n*[np.expand_dims(np.arange(0,self.t0+24).astype(np.float),0)])
+        self.x = np.vstack(self.n*[np.expand_dims(np.arange(0,self.t0+24).astype(float),0)])
 
         #sinusoidal signal
         part1,part2,part3 = 60 * self.rng.rand(3,n)
@@ -31,23 +42,23 @@ class piecewiese_sinusoidal():
 
         self.masks = self._generate_square_subsequent_mask()
 
-    def to_random_state(rs):
+    # define randomstate
+    def to_random_state(self, rs):
         if not isinstance(rs, np.random.RandomState):
             rs = np.random.RandomState(rs)
         return rs
 
-    def load_piecewise_sinusoidal(self, index):
-        if self.return_numpy:
-            return self.x,self.fx,self.masks
-        if self.return_torch:
-            return 0 #TODO
-        #TODO Exception werfen
-
+    # generate mask
     def _generate_square_subsequent_mask(self):
         mask = np.zeros((self.t0+24,self.t0+24))
+        zeros_masked = mask
         for i in range(0,self.t0):
             mask[i,self.t0:] = 1 
         for i in range(self.t0,self.t0+24):
             mask[i,i+1:] = 1
-        mask = np.ma.filled(mask.astype(np.float), np.float(-np.inf)) #TODO funktioniert das so???
+
+        mask = mask.astype(float)
+        mask = np.ma.array(zeros_masked, mask=mask)
+        mask = mask.filled(fill_value=-np.inf)
+        
         return mask
