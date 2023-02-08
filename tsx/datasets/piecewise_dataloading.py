@@ -4,19 +4,20 @@ from torch.utils.data import TensorDataset
 
 # loading dataset
 def load_piecewise_sinusoidal(t0=96, n=1000, return_numpy=False, return_torch=False, random_state=0):
-    ps = piecewiese_sinusoidal(t0, n, return_numpy, return_torch, random_state)
+    ps = PiecewieseSinusoidal(t0, n, return_numpy, return_torch, random_state)
 
     if ps.return_numpy and ps.return_torch:
         raise Exception("can't return numpy and torch, choose one of both")
     if ps.return_numpy:
         return ps.x, ps.fx, ps.masks
     if ps.return_torch:
+        # TODO: Warum gibst du hier nur den ersten Datenpunkt immer zurück? Du kannst auch `torch.from_numpy` komplett auf ps.x / ps.fx aufrufen
         return TensorDataset(torch.from_numpy(ps.x[0,:]), torch.from_numpy(ps.fx[0,:]), torch.from_numpy(ps.masks))
         #return torch.from_numpy(ps.x[0,:]), torch.from_numpy(ps.fx[0,:]), torch.from_numpy(ps.masks)
     raise Exception("return type needed, set return_numpy oder return_torch on true depending which type is needed")
 
 # class for generatig dataset
-class piecewiese_sinusoidal():
+class PiecewieseSinusoidal(): # Comment: Ich hatte die Konvention Klassen immer in Camel-Case zu schreiben ;)
 
     def __init__(self, t0=96, n=1000, return_numpy=False, return_torch=False, random_state=0):
         self.t0 = t0
@@ -38,10 +39,12 @@ class piecewiese_sinusoidal():
             np.expand_dims(part4,1)*np.sin(np.pi*self.x[0,t0:t0+24]/6)+72
         ])
 
+        # TODO: Ist das richtig, dass hier nur ein wert aus der normalverteilung gesampelt werden soll?
         self.fx = self.fx + self.rng.normal()
 
         self.masks = self._generate_square_subsequent_mask()
 
+    # TODO: Ich hatte inzwischen auf dem master branch unter `utils.py` auch eine `to_random_state` implementiert. Kannst du den master hier bei dir rein mergen und dann mit `from tsx.utils import to_random_state` laden?
     # define randomstate
     def to_random_state(self, rs):
         if not isinstance(rs, np.random.RandomState):
