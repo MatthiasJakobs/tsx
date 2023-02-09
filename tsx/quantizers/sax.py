@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm, uniform
@@ -155,10 +156,9 @@ class SAX:
 
 
     def generate_perturbations(self, X, size, random_state=None):
-        encoding = list(self.encode(X))
+        random_state = to_random_state(random_state)
+        encoding = self.encode(X)
         unique_tokens, counts = np.unique(encoding, return_counts=True)
-
-        _token_indices = {token: 0 for token in unique_tokens}
 
         # Sample for each literal in encoding and save to _d
         _d = {}
@@ -166,13 +166,14 @@ class SAX:
             token_index = np.argmax(self.tokens == token)
             lb = self.boundaries[token_index]
             ub = self.boundaries[token_index+1]
-            _d[token] = self.fast_sample_from_range(count*size, lb, ub, random_state=random_state).reshape(count, size)
+            samples = self.fast_sample_from_range(count*size, lb, ub, random_state=random_state)
+            _d[token] = samples
 
         # Populate the samples array per encoding literal
-        samples = np.zeros((size, len(encoding)))
-        for idx in range(len(encoding)):
-            token = encoding[idx]
-            samples[:, idx] = _d[token][_token_indices[token]]
-            _token_indices[token] += 1
+        samples = np.tile(encoding, (size, 1))
+        samples = samples.astype(np.float32)
+
+        for literal in unique_tokens:
+            samples[np.where(samples == literal)] = _d[literal]
 
         return samples
