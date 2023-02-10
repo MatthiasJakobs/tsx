@@ -213,11 +213,12 @@ class SAXIndependentSampler:
 
 class SAXLossValueFunction:
 
-    def __init__(self, sampler=None, normalize=False, sax=None, random_state=None):
+    def __init__(self, sampler=None, normalize=False, sax=None, explain_loss=False, random_state=None):
         self.rng = to_random_state(random_state)
         self.sax = sax
         self.sampler = sampler
         self.normalize = normalize
+        self.explain_loss = explain_loss
 
     def get_value(self, f, S, X, Y=None):
         S = np.array(S)
@@ -253,15 +254,17 @@ class SAXLossValueFunction:
                 _bs[idx] = segment_preds.mean()
                 prev_endpoint += length_segment
 
-        _as = np.array(Y)
-        values = (_as - _bs)**2
+        if self.explain_loss:
+            _as = np.array(Y)
+            return (_as - _bs)**2
+        else:
+            return _bs
 
-        return values
 
 
 class SAXIndependent(ShapleyValues):
 
-    def __init__(self, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
+    def __init__(self, n_alphabet, max_coalition_samples, explain_loss=True, normalize=False, random_state=None):
         rng = to_random_state(random_state)
         
         # Value function
@@ -270,6 +273,7 @@ class SAXIndependent(ShapleyValues):
             random_state=rng,
             sax=SAX(tokens),
             sampler=SAXIndependentSampler(tokens, random_state=rng),
+            explain_loss=explain_loss,
             normalize=normalize,
         )
 
@@ -280,7 +284,7 @@ class SAXIndependent(ShapleyValues):
 
 class SAXEmpiricalDependent(ShapleyValues):
     
-    def __init__(self, background, n_alphabet, max_coalition_samples, normalize=False, random_state=None):
+    def __init__(self, background, n_alphabet, max_coalition_samples, explain_loss=True, normalize=False, random_state=None):
         rng = to_random_state(random_state)
         
         # Value function
@@ -290,6 +294,7 @@ class SAXEmpiricalDependent(ShapleyValues):
             sax=sax,
             random_state=rng,
             sampler=SAXDependentSampler(background, sax=sax, normalize=normalize, random_state=rng),
+            explain_loss=explain_loss,
             normalize=normalize,
         )
 

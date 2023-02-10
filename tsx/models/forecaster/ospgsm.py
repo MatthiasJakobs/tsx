@@ -388,14 +388,37 @@ class OS_PGSM:
                 self.sax_alphabet_size, 
                 self.sax_max_coalition_samples,
                 normalize=self.sax_normalize,
+                explain_loss=True,
                 random_state=self.rng,
             )
+
+        if self.explanation_method == 'sax_dependent_pred':
+            self.X_val_windowed = windowing(X_val, self.lag)[0]
+            self.explainer = SAXEmpiricalDependent(
+                self.X_val_windowed,
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                explain_loss=False,
+                random_state=self.rng,
+            )
+
 
         if self.explanation_method == 'sax_independent':
             self.explainer = SAXIndependent(
                 self.sax_alphabet_size, 
                 self.sax_max_coalition_samples,
                 normalize=self.sax_normalize,
+                explain_loss=True,
+                random_state=self.rng,
+            )
+
+        if self.explanation_method == 'sax_independent_pred':
+            self.explainer = SAXIndependent(
+                self.sax_alphabet_size, 
+                self.sax_max_coalition_samples,
+                normalize=self.sax_normalize,
+                explain_loss=False,
                 random_state=self.rng,
             )
 
