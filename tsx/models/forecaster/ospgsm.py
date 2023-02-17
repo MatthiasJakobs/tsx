@@ -7,7 +7,7 @@ from tslearn.clustering import TimeSeriesKMeans
 from tslearn.utils import to_time_series_dataset
 
 from tsx.attribution import simple_gradcam as gradcam
-from tsx.attribution import SAXEmpiricalDependent, SAXIndependent, KernelShap
+from tsx.attribution import SAXEmpiricalDependent, SAXIndependent, KernelShap, SAXDecodingPerturbations
 from tsx.metrics import mse
 from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
@@ -379,7 +379,7 @@ class OS_PGSM:
     def prepare_explainability_methods(self, X_val, X_test):
         if self.explanation_method == 'kernelshap':
             self.X_val_windowed = windowing(X_val, self.lag)[0]
-            self.explainer = KernelShap(self.X_val_windowed, random_state=self.rng)
+            self.explainer = KernelShap(self.X_val_windowed, max_coalition_samples=self.sax_max_coalition_samples, random_state=self.rng)
             
         if self.explanation_method == 'sax_dependent':
             self.X_val_windowed = windowing(X_val, self.lag)[0]
@@ -397,6 +397,14 @@ class OS_PGSM:
                 self.sax_max_coalition_samples,
                 normalize=self.sax_normalize,
                 random_state=self.rng,
+            )
+
+        if self.explanation_method == 'ks_sax_perturbations':
+            self.explainer = SAXDecodingPerturbations(
+                self.sax_alphabet_size, 
+                nr_perturbations=50, # TODO: Hyperparameter
+                max_coalition_samples=self.sax_max_coalition_samples,
+                random_state=self.rng
             )
 
     # TODO: No runtime reports
@@ -515,7 +523,7 @@ class OS_PGSM:
             r = self.explainer.shap_values(model.predict, x, y, verbose=False)
             l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
 
-            if 'sax' in self.explanation_method:
+            if self.explanation_method == 'sax_dependent' or self.explanation_method == 'sax_independent':
                 # Convert shap values into saliency, because we explain the loss
                 r = np.maximum(r, 0)
 

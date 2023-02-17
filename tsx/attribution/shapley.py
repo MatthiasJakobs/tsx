@@ -81,11 +81,17 @@ class ExpectedFunctionValue:
     def get_value(self, f, S, X, Y):
         S = np.array(S)
         values = np.zeros((len(X)))
-        for idx, x in enumerate(X):
-            samples = self.density_sampler.sample(self.background)
+        samples = self.density_sampler.sample(self.background)
+
+        n_samples = len(samples)
+        n_data = X.shape[0]
+
+        samples = np.tile(samples, (n_data, 1))
+
+        for i in range(n_data):
             if len(S) != 0:
-                samples[:, S] = x[S]
-            values[idx] = f(samples).mean()
+                samples[i*n_data:(i+1)*n_data, S] = X[i, S]
+        values = f(samples).reshape(n_data, n_samples).mean(axis=1)
         
         return values
 
@@ -110,18 +116,42 @@ class SampleCoalitions:
 
 class KernelShap(ShapleyValues):
 
-    def __init__(self, background, random_state=None):
+    def __init__(self, background, max_coalition_samples=50, random_state=None):
         self.rng = to_random_state(random_state)
 
         density_sampler = IndependentSampler(n_samples=None, random_state=self.rng)
         value_function = ExpectedFunctionValue(background, density_sampler)
-        coalition_sampler = AllCoalitions()
+        coalition_sampler = SampleCoalitions(max_coalition_samples, random_state=self.rng)
 
         super().__init__(coalition_sampler=coalition_sampler, value_function_estimator=value_function)
 
 ###
 # Discrete
 ###
+
+class SAXDecodingValueFunction:
+    def __init__(self, sax=None, nr_samples=50, random_state=None):
+        self.rng = to_random_state(random_state)
+        self.sax = sax
+        self.nr_samples = nr_samples
+
+    # Calculate E[f(x) | X_S = x_S]
+    # TODO: Only one call to f for speed
+    def get_value(self, f, S, X, Y):
+        S = np.array(S)
+        values = np.zeros((len(X)))
+        samples = self.sax.generate_perturbations(X, self.nr_samples, random_state=self.rng)
+
+        n_samples = len(samples)
+        n_data = X.shape[0]
+
+        for i in range(n_data):
+            if len(S) != 0:
+                samples[i*n_data:(i+1)*n_data, S] = X[i, S]
+        values = f(samples).reshape(n_data, self.nr_samples).mean(axis=1)
+
+        return values
+
 
 class SAXDependentSampler:
 
@@ -261,6 +291,25 @@ class SAXEmpiricalDependent(ShapleyValues):
             random_state=rng,
             sampler=SAXDependentSampler(background, sax=sax, normalize=normalize, random_state=rng),
             normalize=normalize,
+        )
+
+        # CoalitionSampler
+        cs = SampleCoalitions(max_coalition_samples, random_state=rng)
+
+        super().__init__(value_function_estimator=lvf, coalition_sampler=cs)
+
+class SAXDecodingPerturbations(ShapleyValues):
+    
+    def __init__(self, n_alphabet, max_coalition_samples, nr_perturbations, random_state=None):
+        rng = to_random_state(random_state)
+        
+        # Value function
+        tokens = np.arange(n_alphabet)
+        sax = SAX(tokens)
+        lvf = SAXDecodingValueFunction(
+            sax,
+            nr_samples=nr_perturbations,
+            random_state=rng,
         )
 
         # CoalitionSampler
