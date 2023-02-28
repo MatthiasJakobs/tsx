@@ -5,13 +5,13 @@ from tsx.quantizers import SAX, z_norm
 
 # Simple quantization baseline that forecasts based on sampling from training data
 # TODO: Very simple, this surely is a thing already?
-# TODO: Tested only with H=1
 class PropQuant:
 
-    def __init__(self, sax_alphabet_size, n_decode_samples=10, random_state=None):
+    def __init__(self, sax_alphabet_size, n_decode_samples=10, majority_vote=False, random_state=None):
         self.rng = to_random_state(random_state)
         self.sax = SAX(np.arange(sax_alphabet_size))
         self.n_decode_samples = n_decode_samples
+        self.majority_vote = majority_vote
 
     # X.shape=(n_datapoints, L(ag))
     # y.shape=(n_datapoints, H(orizon))
@@ -43,35 +43,28 @@ class PropQuant:
         self.dist_dict = dist_dict
 
     def predict_step(self, X):
-        #X_start = X[0]
+        # Encode and normalize
         X, mu, std = z_norm(X, return_mean_std=True)
-        Z = self.sax.encode(X)
+        _x = self.sax.encode(X).squeeze()
 
-        predictions = []
+        # String format for dictionary lookup
+        x_string = ','.join([str(a) for a in _x.tolist()])
 
-        for idx, _x in enumerate(Z):
-            x_string = ','.join([str(a) for a in _x.tolist()])
-            try:
-                # Sample from empirical distribution of training data
-                sample = self.rng.choice(self.dist_dict[x_string], size=1)[0]
-                y_e = np.array(sample.split(','), dtype=np.int8)
-            except KeyError:
-                # Return middle token of distribution
-                y_e = np.ones((self.H), dtype=np.int8) * self.sax.tokens[self.sax.n_alphabet // 2]
+        try:
+            # Try getting all samples from empirical distribution
+            samples = self.dist_dict[x_string]
+            y_e = np.vstack([np.array(s.split(','), dtype=np.int8) for s in samples])
 
-            # Decode and denormalize
-            if len(y_e.shape) <= 1:
-                y_e = y_e.reshape(1, -1)
-            y_hat = self.sax.decode(y_e, n_samples=self.n_decode_samples, random_state=self.rng).squeeze()
-            y_hat = std[idx] * y_hat + mu[idx]
+            if self.majority_vote:
+                from scipy.stats import mode
+                y_e = mode(y_e, axis=0, keepdims=False)[0]
+                y_e = np.expand_dims(y_e, 0)
+        except KeyError:
+            # Return middle token of distribution
+            y_e = np.ones((1, self.H), dtype=np.int8) * self.sax.tokens[self.sax.n_alphabet // 2]
 
-            predictions.append(y_hat.squeeze())
+        # Decode and denormalize
+        y_hat = self.sax.decode(y_e, n_samples=self.n_decode_samples, random_state=self.rng)
+        y_hat = std * y_hat + mu
 
-        #return np.concatenate([X_start, np.array(predictions)])
-        return np.array(predictions).squeeze()
-
-
-
-
-
-
+        return y_hat
