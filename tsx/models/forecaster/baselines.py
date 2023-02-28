@@ -24,6 +24,8 @@ class PropQuant:
         else:
             H = 1
 
+        self.H = H
+
         # Normalize and encode
         Z = np.hstack([X, y])
         Z = z_norm(Z)
@@ -41,7 +43,7 @@ class PropQuant:
         self.dist_dict = dist_dict
 
     def predict_step(self, X):
-        X_start = X[0]
+        #X_start = X[0]
         X, mu, std = z_norm(X, return_mean_std=True)
         Z = self.sax.encode(X)
 
@@ -55,17 +57,18 @@ class PropQuant:
                 y_e = np.array(sample.split(','), dtype=np.int8)
             except KeyError:
                 # Return middle token of distribution
-                y_e = self.sax.tokens[self.sax.n_alphabet // 2]
+                y_e = np.ones((self.H), dtype=np.int8) * self.sax.tokens[self.sax.n_alphabet // 2]
 
             # Decode and denormalize
             if len(y_e.shape) <= 1:
-                y_e = y_e.reshape(1, 1)
+                y_e = y_e.reshape(1, -1)
             y_hat = self.sax.decode(y_e, n_samples=self.n_decode_samples, random_state=self.rng).squeeze()
             y_hat = std[idx] * y_hat + mu[idx]
 
             predictions.append(y_hat.squeeze())
 
-        return np.concatenate([X_start, np.array(predictions)])
+        #return np.concatenate([X_start, np.array(predictions)])
+        return np.array(predictions).squeeze()
 
 
 
