@@ -5,7 +5,7 @@ from tsx.quantizers import SAX, z_norm
 
 # Simple quantization baseline that forecasts based on sampling from training data
 # TODO: Very simple, this surely is a thing already?
-class PropQuant:
+class ProbQuant:
 
     def __init__(self, sax_alphabet_size, n_decode_samples=10, majority_vote=False, random_state=None):
         self.rng = to_random_state(random_state)
