@@ -42,6 +42,15 @@ class ProbQuant:
 
         self.dist_dict = dist_dict
 
+    def predict(self, X):
+        preds = []
+        for x in X:
+            x = x.reshape(1, -1)
+            p = self.predict_step(x)
+            p = p.mean(axis=0)
+            preds.append(p)
+        return np.concatenate(preds)
+
     def predict_step(self, X):
         # Encode and normalize
         X, mu, std = z_norm(X, return_mean_std=True)
