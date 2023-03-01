@@ -242,7 +242,7 @@ class SAXLossValueFunction:
 
         preds = f(_X_decoded)
 
-        _bs = np.zeros((len(Y)))
+        _bs = np.zeros((len(_X)))
         prev_endpoint = 0
         for idx in range(len(_X)):
             segment = all_samples[idx]
