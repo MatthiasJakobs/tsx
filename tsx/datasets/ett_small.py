@@ -18,9 +18,13 @@ urls = {
 @dataclass
 class ETTSmall:
 
-    def __init__(self, name):
+    def __init__(self, name, univariate=False):
         self.name = name
         self.download_or_load()
+        self.univariate = univariate
+
+        if univariate:
+            self.X = self.X[:, -1]
 
     def download_or_load(self):
         dataset_file_path = join(dirname(__file__), "data", f"ett{self.name}.csv")
