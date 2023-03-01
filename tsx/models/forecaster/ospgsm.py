@@ -199,7 +199,8 @@ class OS_PGSM:
             except:
                 self.test_forecasters.append(best_model)
 
-            ensemble_prediction = self.ensemble_predict(x.unsqueeze(0).unsqueeze(0), subset=best_model)
+            # TODO: Each model needs to reshape according to their needs. This will only be (batch, features)
+            ensemble_prediction = self.ensemble_predict(x.unsqueeze(0), subset=best_model)
             predictions.append(ensemble_prediction)
 
         return np.concatenate([X_test[:self.lag].numpy(), np.array(predictions)])
@@ -544,7 +545,10 @@ class OS_PGSM:
             l = loss
         else:
             r = self.explainer.shap_values(model.predict, x, y, verbose=False)
-            l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
+            try:
+                l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
+            except ValueError:
+                l = ((model.predict(x).reshape(-1) - y.numpy())**2).sum()
 
             if self.explanation_method == 'sax_dependent' or self.explanation_method == 'sax_independent':
                 # Convert shap values into saliency, because we explain the loss

@@ -255,7 +255,8 @@ class SAXLossValueFunction:
                 prev_endpoint += length_segment
 
         if self.explain_loss:
-            _as = np.array(Y)
+            # TODO:
+            _as = np.array(Y).squeeze()
             return (_as - _bs)**2
         else:
             return _bs
