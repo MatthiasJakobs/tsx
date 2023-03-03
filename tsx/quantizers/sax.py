@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm, uniform
 from tsx.utils import to_random_state
 
-def plot_sax_encoding(x, sax):
+def plot_sax_encoding(x, sax, outpath='saxplot.png'):
     bin_eps = 0.5
     label_eps = 0.5
 
@@ -58,7 +58,7 @@ def plot_sax_encoding(x, sax):
     cax.plot(gaussian, support)
     cax.set_xticks([])
 
-    plt.savefig('saxplot.png')
+    plt.savefig(outpath)
 
 def z_norm(X, return_mean_std=False):
     if len(X.shape) == 1:
