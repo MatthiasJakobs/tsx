@@ -16,6 +16,9 @@ def windowing(x, lag, z=1, H=1, use_torch=False):
     X = []
     y = []
 
+    if isinstance(x, torch.Tensor):
+        x = x.numpy()
+
     if lag + H - z >= len(x):
         raise RuntimeError(f'cannot window sequence of length {len(x)} with L={lag}, H={H}, z={z}')
 
