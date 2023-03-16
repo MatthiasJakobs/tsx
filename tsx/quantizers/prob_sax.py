@@ -53,7 +53,7 @@ def lloyd_max(x, density, n_alphabet, epochs=100, verbose=False, init_codewords=
 
 class KernelSAX:
 
-    def __init__(self, alphabet, kernel='gaussian', boundary_estimator='lloyd-max', bandwidth=0.2):
+    def __init__(self, alphabet, kernel='gaussian', boundary_estimator='lloyd-max', bandwidth=0.2, random_state=None):
         assert boundary_estimator in ['lloyd-max']
         # TODO: epanechnikov is very slow and prints alot of warnings, but seems to work with lloyd-max
         assert kernel in ['gaussian']
@@ -64,9 +64,10 @@ class KernelSAX:
         self.n_alphabet = len(alphabet)
 
         self.is_fitted = False
+        self.random_state = random_state
 
     @staticmethod
-    def bandwith_cross_validation(X, alphabet_size=7, k=5, kernel='gaussian', boundary_estimator='lloyd-max', random_state=None):
+    def bandwith_cross_validation(X, alphabet_size=7, k=5, kernel='gaussian', boundary_estimator='lloyd-max', random_state=0):
         kf = KFold(n_splits=k)
 
         params = {}
@@ -88,7 +89,7 @@ class KernelSAX:
 
         return params
 
-    def fit(self, X):
+    def fit(self, X, epochs=200):
         # TODO: What about multiple samples? Estimate one KDE for each? 
         #assert len(X.shape) == 1
         # if len(X.shape) == 1:
@@ -100,7 +101,7 @@ class KernelSAX:
 
         # Find cutpoints
         density = lambda t: np.exp(self.kde.score_samples(np.array(t).reshape(-1, 1)))
-        self.boundaries, self.representatives = lloyd_max(X.squeeze(), density, self.n_alphabet, epochs=200, random_state=0)
+        self.boundaries, self.representatives = lloyd_max(X.squeeze(), density, self.n_alphabet, epochs=epochs, random_state=self.random_state)
 
         self.is_fitted = True
 
