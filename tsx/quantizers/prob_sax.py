@@ -100,7 +100,7 @@ class KernelSAX:
 
         # Find cutpoints
         density = lambda t: np.exp(self.kde.score_samples(np.array(t).reshape(-1, 1)))
-        self.boundaries, self.representatives = lloyd_max(X.squeeze(), density, self.n_alphabet, epochs=50, random_state=0)
+        self.boundaries, self.representatives = lloyd_max(X.squeeze(), density, self.n_alphabet, epochs=200, random_state=0)
 
         self.is_fitted = True
 
