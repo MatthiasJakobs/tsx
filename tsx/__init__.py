@@ -8,3 +8,4 @@ from .visualizations import *
 from .utils import *
 from .robustness import *
 from .quantizers import z_norm, SAX, EmpiricalQuantized
+from .model_selection import *
