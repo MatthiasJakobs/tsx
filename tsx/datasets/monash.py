@@ -12,6 +12,56 @@ import zipfile
 from shutil import rmtree as remove_dir
 import torch
 
+univariate_datasets = [
+    'm1_yearly',
+    'm1_quarterly',
+    'm1_monthly',
+    'm3_yearly',
+    'm3_quarterly',
+    'm3_monthly',
+    'm3_other',
+    'm4_yearly',
+    'm4_quarterly',
+    'm4_monthly',
+    'm4_weekly',
+    'm4_daily',
+    'm4_hourly',
+    'tourism_yearly',
+    'tourism_quarterly',
+    'tourism_monthly',
+    'cif_2016',
+    'london_smart_meters_nomissing',
+    'australian_electricity_demand',
+    'wind_farms_nomissing',
+    'dominick',
+    'bitcoin_nomissing',
+    'pedestrian_counts',
+    'vehicle_trips_nomissing',
+    'kdd_cup_nomissing',
+    'weather',
+    'sunspot_nomissing',
+    'saugene_river_flow',
+    'us_births',
+    'solar_power',
+    'wind_power',
+]
+
+multivariate_datasets = [
+    'nn5_daily_nomissing',
+    'nn5_weekly',
+    'web_traffic_daily_nomissing',
+    'web_traffic_weekly',
+    'solar_10_minutes',
+    'electricity_hourly',
+    'electricity_weekly',
+    'car_parts_nomissing',
+    'san_fracisco_traffic_hourly',
+    'san_fracisco_traffic_weekly',
+    'ride_share_nomissing',
+    'hospital',
+    'covid_deaths',
+    'temperature_rain_nomissing',
+]
 
 def possible_datasets() -> List[str]:
     """
