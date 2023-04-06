@@ -14,7 +14,7 @@ class BestCaseSelector:
         preds = []
         for _x, _y in zip(X, y):
             _x = _x.reshape(1, -1)
-            model_losses = [(m.predict(_x).squeeze() - _y)**2 for m in self.models]
+            model_losses = [((m.predict(_x).squeeze() - _y)**2).sum() for m in self.models]
             best_forecaster = np.argmin(model_losses)
             self.test_predictors.append(best_forecaster)
             preds.append(self.models[best_forecaster].predict(_x).squeeze())
@@ -34,7 +34,7 @@ class WorstCaseSelector:
         preds = []
         for _x, _y in zip(X, y):
             _x = _x.reshape(1, -1)
-            model_losses = [(m.predict(_x).squeeze() - _y)**2 for m in self.models]
+            model_losses = [((m.predict(_x).squeeze() - _y)**2).sum() for m in self.models]
             worst_forecaster = np.argmax(model_losses)
             self.test_predictors.append(worst_forecaster)
             preds.append(self.models[worst_forecaster].predict(_x).squeeze())
