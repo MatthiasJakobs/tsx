@@ -59,6 +59,7 @@ multivariate_datasets = [
     'san_fracisco_traffic_weekly',
     'ride_share_nomissing',
     'hospital',
+    'fred_md',
     'covid_deaths',
     'temperature_rain_nomissing',
 ]
@@ -97,6 +98,9 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
             for i, p_array in enumerate(array):
                 array[i] = p_array.to_numpy()
             array = np.stack(array).astype("float64")
+            if dataset in multivariate_datasets:
+                array = array.T
+            array = array.squeeze()
             if return_numpy:
                 return array
             else:
