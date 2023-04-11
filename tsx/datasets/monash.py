@@ -72,7 +72,7 @@ def possible_datasets() -> List[str]:
     return list(get_links_dict().keys())
 
 
-def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False) -> pd.DataFrame | np.ndarray | torch.Tensor:
+def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False, return_horizon: bool = False) -> pd.DataFrame | np.ndarray | torch.Tensor:
     """
     loads datasets from Monash Time Series Forecasting Repository.
     :param dataset: name of the dataset to be downloaded. Consists of the name of the dataset as well as the "version"
@@ -105,6 +105,8 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
                 return array
             else:
                 return torch.from_numpy(array)
+    if return_horizon:
+        return frame, forecast_horizon
     return frame
 
 
