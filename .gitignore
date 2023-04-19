@@ -2,3 +2,5 @@ __pycache__
 tsx/datasets/data
 .vscode
 .pytest_cache
+build
+*.egg-info
