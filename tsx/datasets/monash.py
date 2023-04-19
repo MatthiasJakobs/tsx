@@ -30,9 +30,9 @@ univariate_datasets = [
     'tourism_quarterly',
     'tourism_monthly',
     'cif_2016',
-    'london_smart_meters_nomissing',
+    #'london_smart_meters_nomissing',
     'australian_electricity_demand',
-    'wind_farms_nomissing',
+    #'wind_farms_nomissing',
     'dominick',
     'bitcoin_nomissing',
     'pedestrian_counts',
@@ -42,8 +42,8 @@ univariate_datasets = [
     'sunspot_nomissing',
     'saugene_river_flow',
     'us_births',
-    'solar_power',
-    'wind_power',
+    #'solar_power',
+    #'wind_power',
 ]
 
 multivariate_datasets = [
