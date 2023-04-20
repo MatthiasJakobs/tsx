@@ -1,9 +1,7 @@
 # Time-series explainability library (TSX)
-TODO
+Collection of methods used to explain different aspects and application settings for time series data.
 
-## Packages needed
-TODO: incomplete
-
-First: Install PyTorch
-
-`pip install sklearn tqdm matplotlib numpy fastdtw`
+## Install
+```
+pip install -r requirements.txt
+```
