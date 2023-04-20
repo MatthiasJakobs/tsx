@@ -1,0 +1,10 @@
+torch==1.12.1
+pandas==1.5.0
+matplotlib==3.6.1
+tqdm==4.64.1
+scipy===1.9.2
+git+https://github.com/MatthiasJakobs/shap
+seedpy==0.3
+tslearn==0.5.2
+fastdtw==0.3.4
+h5py==3.8.0
