@@ -10,7 +10,7 @@ def normalize(X):
     if isinstance(X[0], type(torch.zeros(1))):
         return ((X.T - torch.mean(X, axis=-1)) / torch.std(X, axis=-1)).T
 
-def windowing(x, lag, z=1, H=1, use_torch=False):
+def windowing(x, L, z=1, H=1, use_torch=False):
     univariate = len(x.shape) == 1
 
     if univariate:
@@ -25,12 +25,12 @@ def windowing(x, lag, z=1, H=1, use_torch=False):
     if isinstance(x, torch.Tensor):
         x = x.numpy()
 
-    if lag + H - z >= len(x):
-        raise RuntimeError(f'cannot window sequence of length {len(x)} with L={lag}, H={H}, z={z}')
+    if L + H - z >= len(x):
+        raise RuntimeError(f'cannot window sequence of length {len(x)} with L={L}, H={H}, z={z}')
 
-    for i in range(0, len(x)-H-lag+1, z):
-        X.append(x[i:(i+lag)].reshape(1, -1, n_features))
-        y.append(x[(i+lag):(i+lag+H)])
+    for i in range(0, len(x)-H-L+1, z):
+        X.append(x[i:(i+L)].reshape(1, -1, n_features))
+        y.append(x[(i+L):(i+L+H)])
 
     X = np.concatenate(X, axis=0)
     y = np.array(y)
