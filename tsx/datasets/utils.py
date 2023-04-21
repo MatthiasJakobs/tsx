@@ -11,7 +11,13 @@ def normalize(X):
         return ((X.T - torch.mean(X, axis=-1)) / torch.std(X, axis=-1)).T
 
 def windowing(x, lag, z=1, H=1, use_torch=False):
-    assert len(x.shape) == 1
+    univariate = len(x.shape) == 1
+
+    if univariate:
+        x = x.reshape(-1, 1)
+
+    assert len(x.shape) == 2
+    n_features = x.shape[-1]
 
     X = []
     y = []
@@ -23,11 +29,14 @@ def windowing(x, lag, z=1, H=1, use_torch=False):
         raise RuntimeError(f'cannot window sequence of length {len(x)} with L={lag}, H={H}, z={z}')
 
     for i in range(0, len(x)-H-lag+1, z):
-        X.append(x[i:(i+lag)].reshape(1, -1))
+        X.append(x[i:(i+lag)].reshape(1, -1, n_features))
         y.append(x[(i+lag):(i+lag+H)])
 
     X = np.concatenate(X, axis=0)
     y = np.array(y)
+    if X.shape[-1] == 1 and y.shape[-1] == 1:
+        X = X.squeeze()
+        y = y.squeeze()
 
     if use_torch:
         return torch.from_numpy(X).float(), torch.from_numpy(y)
