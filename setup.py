@@ -25,5 +25,6 @@ setuptools.setup(name='tsx',
         'tslearn>=0.5.2',
         'fastdtw>=0.3.4',
         'h5py>=3.8.0',
+        'skorch>=0.12.1'
       ],
       python_requires='>=3.5',)

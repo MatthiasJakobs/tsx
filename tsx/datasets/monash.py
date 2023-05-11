@@ -101,10 +101,14 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
             if dataset in multivariate_datasets:
                 array = array.T
             array = array.squeeze()
-            if return_numpy:
-                return array
+            if return_pytorch:
+                array = torch.from_numpy(array)
+
+            if return_horizon:
+                return array, forecast_horizon
             else:
-                return torch.from_numpy(array)
+                return array
+
     if return_horizon:
         return frame, forecast_horizon
     return frame
