@@ -92,6 +92,30 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
 
     frame, frequency, forecast_horizon, contain_missing_values, contain_equal_length = convert_tsf_to_dataframe(os.path.join(path, files[0]))
     series_value = frame["series_value"]
+
+    # Set forecast horizon  manually, based on https://arxiv.org/pdf/2202.08485.pdf
+    print(dataset, frame.columns)
+    if dataset == 'australian_electricity_demand':
+        forecast_horizon = 48
+    elif dataset == 'dominick':
+        forecast_horizon = 8
+    elif dataset == 'bitcoin_nomissing' or dataset == 'bitcoin_missing':
+        forecast_horizon = 30
+    elif dataset == 'pedestrian_counts':
+        forecast_horizon = 48
+    elif dataset == 'vehicle_trips_missing' or dataset == 'vehicle_trips_nomissing':
+        forecast_horizon = 30
+    elif dataset == 'kdd_cup_missing' or dataset == 'kdd_cup_nomissing':
+        forecast_horizon = 48
+    elif dataset == 'weather':
+        forecast_horizon = 30
+
+    if forecast_horizon is None:
+        if 'horizon' in frame.columns:
+            forecast_horizon = frame['horizon'].tolist()
+    else:
+        forecast_horizon = [forecast_horizon for _ in range(len(series_value))]
+
     if return_numpy or return_pytorch:
         if contain_equal_length:
             array = series_value.to_numpy()
