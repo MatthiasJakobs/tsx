@@ -2,6 +2,7 @@ import numpy as np
 
 from tsx.utils import to_random_state
 from tsx.quantizers import SAX, z_norm
+from sklearn.metrics import r2_score
 
 # Simple quantization baseline that forecasts based on sampling from training data
 # TODO: Very simple, this surely is a thing already?
@@ -50,6 +51,10 @@ class ProbQuant:
             p = p.mean(axis=0)
             preds.append(p)
         return np.concatenate(preds)
+
+    def score(self, X, y):
+        preds = self.predict(X)
+        return r2_score(y, preds)
 
     def predict_step(self, X):
         # Encode and normalize

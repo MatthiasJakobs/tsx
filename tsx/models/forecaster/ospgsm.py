@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-import shap
 
 from seedpy import fixedseed
 from tslearn.clustering import TimeSeriesKMeans

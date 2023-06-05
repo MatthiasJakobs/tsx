@@ -6,6 +6,21 @@ import matplotlib.pyplot as plt
 from tqdm import trange
 from itertools import combinations
 
+def to_float32(X):
+    if isinstance(X, np.ndarray):
+        return X.astype(np.float32)
+    if isinstance(X, torch.Tensor):
+        return X.float()
+
+    raise RuntimeError(f'Cannot cast type {type(X)} to float32')
+
+def to_int64(X):
+    if isinstance(X, np.ndarray):
+        return X.astype(np.int64)
+    if isinstance(X, torch.Tensor):
+        return X.long()
+
+    raise RuntimeError(f'Cannot cast type {type(X)} to int64')
 
 class NSGA2:
     # based on implementation from https://github.com/haris989/NSGA-II/blob/master/NSGA%20II.py

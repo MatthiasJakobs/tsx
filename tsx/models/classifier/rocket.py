@@ -6,14 +6,14 @@ import numpy as np
 from os.path import join
 
 from sklearn.linear_model import RidgeClassifierCV
-from tsx.models.classifier import BasePyTorchClassifier
+from sklearn.metrics import f1_score
+from tsx.models import NeuralNetClassifier
 
-class ROCKET(BasePyTorchClassifier):
+class ROCKET:
 
     # TODO: Only for equal-length datasets?
     # TODO: Pytorch version appears to be very unstable. Needs more work
-    def __init__(self, input_length=10, k=10_000, ridge=True, ppv_only=False, use_sigmoid=False, **kwargs):
-        super(ROCKET, self).__init__(**kwargs)
+    def __init__(self, input_length=10, k=10_000, n_classes=None, ridge=True, ppv_only=False, use_sigmoid=False):
         self.k = k
         self.ridge = ridge
         self.input_length = input_length
@@ -21,13 +21,17 @@ class ROCKET(BasePyTorchClassifier):
         self.use_sigmoid = False
 
         self.kernels = []
-        self.inform("Start building kernels")
         self.build_kernels()
-        self.inform("Finished building kernels")
 
         if self.ridge:
-            self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10), normalize = True)
+            #self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10), normalize = True)
+            self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10))
         else:
+            if n_classes is None:
+                raise RuntimeError('You need to provide `n_classes` argument if ridge=False')
+
+            self.n_classes = n_classes
+
             if ppv_only:
                 self.logits = nn.Linear(self.k, self.n_classes)
             else:
@@ -111,24 +115,22 @@ class ROCKET(BasePyTorchClassifier):
 
     def predict(self, x):
         x = self.transform(x)
-        if self.ridge:
-            return self.classifier.predict(x)
-        else:
-            return self.classifier(x)
+        return self.classifier.predict(x)
 
-    def fit(self, X_train, y_train, X_test=None, y_test=None):
-        self.inform("Start fitting")
-        if self.ridge:
-            # Custom `fit` for Ridge regression
-            X_train, y_train, X_test, y_test = self.preprocessing(X_train, y_train, X_test=X_test, y_test=y_test)
-            self.classifier.fit(X_train, y_train)
-            if X_test is not None and y_test is not None:
-                print("ROCKET: Test set accuracy", self.classifier.score(X_test, y_test))
-            self.fitted = True
-        else:
-            super().fit(X_train, y_train, X_test=X_test, y_test=y_test)
+    def score(self, X, y):
+        preds = self.predict(X)
+        return f1_score(y, preds)
 
-        self.inform("Finished fitting")
+    def fit(self, X_train, y_train, X_test=None, y_test=None, **kwargs):
+        # Custom `fit` for Ridge regression
+        if not self.ridge:
+            self.classifier = NeuralNetClassifier(self.classifier, **kwargs)
+
+        X_train, y_train, X_test, y_test = self.preprocessing(X_train, y_train, X_test=X_test, y_test=y_test)
+        self.classifier.fit(X_train, y_train)
+        if X_test is not None and y_test is not None:
+            print("ROCKET: Test set accuracy", self.classifier.score(X_test, y_test))
+        self.fitted = True
 
     def apply_kernels(self, X):
         features_ppv = []
@@ -158,13 +160,11 @@ class ROCKET(BasePyTorchClassifier):
         return torch.mean((x > 0).float(), dim=-1)
 
     def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
-        self.inform("Start preprocessing")
         X_train = self.apply_kernels(X_train)
 
         if X_test is not None:
             X_test = self.apply_kernels(X_test)
 
-        self.inform("Finished preprocessing")
         return X_train, y_train, X_test, y_test
 
     def forward(self, x):
