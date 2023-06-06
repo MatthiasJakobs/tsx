@@ -94,6 +94,7 @@ class ROCKET:
             X = torch.from_numpy(X).float()
 
         multiplier = 1 if self.ppv_only else 2
+        # TODO: Is this really necessary?
         if X.shape[-1] == self.k * multiplier:
             return X
 
@@ -123,6 +124,11 @@ class ROCKET:
 
     def fit(self, X_train, y_train, X_test=None, y_test=None, **kwargs):
         # Custom `fit` for Ridge regression
+
+        if isinstance(X_train, np.ndarray):
+            X_train = torch.from_numpy(X_train)
+            y_train = torch.from_numpy(y_train)
+
         if not self.ridge:
             self.classifier = NeuralNetClassifier(self.classifier, **kwargs)
 
