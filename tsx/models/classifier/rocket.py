@@ -9,72 +9,40 @@ from sklearn.linear_model import RidgeClassifierCV
 from sklearn.metrics import f1_score
 from tsx.models import NeuralNetClassifier
 
-class ROCKET:
+#self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10))
 
-    # TODO: Only for equal-length datasets?
-    # TODO: Pytorch version appears to be very unstable. Needs more work
-    def __init__(self, input_length=10, k=10_000, n_classes=None, ridge=True, ppv_only=False, use_sigmoid=False):
+class ROCKETTransform:
+
+    def __init__(self, L, k=1_000, n_channels=1, ppv_only=False, use_sigmoid=False):
+        self.L = L
         self.k = k
-        self.ridge = ridge
-        self.input_length = input_length
+        self.n_channels = n_channels
         self.ppv_only = ppv_only
-        self.use_sigmoid = False
-
-        self.kernels = []
-        self.build_kernels()
-
-        if self.ridge:
-            #self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10), normalize = True)
-            self.classifier = RidgeClassifierCV(alphas = np.logspace(-3, 3, 10))
-        else:
-            if n_classes is None:
-                raise RuntimeError('You need to provide `n_classes` argument if ridge=False')
-
-            self.n_classes = n_classes
-
-            if ppv_only:
-                self.logits = nn.Linear(self.k, self.n_classes)
-            else:
-                self.logits = nn.Linear(2*self.k, self.n_classes)
-
-            self.classifier = nn.Sequential(self.logits, nn.Softmax(dim=-1))
-
-    def save(self):
-        torch.save(self.kernels, 'rocket.kernels')
-        if self.ridge:
-            pickle.dump(self.classifier, open('rocket.classifier', 'wb'))
-        else:
-            torch.save(self.classifier.state_dict(), 'rocket.classifier')
-
-    def load(self, path):
-        self.kernels = torch.load(join(path, 'rocket.kernels'))
-        if self.ridge:
-            with open(join(path, 'rocket.classifier'), 'rb') as fp:
-                self.classifier = pickle.load(fp)
-        else:
-            self.classifier.load_state_dict(torch.load(join(path, 'rocket.classifier')))
+        self.use_sigmoid = use_sigmoid
 
     def build_kernels(self):
+        self.kernels = []
         grouped_kernels = np.zeros((self.k, 3), dtype=int)
         kernel_weights = []
         kernel_biases = []
         for i in range(self.k):
+
+            # Weights
             kernel_length = [7, 9, 11][np.random.randint(0, 3)]
-
-            weights = torch.normal(torch.zeros(1,1,kernel_length), 1)
+            weights = torch.normal(torch.zeros(1,self.n_channels,kernel_length), 1)
             weights = weights - torch.mean(weights)
-
             bias = torch.rand(1)
             bias = (-1 - 1) * bias + 1
-
-            # Parameter for dilation
-            A = np.log2((self.input_length-1) / (float(kernel_length)-1))
-            dilation = torch.floor(2**(torch.rand(1)*A)).long().item()
-            padding = 0 if torch.rand(1)>0.5 else 1
-
             grouped_kernels[i][0] = kernel_length
-            grouped_kernels[i][1] = padding
+
+            # Dilation
+            A = np.log2((self.L-1) / (float(kernel_length)-1))
+            dilation = torch.floor(2**(torch.rand(1)*A)).long().item()
             grouped_kernels[i][2] = dilation
+
+            # Padding
+            padding = 0 if torch.rand(1)>0.5 else 1
+            grouped_kernels[i][1] = padding
 
             kernel_weights.append(weights)
             kernel_biases.append(bias)
@@ -82,63 +50,26 @@ class ROCKET:
         unique_configs = np.unique(grouped_kernels, axis=0)
         for u in unique_configs:
             indices = np.prod(np.equal(grouped_kernels, u), axis=1)
-            kernel = nn.Conv1d(1, np.sum(indices), kernel_size=u[0], stride=1, padding=u[1], dilation=u[2], bias=True)
+            kernel = nn.Conv1d(self.n_channels, np.sum(indices), kernel_size=u[0], stride=1, padding=u[1], dilation=u[2], bias=True)
             indices = indices.nonzero()[0]
             kernel.weight = nn.Parameter(torch.cat([kernel_weights[i] for i in indices], axis=0), requires_grad=False)
             kernel.bias = nn.Parameter(torch.cat([kernel_biases[i] for i in indices], axis=0), requires_grad=False)
             kernel.require_grad = False
             self.kernels.append(kernel)
 
+    def _ppv(self, x):
+        # use sigmoid as a soft approximation for ">" activation
+        if self.use_sigmoid:
+            return torch.mean(torch.sigmoid(x), dim=-1)
+        return torch.mean((x > 0).float(), dim=-1)
+
     def transform(self, X):
         if isinstance(X, type(np.zeros(1))):
             X = torch.from_numpy(X).float()
 
-        multiplier = 1 if self.ppv_only else 2
-        # TODO: Is this really necessary?
-        if X.shape[-1] == self.k * multiplier:
-            return X
+        return self._apply_kernels(X)
 
-        return self.apply_kernels(X)
-
-    def proba(self, x):
-        x = self.transform(x)
-        if self.ridge:
-            return self.classifier.decision_function(x)
-        else:
-            return self.logits(x)
-
-    def score(self, x, y):
-        x = self.transform(x)
-        if self.ridge:
-            return self.classifier.score(x, y)
-        else:
-            return self.classifier(x)
-
-    def predict(self, x):
-        x = self.transform(x)
-        return self.classifier.predict(x)
-
-    def score(self, X, y):
-        preds = self.predict(X)
-        return f1_score(y, preds)
-
-    def fit(self, X_train, y_train, X_test=None, y_test=None, **kwargs):
-        # Custom `fit` for Ridge regression
-
-        if isinstance(X_train, np.ndarray):
-            X_train = torch.from_numpy(X_train)
-            y_train = torch.from_numpy(y_train)
-
-        if not self.ridge:
-            self.classifier = NeuralNetClassifier(self.classifier, **kwargs)
-
-        X_train, y_train, X_test, y_test = self.preprocessing(X_train, y_train, X_test=X_test, y_test=y_test)
-        self.classifier.fit(X_train, y_train)
-        if X_test is not None and y_test is not None:
-            print("ROCKET: Test set accuracy", self.classifier.score(X_test, y_test))
-        self.fitted = True
-
-    def apply_kernels(self, X):
+    def _apply_kernels(self, X):
         features_ppv = []
         features_max = []
         with torch.no_grad():
@@ -148,7 +79,7 @@ class ROCKET:
 
                 transformed_data = k(X)
 
-                features_ppv.append(self._ppv(transformed_data, dim=-1))
+                features_ppv.append(self._ppv(transformed_data))
                 if not self.ppv_only:
                     features_max.append(torch.max(transformed_data, dim=-1)[0])
 
@@ -158,23 +89,4 @@ class ROCKET:
             else:
                 features_max = torch.cat(features_max, -1)
                 return torch.cat((features_ppv, features_max), -1)
-
-    def _ppv(self, x, dim=-1):
-        # use sigmoid as a soft approximation for ">" activation
-        if self.use_sigmoid:
-            return torch.mean(torch.sigmoid(x), dim=-1)
-        return torch.mean((x > 0).float(), dim=-1)
-
-    def preprocessing(self, X_train, y_train, X_test=None, y_test=None):
-        X_train = self.apply_kernels(X_train)
-
-        if X_test is not None:
-            X_test = self.apply_kernels(X_test)
-
-        return X_train, y_train, X_test, y_test
-
-    def forward(self, x):
-        if self.ridge:
-            raise ValueError("'forward' should not be called if not a neural network model!")
-        return self.classifier(x)
     
