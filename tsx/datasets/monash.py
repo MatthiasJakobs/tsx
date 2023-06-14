@@ -94,7 +94,6 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
     series_value = frame["series_value"]
 
     # Set forecast horizon  manually, based on https://arxiv.org/pdf/2202.08485.pdf
-    print(dataset, frame.columns)
     if dataset == 'australian_electricity_demand':
         forecast_horizon = 48
     elif dataset == 'dominick':
