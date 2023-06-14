@@ -10,6 +10,15 @@ def normalize(X):
     if isinstance(X[0], type(torch.zeros(1))):
         return ((X.T - torch.mean(X, axis=-1)) / torch.std(X, axis=-1)).T
 
+def split_horizon(x, H, L=None):
+    assert len(x.shape) == 1
+    assert len(x) > H
+
+    if L is None:
+        L = 0
+
+    return x[:-(L+H)], x[-(L+H):]
+
 def windowing(x, L, z=1, H=1, use_torch=False):
     univariate = len(x.shape) == 1
 
