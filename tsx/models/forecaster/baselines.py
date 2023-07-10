@@ -4,6 +4,31 @@ from tsx.utils import to_random_state
 from tsx.quantizers import SAX, z_norm
 from sklearn.metrics import r2_score
 
+class LastValueRepeat:
+
+    def fit(self, X, y):
+        return
+
+    # Assumes last dim to be time
+    def predict(self, X, steps=1):
+        if len(X.shape) == 1:
+            last_value = X[-1].reshape(1, 1)
+        else:
+            last_value = X[:, -1:]
+
+        return np.repeat(last_value, steps, axis=-1)
+
+class MeanValueRepeat:
+
+    def fit(self, X, y):
+        return
+
+    # Assumes last dim to be time
+    def predict(self, X, steps=1):
+        mean_value = X.mean().reshape(1, 1)
+        return np.repeat(mean_value, steps, axis=-1)
+        
+
 # Simple quantization baseline that forecasts based on sampling from training data
 # TODO: Very simple, this surely is a thing already?
 class ProbQuant:
