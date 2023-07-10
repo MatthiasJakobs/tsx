@@ -1,3 +1,4 @@
+import pickle
 import torch
 import pickle
 import torch.nn as nn
@@ -19,6 +20,7 @@ class ROCKETTransform:
         self.n_channels = n_channels
         self.ppv_only = ppv_only
         self.use_sigmoid = use_sigmoid
+        self.fitted = False
 
     def build_kernels(self):
         self.kernels = []
@@ -57,6 +59,8 @@ class ROCKETTransform:
             kernel.require_grad = False
             self.kernels.append(kernel)
 
+        self.fitted = True
+
     def _ppv(self, x):
         # use sigmoid as a soft approximation for ">" activation
         if self.use_sigmoid:
@@ -89,4 +93,16 @@ class ROCKETTransform:
             else:
                 features_max = torch.cat(features_max, -1)
                 return torch.cat((features_ppv, features_max), -1)
+
+    def save_kernels(self, path):
+        if not self.fitted:
+            raise RuntimeError('No kernels present. Call build_kernels() or load_kernels() first!')
+        with open(path, 'wb') as _f:
+            pickle.dump(self.kernels, _f)
+
+    def load_kernels(self, path):
+        with open(path, 'rb') as _f:
+            self.kernels = pickle.load(_f)
+
+        self.fitted = True
     
