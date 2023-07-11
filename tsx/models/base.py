@@ -21,7 +21,7 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
 
     """
     def __init__(self, module, random_state=None, max_epochs=10, device=None, lr=2e-3, batch_size=32, verbose=False, callbacks=None, **kwargs):
-        self.random_state = to_random_state(random_state)
+        self.random_state = random_state
         self.verbose = verbose
 
         self.device = device
