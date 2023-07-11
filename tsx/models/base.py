@@ -41,12 +41,12 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
             **kwargs
         )
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         if self.verbose:
             print('Run training on', self.device)
-        # with fixedseed([torch, np], seed=self.random_state):
-        #     super().fit(X, y)
-        super().fit(X, y)
+        with fixedseed([torch, np], seed=self.random_state):
+            super().fit(X, y)
+        super().fit(X, y=y)
 
 class NeuralNetClassifier(skorch.NeuralNetClassifier):
     """ Classification wrapper for scikit-learn-like PyTorch training
@@ -85,8 +85,8 @@ class NeuralNetClassifier(skorch.NeuralNetClassifier):
             **kwargs
         )
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         if self.verbose:
             print('Run training on', self.device)
         with fixedseed([torch, np], seed=self.random_state):
-            super().fit(X, y)
+            super().fit(X, y=y)
