@@ -33,41 +33,60 @@ class DLinear(nn.Module):
     """
     Decomposition-Linear
     """
-    def __init__(self, L, H, n_features, kernel_size=25):
+    def __init__(self, L, H, n_features, kernel_size=25, individual=False, normalize=False):
         super(DLinear, self).__init__()
         self.L = L
         self.H = H
 
         self.decompsition = SeriesDecomposition(kernel_size)
         self.channels = n_features
+        self.individual = individual
+        self.normalize = normalize
 
-        self.seasonal = nn.ModuleList()
-        self.trend = nn.ModuleList()
-        
-        for _ in range(self.channels):
-            self.seasonal.append(nn.Linear(self.L, self.H))
-            self.trend.append(nn.Linear(self.L, self.H))
+        if self.individual:
+            self.seasonal = nn.ModuleList()
+            self.trend = nn.ModuleList()
+            
+            for _ in range(self.channels):
+                self.seasonal.append(nn.Linear(self.L, self.H))
+                self.trend.append(nn.Linear(self.L, self.H))
+        else:
+            self.seasonal = nn.Linear(self.L, self.H)
+            self.trend = nn.Linear(self.L, self.H)
+
 
     def forward(self, x):
         # x: [Batch, Input length, Channel]
+        if self.normalize:
+            seq_last = x[:,-1:,:].detach()
+            x = x - seq_last            
+
         seasonal_init, trend_init = self.decompsition(x)
         seasonal_init, trend_init = seasonal_init.permute(0,2,1), trend_init.permute(0,2,1)
 
-        seasonal_output = torch.zeros([seasonal_init.size(0),seasonal_init.size(1),self.H],dtype=seasonal_init.dtype).to(seasonal_init.device)
-        trend_output = torch.zeros([trend_init.size(0),trend_init.size(1),self.H],dtype=trend_init.dtype).to(trend_init.device)
+        if self.individual:
+            seasonal_output = torch.zeros([seasonal_init.size(0),seasonal_init.size(1),self.H],dtype=seasonal_init.dtype).to(seasonal_init.device)
+            trend_output = torch.zeros([trend_init.size(0),trend_init.size(1),self.H],dtype=trend_init.dtype).to(trend_init.device)
 
-        for i in range(self.channels):
-            seasonal_output[:,i,:] = self.seasonal[i](seasonal_init[:,i,:])
-            trend_output[:,i,:] = self.trend[i](trend_init[:,i,:])
+            for i in range(self.channels):
+                seasonal_output[:,i,:] = self.seasonal[i](seasonal_init[:,i,:])
+                trend_output[:,i,:] = self.trend[i](trend_init[:,i,:])
+        else:
+            seasonal_output = self.seasonal(seasonal_init)
+            trend_output = self.trend(trend_init)
 
         x = seasonal_output + trend_output
+        
+        if self.normalize:
+            x = x + seq_last   
+        
         return x.permute(0,2,1) 
 
 class NLinear(nn.Module):
     """
     Normalization-Linear
     """
-    def __init__(self, L, H, n_features, individual=True):
+    def __init__(self, L, H, n_features, individual=False):
         super(NLinear, self).__init__()
         self.seq_len = L
         self.pred_len = H
