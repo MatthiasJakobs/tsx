@@ -12,6 +12,8 @@ import zipfile
 from shutil import rmtree as remove_dir
 import torch
 
+from tsx.datasets.utils import download_and_unzip
+
 univariate_datasets = [
     'm1_yearly',
     'm1_quarterly',
@@ -206,7 +208,7 @@ def get_links_dict() -> Dict[str, str]:
 
 def download(name: str) -> str:
     """
-    downloads a given dataset
+    downloads a given monash dataset
     :param name: name of the dataset
     :return: path to the folder in which the dataset was saved
     """
@@ -218,13 +220,9 @@ def download(name: str) -> str:
             url = links[name]
         except KeyError:
             raise KeyError(f"no dataset with the name \"{name}\" found!")
-        dl_dir = tempfile.mkdtemp()
-        zip_file_name = os.path.join(dl_dir, os.path.basename(url))
-        urlretrieve(url, zip_file_name)
 
-        print(f"downloaded {name}")
-        zipfile.ZipFile(zip_file_name, "r").extractall(path)
-        remove_dir(dl_dir)
+        path = download_and_unzip(url, name)
+        print('downloaded', path)
     return path
 
 

@@ -1,5 +1,26 @@
 import numpy as np
 import torch
+import tempfile
+import zipfile
+
+from urllib.request import urlretrieve
+from os.path import join, basename, dirname
+from shutil import rmtree as remove_dir
+
+def download_and_unzip(url: str, name: str) -> str:
+    """
+    downloads a given dataset url and unzips it
+    :param name: name of the dataset
+    :return: path to the folder in which the dataset was saved
+    """
+    path = join(dirname(__file__), "data", name)
+    dl_dir = tempfile.mkdtemp()
+    zip_file_name = join(dl_dir, basename(url))
+    urlretrieve(url, zip_file_name)
+
+    zipfile.ZipFile(zip_file_name, "r").extractall(path)
+    remove_dir(dl_dir)
+    return path
 
 # ----- transforms for entire dataset -----
 
