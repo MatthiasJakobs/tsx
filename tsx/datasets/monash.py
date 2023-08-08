@@ -5,11 +5,7 @@ import numpy as np
 from datetime import datetime
 from distutils.util import strtobool
 import pandas as pd
-import tempfile
 import os
-from urllib.request import urlretrieve
-import zipfile
-from shutil import rmtree as remove_dir
 import torch
 
 from tsx.datasets.utils import download_and_unzip
