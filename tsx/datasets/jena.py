@@ -6,10 +6,11 @@ from os.path import join
 
 URL = 'https://storage.googleapis.com/tensorflow/tf-keras-datasets/jena_climate_2009_2016.csv.zip'
 
-def load_jena(resample: str ='60T', return_numpy: bool = False, return_pytorch: bool = False):
+def load_jena(full_features: bool = False, resample: str ='60T', return_numpy: bool = False, return_pytorch: bool = False):
     """
     returns the Jena Climate 2009 - 2016 dataset
-    :param resample: String in pandas resample notation
+    :param full_feature: return all features (true) or selection of informative features
+    :param resample: string in pandas resample notation
     :param return_numpy: returns dataset as a numpy array
     :param return_pytorch: returns dataset as a pytorch tensor
     :return: the dataset 
@@ -20,6 +21,10 @@ def load_jena(resample: str ='60T', return_numpy: bool = False, return_pytorch: 
     X = pd.read_csv(path)
     X['Date Time'] = pd.to_datetime(X['Date Time'], format='%d.%m.%Y %H:%M:%S')
     X = X.set_index('Date Time')
+
+    if not full_features:
+        selected_features = [X.columns[i] for i in [0, 1, 5, 7, 8, 10, 11]]
+        X = X[selected_features]
 
     # Resample to desired length. Default is 60 minutes (as suggested in https://github.com/keras-team/keras-io/blob/master/examples/timeseries/timeseries_weather_forecasting.py) 
     X = X.resample(resample).mean()
