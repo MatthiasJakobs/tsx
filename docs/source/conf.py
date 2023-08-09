@@ -42,7 +42,8 @@ autodoc_mock_imports = [
     'pandas',
     'torch',
     'seedpy',
-    'skorch'
+    'skorch',
+    'matplotlib',
 ]
 
 # -- Options for HTML output -------------------------------------------------
