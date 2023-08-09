@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import numpy as np
 import tqdm
 
@@ -9,11 +10,16 @@ from sklearn.metrics import mean_squared_error as mse
 from tsx.utils import to_random_state
 from tsx.quantizers import SAX, EmpiricalQuantized, z_norm
 
-###
-# General
-###
 
 class ShapleyValues:
+    ''' Extensible base class for estimating Shapley value estimation
+
+    Args:
+        coalition_sampler: instance of a CoalitionSamplerBase object
+        value_function_estimator: instance of a ValueFunctionBase object
+        weight_function: instance of a WeightFunctionBase object
+
+    '''
 
     def __init__(self, coalition_sampler=None, value_function_estimator=None, weight_function=None):
         self.cs = coalition_sampler
@@ -51,25 +57,20 @@ class ShapleyValues:
         
         return shaps
 
-class ShapleyWeightFunction:
+# ----- Coalition weighting 
+
+class WeightFunctionBase:
+
+    @abstractmethod
+    def w(self, S, N):
+        ...
+
+class ShapleyWeightFunction(WeightFunctionBase):
 
     @lru_cache
     def w(self, S, N):
         return (1/N)*(1/binom(N-1, S))
 
-
-class IndependentSampler:
-
-    def __init__(self, n_samples=100, random_state=None):
-        self.rng = to_random_state(random_state)
-        self.n_samples = n_samples
-
-    def sample(self, background):
-        if self.n_samples is None:
-            return background.copy()
-        else:
-            indices = rng.choice(len(background), size=self.n_samples, replace=True)
-        return background[indices]
 
 class ExpectedFunctionValue:
 
@@ -95,12 +96,20 @@ class ExpectedFunctionValue:
         
         return values
 
-class AllCoalitions:
+# ----- Coalition Sampler classes
+
+class CoalitionSamplerBase:
+
+    @abstractmethod
+    def get(self, n_features):
+        ...
+
+class AllCoalitions(CoalitionSamplerBase):
 
     def get(self, n_features):
         return chain(*(combinations(np.arange(n_features), r=coal_size) for coal_size in range(n_features)))
 
-class SampleCoalitions:
+class SampleCoalitions(CoalitionSamplerBase):
 
     def __init__(self, n_samples, random_state=None):
         self.n_samples = n_samples
@@ -114,6 +123,22 @@ class SampleCoalitions:
         coal_sizes = np.concatenate([[0], coal_sizes, [n_features]]).astype(np.int8)
         return [tuple(self.rng.choice(n_features, replace=False, size=s)) for s in coal_sizes]
 
+# ----- KernelShap configuration
+
+class IndependentSampler:
+
+    def __init__(self, n_samples=100, random_state=None):
+        self.rng = to_random_state(random_state)
+        self.n_samples = n_samples
+
+    def sample(self, background):
+        if self.n_samples is None:
+            return background.copy()
+        else:
+            indices = self.rng.choice(len(background), size=self.n_samples, replace=True)
+        return background[indices]
+
+
 class KernelShap(ShapleyValues):
 
     def __init__(self, background, max_coalition_samples=50, random_state=None):
@@ -125,9 +150,7 @@ class KernelShap(ShapleyValues):
 
         super().__init__(coalition_sampler=coalition_sampler, value_function_estimator=value_function)
 
-###
-# Discrete
-###
+# --- Legacy code (for reference)
 
 class SAXDecodingValueFunction:
     def __init__(self, sax=None, nr_samples=50, random_state=None):

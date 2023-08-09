@@ -27,4 +27,8 @@ setuptools.setup(name='tsx',
         'h5py>=3.8.0',
         'skorch>=0.12.1'
       ],
-      python_requires='>=3.5',)
+      python_requires='>=3.8',
+      extras_require={
+          'docs': ['myst-parser', 'sphinx-rtd-theme'],
+      }
+)

@@ -63,21 +63,18 @@ multivariate_datasets = [
 ]
 
 def possible_datasets() -> List[str]:
-    """
-    returns list of possible dataset names
-    :return: the list
+    """ Returns list of possible dataset names
     """
     return list(get_links_dict().keys())
 
 
 def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False, return_horizon: bool = False) -> pd.DataFrame | np.ndarray | torch.Tensor:
-    """
-    loads datasets from Monash Time Series Forecasting Repository.
-    :param dataset: name of the dataset to be downloaded. Consists of the name of the dataset as well as the "version"
-    of the dataset separated by an underscore.
-    :param return_pytorch: returns dataset as a PyTorch tensor. Throws error if not possible.
-    :param return_numpy: returns dataset as a numpy array. Throws error if not possible.
-    :return: loaded dataset as pandas dataframe per default.
+    """ Loads datasets from Monash Time Series Forecasting Repository.
+
+    Args:
+        dataset: Name of the dataset to be downloaded. Consists of the name of the dataset as well as the "version" of the dataset separated by an underscore.
+        return_pytorch: Returns dataset as a PyTorch tensor. Throws error if not possible.
+        return_numpy: Returns dataset as a numpy array. Throws error if not possible.
     """
     path = download(dataset)
     files = os.listdir(path)
@@ -136,9 +133,7 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
 
 
 def get_links_dict() -> Dict[str, str]:
-    """
-    get dictionary with dataset names as keys and corresponding download urls as values
-    :return: the dictionary
+    """ Get dictionary with dataset names as keys and corresponding download urls as values
     """
     return {
         "m1_yearly": "https://zenodo.org/record/4656193/files/m1_yearly_dataset.zip",
@@ -203,10 +198,10 @@ def get_links_dict() -> Dict[str, str]:
 
 
 def download(name: str) -> str:
-    """
-    downloads a given monash dataset
-    :param name: name of the dataset
-    :return: path to the folder in which the dataset was saved
+    """ Downloads a given monash dataset
+
+    Args:
+        name: name of the dataset
     """
     path = os.path.join(os.path.dirname(__file__), "data", name)
 
@@ -227,14 +222,11 @@ def convert_tsf_to_dataframe(
     replace_missing_vals_with="NaN",
     value_column_name="series_value",
 ) -> Tuple:
-    """
-    Converts the contents in a .tsf file into a dataframe and returns it along with other meta-data of the dataset:
-    frequency, horizon, whether the dataset contains missing values and whether the series have equal lengths
-    :param full_file_path_and_name: complete .tsf file path
-    :param replace_missing_vals_with: a term to indicate the missing values in series in the returning dataframe
-    :param value_column_name: Any name that is preferred to have as the name of the column containing series values in
-    the returning dataframe
-    :return: Tuple containing loaded_data, frequency, forecast_horizon, contain_missing_values, contain_equal_length
+    """ Converts the contents in a .tsf file into a dataframe and returns it along with other meta-data of the dataset: frequency, horizon, whether the dataset contains missing values and whether the series have equal lengths
+    Args:
+        full_file_path_and_name: complete .tsf file path
+        replace_missing_vals_with: a term to indicate the missing values in series in the returning dataframe
+        value_column_name: Any name that is preferred to have as the name of the column containing series values in the returning dataframe
     """
     col_names = []
     col_types = []

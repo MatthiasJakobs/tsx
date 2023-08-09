@@ -3,7 +3,6 @@ import torch
 import skorch
 
 from seedpy import fixedseed
-from tsx.utils import to_random_state
 
 class NeuralNetRegressor(skorch.NeuralNetRegressor):
     """ Regression wrapper for scikit-learn-like PyTorch training

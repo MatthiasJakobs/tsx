@@ -7,13 +7,13 @@ from os.path import join
 URL = 'https://storage.googleapis.com/tensorflow/tf-keras-datasets/jena_climate_2009_2016.csv.zip'
 
 def load_jena(full_features: bool = False, resample: str ='60T', return_numpy: bool = False, return_pytorch: bool = False):
-    """
-    returns the Jena Climate 2009 - 2016 dataset
-    :param full_feature: return all features (true) or selection of informative features
-    :param resample: string in pandas resample notation
-    :param return_numpy: returns dataset as a numpy array
-    :param return_pytorch: returns dataset as a pytorch tensor
-    :return: the dataset 
+    """ Returns the Jena Climate 2009 - 2016 dataset
+
+    Args:
+        full_feature: return all features (true) or selection of informative features
+        resample: string in pandas resample notation
+        return_numpy: returns dataset as a numpy array
+        return_pytorch: returns dataset as a pytorch tensor
     """
     path = download_and_unzip(URL, 'jena')
     path = join(path, 'jena_climate_2009_2016.csv')
