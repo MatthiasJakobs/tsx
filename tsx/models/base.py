@@ -1,8 +1,10 @@
 import numpy as np
 import torch
+import torch.nn as nn
 import skorch
 
 from seedpy import fixedseed
+from typing import Union
 
 class NeuralNetRegressor(skorch.NeuralNetRegressor):
     """ Regression wrapper for scikit-learn-like PyTorch training
@@ -19,7 +21,7 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
         **kwargs: Optional keyword arguments for skorch.NeuralNetRegressor
 
     """
-    def __init__(self, module, random_state=None, max_epochs=10, device=None, lr=2e-3, batch_size=32, verbose=False, callbacks=None, **kwargs):
+    def __init__(self, module: nn.Module, random_state: Union[None, np.random.RandomState, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
         self.random_state = random_state
         self.verbose = verbose
 
@@ -63,7 +65,7 @@ class NeuralNetClassifier(skorch.NeuralNetClassifier):
 
     """
 
-    def __init__(self, module, random_state=None, max_epochs=10, device=None, lr=2e-3, batch_size=32, verbose=False, callbacks=None, **kwargs):
+    def __init__(self, module: nn.Module, random_state: Union[None, np.random.RandomState, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
         self.random_state = random_state
         self.verbose = verbose
 

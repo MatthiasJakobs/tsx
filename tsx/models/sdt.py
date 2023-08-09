@@ -72,6 +72,12 @@ class SoftDecisionTreeRegressor(SDTBase):
 
     @torch.no_grad()
     def predict(self, X):
+        """ Predict function
+
+        Args:
+            X (torch.Tensor): Input tensor of size (batch_size, n_features)
+
+        """
         return self.model(X).cpu().numpy().squeeze()
 
 class SoftDecisionTreeClassifier(SDTBase):
@@ -87,6 +93,12 @@ class SoftDecisionTreeClassifier(SDTBase):
 
     @torch.no_grad()
     def predict(self, X):
+        """ Predict function
+
+        Args:
+            X (torch.Tensor): Input tensor of size (batch_size, n_features)
+
+        """
         return (self.model(X) >= 0.5).cpu().numpy().squeeze()
 
 class SoftEnsembleClassifier(nn.Module):
@@ -107,6 +119,12 @@ class SoftEnsembleClassifier(nn.Module):
         return torch.mean(single_preds, axis=-1)
 
     def predict(self, X):
+        """ Predict function
+
+        Args:
+            X (torch.Tensor): Input tensor of size (batch_size, n_features)
+
+        """
         with torch.no_grad():
             return (self.forward(X).cpu().numpy() >= 0.5).astype(np.int8)
 
@@ -128,6 +146,12 @@ class SoftEnsembleRegressor(nn.Module):
         return torch.mean(single_preds, axis=-1)
 
     def predict(self, X):
+        """ Predict function
+
+        Args:
+            X (torch.Tensor): Input tensor of size (batch_size, n_features)
+
+        """
         with torch.no_grad():
             return self.forward(X).cpu().numpy()
 

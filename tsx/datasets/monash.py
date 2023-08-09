@@ -73,6 +73,7 @@ def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool =
 
     Args:
         dataset: Name of the dataset to be downloaded. Consists of the name of the dataset as well as the "version" of the dataset separated by an underscore.
+        return_horizon: Datasets have a specific forecast horizon. True if they should be returned as well.
         return_pytorch: Returns dataset as a PyTorch tensor. Throws error if not possible.
         return_numpy: Returns dataset as a numpy array. Throws error if not possible.
     """
