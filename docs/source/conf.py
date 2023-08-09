@@ -44,6 +44,7 @@ autodoc_mock_imports = [
     'seedpy',
     'skorch',
     'matplotlib',
+    'tqdm',
 ]
 
 # -- Options for HTML output -------------------------------------------------
