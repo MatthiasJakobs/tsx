@@ -60,6 +60,12 @@ class SDTBase(nn.Module):
         return self.model.num_parameters()
 
 class SoftDecisionTreeRegressor(SDTBase):
+    """ Soft Decision Tree, configured as a regressor
+
+    Args:
+        n_features: Number of input features
+        depth: Fixed depth of the tree
+    """
 
     def __init__(self, n_features, depth):
         super().__init__(n_features, depth, classifier=False)
@@ -69,6 +75,12 @@ class SoftDecisionTreeRegressor(SDTBase):
         return self.model(X).cpu().numpy().squeeze()
 
 class SoftDecisionTreeClassifier(SDTBase):
+    """ Soft Decision Tree, configured as a classifier
+
+    Args:
+        n_features: Number of input features
+        depth: Fixed depth of the tree
+    """
 
     def __init__(self, n_features, depth):
         super().__init__(n_features, depth, classifier=True)
@@ -78,6 +90,13 @@ class SoftDecisionTreeClassifier(SDTBase):
         return (self.model(X) >= 0.5).cpu().numpy().squeeze()
 
 class SoftEnsembleClassifier(nn.Module):
+    """ Ensemble of Soft Decision Trees for classification
+
+    Args:
+        n_trees: Number of ensemble member
+        n_features: Number of input features
+        depth: Fixed depth of the tree
+    """
 
     def __init__(self, n_trees, n_features, depth):
         super().__init__()
@@ -92,6 +111,13 @@ class SoftEnsembleClassifier(nn.Module):
             return (self.forward(X).cpu().numpy() >= 0.5).astype(np.int8)
 
 class SoftEnsembleRegressor(nn.Module):
+    """ Ensemble of Soft Decision Trees for regression
+
+    Args:
+        n_trees: Number of ensemble member
+        n_features: Number of input features
+        depth: Fixed depth of the tree
+    """
 
     def __init__(self, n_trees, n_features, depth):
         super().__init__()
