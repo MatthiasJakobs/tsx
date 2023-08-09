@@ -6,15 +6,21 @@ This page documents the classes and methods contained in the `tsx` package.
 ## Models
 
 ```{eval-rst}
-.. autoclass:: tsx.models.base.NeuralNetRegressor
-.. autoclass:: tsx.models.base.NeuralNetClassifier
+.. autoclass:: tsx.models.base.NeuralNetRegressor()
+   :members:
+.. autoclass:: tsx.models.base.NeuralNetClassifier()
+   :members:
 ```
 
 ```{eval-rst}
-.. autoclass:: tsx.models.sdt.SoftDecisionTreeClassifier
-.. autoclass:: tsx.models.sdt.SoftEnsembleClassifier
-.. autoclass:: tsx.models.sdt.SoftDecisionTreeRegressor
-.. autoclass:: tsx.models.sdt.SoftEnsembleRegressor
+.. autoclass:: tsx.models.sdt.SoftDecisionTreeClassifier()
+   :members:
+.. autoclass:: tsx.models.sdt.SoftEnsembleClassifier()
+   :members:
+.. autoclass:: tsx.models.sdt.SoftDecisionTreeRegressor()
+   :members:
+.. autoclass:: tsx.models.sdt.SoftEnsembleRegressor()
+   :members:
 ```
 
 ## Datasets
