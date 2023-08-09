@@ -17,7 +17,6 @@ jobs:
       with:
         pre-build-command: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -e .[docs]
           python -m pip install sphinx-book-theme myst-parser
         docs-folder: "docs/"
         build-command: "sphinx-build -M html source/ build/ -a -j auto"

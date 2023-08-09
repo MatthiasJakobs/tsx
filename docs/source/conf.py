@@ -37,13 +37,13 @@ exclude_patterns = [
 ]
 
 add_module_names = True
-# autodoc_mock_imports = [
-#     'numpy',
-#     '_c_utils',
-#     'sklearn',
-#     'portion',
-#     'igraph'
-# ]
+autodoc_mock_imports = [
+    'numpy',
+    'pandas',
+    'torch',
+    'seedpy',
+    'skorch'
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
