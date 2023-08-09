@@ -277,7 +277,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.base.NeuralNetRegressor"><code class="docutils literal notranslate"><span class="pre">NeuralNetRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.base.NeuralNetClassifier"><code class="docutils literal notranslate"><span class="pre">NeuralNetClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftDecisionTreeClassifier"><code class="docutils literal notranslate"><span class="pre">SoftDecisionTreeClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftDecisionTreeRegressor"><code class="docutils literal notranslate"><span class="pre">SoftDecisionTreeRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleRegressor"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleRegressor</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a></li>
@@ -299,6 +307,106 @@ document.write(`
 <p>This page documents the classes and methods contained in the <code class="docutils literal notranslate"><span class="pre">tsx</span></code> package.</p>
 <section id="models">
 <h2>Models<a class="headerlink" href="#models" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.base.NeuralNetRegressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.base.</span></span><span class="sig-name descname"><span class="pre">NeuralNetRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/base.html#NeuralNetRegressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.base.NeuralNetRegressor" title="Permalink to this definition">#</a></dt>
+<dd><p>Regression wrapper for scikit-learn-like PyTorch training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – A PyTorch model of type <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
+<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or a <code class="docutils literal notranslate"><span class="pre">np.random.RandomState</span></code> object. Defaults to None.</p></li>
+<li><p><strong>max_epochs</strong> (<em>optional</em>) – How long to train for. Defaults to 10.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.</p></li>
+<li><p><strong>lr</strong> (<em>optional</em>) – Set learning rate. Defaults to 2e-3</p></li>
+<li><p><strong>batch_size</strong> (<em>optional</em>) – Training batch size. Defaults to 32.</p></li>
+<li><p><strong>verbose</strong> (<em>optional</em>) – Print status updates to the console. Defaults to false</p></li>
+<li><p><strong>callbacks</strong> (<em>optional</em>) – Skorch callback list used for training. Defaults to None.</p></li>
+<li><p><strong>**kwargs</strong> – Optional keyword arguments for skorch.NeuralNetRegressor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.base.NeuralNetClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.base.</span></span><span class="sig-name descname"><span class="pre">NeuralNetClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/base.html#NeuralNetClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.base.NeuralNetClassifier" title="Permalink to this definition">#</a></dt>
+<dd><p>Classification wrapper for scikit-learn-like PyTorch training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – A PyTorch model of type <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
+<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or a <code class="docutils literal notranslate"><span class="pre">np.random.RandomState</span></code> object. Defaults to None.</p></li>
+<li><p><strong>max_epochs</strong> (<em>optional</em>) – How long to train for. Defaults to 10.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.</p></li>
+<li><p><strong>lr</strong> (<em>optional</em>) – Set learning rate. Defaults to 2e-3</p></li>
+<li><p><strong>batch_size</strong> (<em>optional</em>) – Training batch size. Defaults to 32.</p></li>
+<li><p><strong>verbose</strong> (<em>optional</em>) – Print status updates to the console. Defaults to false</p></li>
+<li><p><strong>callbacks</strong> (<em>optional</em>) – Skorch callback list used for training. Defaults to None.</p></li>
+<li><p><strong>**kwargs</strong> – Optional keyword arguments for skorch.NeuralNetClassifier</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.sdt.SoftDecisionTreeClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.sdt.</span></span><span class="sig-name descname"><span class="pre">SoftDecisionTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/sdt.html#SoftDecisionTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.sdt.SoftDecisionTreeClassifier" title="Permalink to this definition">#</a></dt>
+<dd><p>Soft Decision Tree, configured as a classifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_features</strong> – Number of input features</p></li>
+<li><p><strong>depth</strong> – Fixed depth of the tree</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.sdt.SoftEnsembleClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.sdt.</span></span><span class="sig-name descname"><span class="pre">SoftEnsembleClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/sdt.html#SoftEnsembleClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.sdt.SoftEnsembleClassifier" title="Permalink to this definition">#</a></dt>
+<dd><p>Ensemble of Soft Decision Trees for classification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_trees</strong> – Number of ensemble member</p></li>
+<li><p><strong>n_features</strong> – Number of input features</p></li>
+<li><p><strong>depth</strong> – Fixed depth of the tree</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.sdt.SoftDecisionTreeRegressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.sdt.</span></span><span class="sig-name descname"><span class="pre">SoftDecisionTreeRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/sdt.html#SoftDecisionTreeRegressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.sdt.SoftDecisionTreeRegressor" title="Permalink to this definition">#</a></dt>
+<dd><p>Soft Decision Tree, configured as a regressor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_features</strong> – Number of input features</p></li>
+<li><p><strong>depth</strong> – Fixed depth of the tree</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.sdt.SoftEnsembleRegressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.sdt.</span></span><span class="sig-name descname"><span class="pre">SoftEnsembleRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/sdt.html#SoftEnsembleRegressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.sdt.SoftEnsembleRegressor" title="Permalink to this definition">#</a></dt>
+<dd><p>Ensemble of Soft Decision Trees for regression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_trees</strong> – Number of ensemble member</p></li>
+<li><p><strong>n_features</strong> – Number of input features</p></li>
+<li><p><strong>depth</strong> – Fixed depth of the tree</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="datasets">
 <h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">#</a></h2>
@@ -364,7 +472,15 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.base.NeuralNetRegressor"><code class="docutils literal notranslate"><span class="pre">NeuralNetRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.base.NeuralNetClassifier"><code class="docutils literal notranslate"><span class="pre">NeuralNetClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftDecisionTreeClassifier"><code class="docutils literal notranslate"><span class="pre">SoftDecisionTreeClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleClassifier</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftDecisionTreeRegressor"><code class="docutils literal notranslate"><span class="pre">SoftDecisionTreeRegressor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleRegressor"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleRegressor</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a></li>
