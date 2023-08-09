@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tsx.datasets.monash &#8212; tsx</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/tsx/datasets/monash';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/tsx_logo_light.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/tsx_logo_dark.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">tsx</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for tsx.datasets.monash</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">distutils.util</span> <span class="kn">import</span> <span class="n">strtobool</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">tsx.datasets.utils</span> <span class="kn">import</span> <span class="n">download_and_unzip</span>
+
+<span class="n">univariate_datasets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;m1_yearly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m1_quarterly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m1_monthly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m3_yearly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m3_quarterly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m3_monthly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m3_other&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_yearly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_quarterly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_monthly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_weekly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_daily&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;m4_hourly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tourism_yearly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tourism_quarterly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tourism_monthly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cif_2016&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;london_smart_meters_nomissing&#39;,</span>
+    <span class="s1">&#39;australian_electricity_demand&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;wind_farms_nomissing&#39;,</span>
+    <span class="s1">&#39;dominick&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;bitcoin_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pedestrian_counts&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;vehicle_trips_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;kdd_cup_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;weather&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sunspot_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;saugene_river_flow&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;us_births&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;solar_power&#39;,</span>
+    <span class="c1">#&#39;wind_power&#39;,</span>
+<span class="p">]</span>
+
+<span class="n">multivariate_datasets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;nn5_daily_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nn5_weekly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;web_traffic_daily_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;web_traffic_weekly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;solar_10_minutes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;electricity_hourly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;electricity_weekly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;car_parts_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;san_fracisco_traffic_hourly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;san_fracisco_traffic_weekly&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ride_share_nomissing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hospital&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fred_md&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;covid_deaths&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;temperature_rain_nomissing&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<div class="viewcode-block" id="possible_datasets"><a class="viewcode-back" href="../../../api.html#tsx.datasets.monash.possible_datasets">[docs]</a><span class="k">def</span> <span class="nf">possible_datasets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns list of possible dataset names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_links_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="load_monash"><a class="viewcode-back" href="../../../api.html#tsx.datasets.monash.load_monash">[docs]</a><span class="k">def</span> <span class="nf">load_monash</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">return_pytorch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">return_numpy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">return_horizon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads datasets from Monash Time Series Forecasting Repository.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset: Name of the dataset to be downloaded. Consists of the name of the dataset as well as the &quot;version&quot; of the dataset separated by an underscore.</span>
+<span class="sd">        return_pytorch: Returns dataset as a PyTorch tensor. Throws error if not possible.</span>
+<span class="sd">        return_numpy: Returns dataset as a numpy array. Throws error if not possible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tsf&quot;</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;no .tsf file found!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;multiple .tsf files found!&quot;</span><span class="p">)</span>
+
+    <span class="n">frame</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">forecast_horizon</span><span class="p">,</span> <span class="n">contain_missing_values</span><span class="p">,</span> <span class="n">contain_equal_length</span> <span class="o">=</span> <span class="n">convert_tsf_to_dataframe</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">series_value</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s2">&quot;series_value&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Set forecast horizon  manually, based on https://arxiv.org/pdf/2202.08485.pdf</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;australian_electricity_demand&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;dominick&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;bitcoin_nomissing&#39;</span> <span class="ow">or</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;bitcoin_missing&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;pedestrian_counts&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;vehicle_trips_missing&#39;</span> <span class="ow">or</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;vehicle_trips_nomissing&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;kdd_cup_missing&#39;</span> <span class="ow">or</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;kdd_cup_nomissing&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;weather&#39;</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="mi">30</span>
+
+    <span class="k">if</span> <span class="n">forecast_horizon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;horizon&#39;</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="p">[</span><span class="n">forecast_horizon</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">series_value</span><span class="p">))]</span>
+
+    <span class="k">if</span> <span class="n">return_numpy</span> <span class="ow">or</span> <span class="n">return_pytorch</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">contain_equal_length</span><span class="p">:</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">series_value</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p_array</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+                <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_array</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">multivariate_datasets</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">return_pytorch</span><span class="p">:</span>
+                <span class="n">array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">return_horizon</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">array</span><span class="p">,</span> <span class="n">forecast_horizon</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">array</span>
+
+    <span class="k">if</span> <span class="n">return_horizon</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">frame</span><span class="p">,</span> <span class="n">forecast_horizon</span>
+    <span class="k">return</span> <span class="n">frame</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_links_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get dictionary with dataset names as keys and corresponding download urls as values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;m1_yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656193/files/m1_yearly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m1_quarterly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656154/files/m1_quarterly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m1_monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656159/files/m1_monthly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m3_yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656222/files/m3_yearly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m3_quarterly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656262/files/m3_quarterly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m3_monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656298/files/m3_monthly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m3_other&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656335/files/m3_other_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656379/files/m4_yearly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_quarterly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656410/files/m4_quarterly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656480/files/m4_monthly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656522/files/m4_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_daily&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656548/files/m4_daily_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m4_hourly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656589/files/m4_hourly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tourism_yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656103/files/tourism_yearly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tourism_quarterly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656093/files/tourism_quarterly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tourism_monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656096/files/tourism_monthly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cif_2016&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656042/files/cif_2016_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;london_smart_meters_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656072/files/london_smart_meters_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;london_smart_meters_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656091/files/london_smart_meters_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;australian_electricity_demand&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4659727/files/australian_electricity_demand_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;wind_farms_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654909/files/wind_farms_minutely_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;wind_farms_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654858/files/wind_farms_minutely_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dominick&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654802/files/dominick_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bitcoin_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5121965/files/bitcoin_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bitcoin_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5122101/files/bitcoin_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pedestrian_counts&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656626/files/pedestrian_counts_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vehicle_trips_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5122535/files/vehicle_trips_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vehicle_trips_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5122537/files/vehicle_trips_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kdd_cup_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656719/files/kdd_cup_2018_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kdd_cup_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656756/files/kdd_cup_2018_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;weather&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654822/files/weather_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nn5_daily_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656110/files/nn5_daily_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nn5_daily_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656117/files/nn5_daily_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nn5_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656125/files/nn5_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;web_traffic_daily_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656080/files/kaggle_web_traffic_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;web_traffic_daily_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656075/files/kaggle_web_traffic_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;web_traffic_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656664/files/kaggle_web_traffic_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;solar_10_minutes&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656144/files/solar_10_minutes_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;solar_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656151/files/solar_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;electricity_hourly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656140/files/electricity_hourly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;electricity_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656141/files/electricity_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;car_parts_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656022/files/car_parts_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;car_parts_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656021/files/car_parts_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fred_md&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654833/files/fred_md_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;san_fracisco_traffic_hourly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656132/files/traffic_hourly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;san_fracisco_traffic_weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656135/files/traffic_weekly_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ride_share_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5122114/files/rideshare_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ride_share_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5122232/files/rideshare_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hospital&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656014/files/hospital_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;covid_deaths&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656009/files/covid_deaths_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;temperature_rain_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5129073/files/temperature_rain_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;temperature_rain_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/5129091/files/temperature_rain_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sunspot_missing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654773/files/sunspot_dataset_with_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sunspot_nomissing&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4654722/files/sunspot_dataset_without_missing_values.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;saugene_river_flow&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656058/files/saugeenday_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;us_births&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656049/files/us_births_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;solar_power&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656027/files/solar_4_seconds_dataset.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;wind_power&quot;</span><span class="p">:</span> <span class="s2">&quot;https://zenodo.org/record/4656032/files/wind_4_seconds_dataset.zip&quot;</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Downloads a given monash dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: name of the dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">links</span> <span class="o">=</span> <span class="n">get_links_dict</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;no dataset with the name </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> found!&quot;</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">download_and_unzip</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;downloaded&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+
+
+<span class="k">def</span> <span class="nf">convert_tsf_to_dataframe</span><span class="p">(</span>
+    <span class="n">full_file_path_and_name</span><span class="p">,</span>
+    <span class="n">replace_missing_vals_with</span><span class="o">=</span><span class="s2">&quot;NaN&quot;</span><span class="p">,</span>
+    <span class="n">value_column_name</span><span class="o">=</span><span class="s2">&quot;series_value&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the contents in a .tsf file into a dataframe and returns it along with other meta-data of the dataset: frequency, horizon, whether the dataset contains missing values and whether the series have equal lengths</span>
+<span class="sd">    Args:</span>
+<span class="sd">        full_file_path_and_name: complete .tsf file path</span>
+<span class="sd">        replace_missing_vals_with: a term to indicate the missing values in series in the returning dataframe</span>
+<span class="sd">        value_column_name: Any name that is preferred to have as the name of the column containing series values in the returning dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">col_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">col_types</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">line_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">frequency</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contain_missing_values</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contain_equal_length</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">found_data_tag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">found_data_section</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">started_reading_data_section</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_file_path_and_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;cp1252&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="c1"># Strip white space from start/end of line</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">):</span>  <span class="c1"># Read meta-data</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@data&quot;</span><span class="p">):</span>
+                        <span class="n">line_content</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@attribute&quot;</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                    <span class="nb">len</span><span class="p">(</span><span class="n">line_content</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span>
+                            <span class="p">):</span>  <span class="c1"># Attributes have both name and type</span>
+                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid meta-data specification.&quot;</span><span class="p">)</span>
+
+                            <span class="n">col_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line_content</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="n">col_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line_content</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                    <span class="nb">len</span><span class="p">(</span><span class="n">line_content</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span>
+                            <span class="p">):</span>  <span class="c1"># Other meta-data have only values</span>
+                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid meta-data specification.&quot;</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@frequency&quot;</span><span class="p">):</span>
+                                <span class="n">frequency</span> <span class="o">=</span> <span class="n">line_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@horizon&quot;</span><span class="p">):</span>
+                                <span class="n">forecast_horizon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line_content</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@missing&quot;</span><span class="p">):</span>
+                                <span class="n">contain_missing_values</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span>
+                                    <span class="n">strtobool</span><span class="p">(</span><span class="n">line_content</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                <span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@equallength&quot;</span><span class="p">):</span>
+                                <span class="n">contain_equal_length</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">strtobool</span><span class="p">(</span><span class="n">line_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                                <span class="s2">&quot;Missing attribute section. Attribute section must come before data.&quot;</span>
+                            <span class="p">)</span>
+
+                        <span class="n">found_data_tag</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                            <span class="s2">&quot;Missing attribute section. Attribute section must come before data.&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">found_data_tag</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing @data tag.&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">started_reading_data_section</span><span class="p">:</span>
+                            <span class="n">started_reading_data_section</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="n">found_data_section</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="n">all_series</span> <span class="o">=</span> <span class="p">[]</span>
+
+                            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_names</span><span class="p">:</span>
+                                <span class="n">all_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                        <span class="n">full_info</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_info</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing attributes/values in series.&quot;</span><span class="p">)</span>
+
+                        <span class="n">series</span> <span class="o">=</span> <span class="n">full_info</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_info</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                                <span class="s2">&quot;A given series should contains a set of comma separated numeric values. At least one numeric value should be there in a series. Missing values should be indicated with ? symbol&quot;</span>
+                            <span class="p">)</span>
+
+                        <span class="n">numeric_series</span> <span class="o">=</span> <span class="p">[]</span>
+
+                        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">series</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;?&quot;</span><span class="p">:</span>
+                                <span class="n">numeric_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replace_missing_vals_with</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">numeric_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+                        <span class="k">if</span> <span class="n">numeric_series</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">replace_missing_vals_with</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                <span class="n">numeric_series</span>
+                        <span class="p">):</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                                <span class="s2">&quot;All series values are missing. A given series should contains a set of comma separated numeric values. At least one numeric value should be there in a series.&quot;</span>
+                            <span class="p">)</span>
+
+                        <span class="n">all_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">numeric_series</span><span class="p">)</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)):</span>
+                            <span class="n">att_val</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="k">if</span> <span class="n">col_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;numeric&quot;</span><span class="p">:</span>
+                                <span class="n">att_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">full_info</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                            <span class="k">elif</span> <span class="n">col_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+                                <span class="n">att_val</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">full_info</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                            <span class="k">elif</span> <span class="n">col_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span>
+                                <span class="n">att_val</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                                    <span class="n">full_info</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H-%M-%S&quot;</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                                    <span class="s2">&quot;Invalid attribute type.&quot;</span>
+                                <span class="p">)</span>  <span class="c1"># Currently, the code supports only numeric, string and date types. Extend this as required.</span>
+
+                            <span class="k">if</span> <span class="n">att_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid attribute value.&quot;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">all_data</span><span class="p">[</span><span class="n">col_names</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">att_val</span><span class="p">)</span>
+
+                <span class="n">line_count</span> <span class="o">=</span> <span class="n">line_count</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">line_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Empty file.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing attribute section.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_data_section</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing series information under data section.&quot;</span><span class="p">)</span>
+
+        <span class="n">all_data</span><span class="p">[</span><span class="n">value_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_series</span>
+        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">loaded_data</span><span class="p">,</span>
+            <span class="n">frequency</span><span class="p">,</span>
+            <span class="n">forecast_horizon</span><span class="p">,</span>
+            <span class="n">contain_missing_values</span><span class="p">,</span>
+            <span class="n">contain_equal_length</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nn5_daily_missing&quot;</span>
+    <span class="n">np_array</span> <span class="o">=</span> <span class="n">load_monash</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">return_numpy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">load_monash</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">return_pytorch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthias Jakobs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Matthias Jakobs.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

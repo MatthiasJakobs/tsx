@@ -287,8 +287,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.monash.possible_datasets"><code class="docutils literal notranslate"><span class="pre">possible_datasets()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.monash.load_monash"><code class="docutils literal notranslate"><span class="pre">load_monash()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.jena.load_jena"><code class="docutils literal notranslate"><span class="pre">load_jena()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -412,9 +419,46 @@ document.write(`
 <h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">#</a></h2>
 <section id="monash-forecasting-repository">
 <h3>Monash Forecasting Repository<a class="headerlink" href="#monash-forecasting-repository" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.datasets.monash.possible_datasets">
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">possible_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tsx/datasets/monash.html#possible_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.possible_datasets" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns list of possible dataset names</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.datasets.monash.load_monash">
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">load_monash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pytorch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_horizon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pd.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="_modules/tsx/datasets/monash.html#load_monash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.load_monash" title="Permalink to this definition">#</a></dt>
+<dd><p>Loads datasets from Monash Time Series Forecasting Repository.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> – Name of the dataset to be downloaded. Consists of the name of the dataset as well as the “version” of the dataset separated by an underscore.</p></li>
+<li><p><strong>return_pytorch</strong> – Returns dataset as a PyTorch tensor. Throws error if not possible.</p></li>
+<li><p><strong>return_numpy</strong> – Returns dataset as a numpy array. Throws error if not possible.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="jena-climate-dataset">
 <h3>Jena Climate Dataset<a class="headerlink" href="#jena-climate-dataset" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.datasets.jena.load_jena">
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.jena.</span></span><span class="sig-name descname"><span class="pre">load_jena</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'60T'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pytorch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/datasets/jena.html#load_jena"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.jena.load_jena" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the Jena Climate 2009 - 2016 dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full_feature</strong> – return all features (true) or selection of informative features</p></li>
+<li><p><strong>resample</strong> – string in pandas resample notation</p></li>
+<li><p><strong>return_numpy</strong> – returns dataset as a numpy array</p></li>
+<li><p><strong>return_pytorch</strong> – returns dataset as a pytorch tensor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <!-- ### `tsx.datasets.jena` -->
 <!-- ```{eval-rst} -->
 <!-- .. automodule:: tsx.datasets.jena -->
@@ -482,8 +526,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monash-forecasting-repository">Monash Forecasting Repository</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.monash.possible_datasets"><code class="docutils literal notranslate"><span class="pre">possible_datasets()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.monash.load_monash"><code class="docutils literal notranslate"><span class="pre">load_monash()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jena-climate-dataset">Jena Climate Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.jena.load_jena"><code class="docutils literal notranslate"><span class="pre">load_jena()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
