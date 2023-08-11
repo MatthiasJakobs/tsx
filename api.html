@@ -308,6 +308,15 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.jena.load_jena"><code class="docutils literal notranslate"><span class="pre">load_jena()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.utils.windowing"><code class="docutils literal notranslate"><span class="pre">windowing()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.utils.split_horizon"><code class="docutils literal notranslate"><span class="pre">split_horizon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.utils.to_random_state"><code class="docutils literal notranslate"><span class="pre">to_random_state()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -334,7 +343,7 @@ document.write(`
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module</strong> – A PyTorch model of type <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
-<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or a <code class="docutils literal notranslate"><span class="pre">np.random.RandomState</span></code> object. Defaults to None.</p></li>
+<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or None. Defaults to None.</p></li>
 <li><p><strong>max_epochs</strong> (<em>optional</em>) – How long to train for. Defaults to 10.</p></li>
 <li><p><strong>device</strong> (<em>optional</em>) – Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.</p></li>
 <li><p><strong>lr</strong> (<em>optional</em>) – Set learning rate. Defaults to 2e-3</p></li>
@@ -355,7 +364,7 @@ document.write(`
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module</strong> – A PyTorch model of type <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
-<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or a <code class="docutils literal notranslate"><span class="pre">np.random.RandomState</span></code> object. Defaults to None.</p></li>
+<li><p><strong>random_state</strong> (<em>optional</em>) – Seed training with either a fixed seed or None. Defaults to None.</p></li>
 <li><p><strong>max_epochs</strong> (<em>optional</em>) – How long to train for. Defaults to 10.</p></li>
 <li><p><strong>device</strong> (<em>optional</em>) – Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.</p></li>
 <li><p><strong>lr</strong> (<em>optional</em>) – Set learning rate. Defaults to 2e-3</p></li>
@@ -477,13 +486,13 @@ document.write(`
 <h3>Monash Forecasting Repository<a class="headerlink" href="#monash-forecasting-repository" title="Permalink to this heading">#</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="tsx.datasets.monash.possible_datasets">
-<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">possible_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tsx/datasets/monash.html#possible_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.possible_datasets" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">possible_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/datasets/monash.html#possible_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.possible_datasets" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns list of possible dataset names</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tsx.datasets.monash.load_monash">
-<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">load_monash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pytorch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_horizon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pd.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="_modules/tsx/datasets/monash.html#load_monash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.load_monash" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.monash.</span></span><span class="sig-name descname"><span class="pre">load_monash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pytorch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_numpy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_horizon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/datasets/monash.html#load_monash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.monash.load_monash" title="Permalink to this definition">#</a></dt>
 <dd><p>Loads datasets from Monash Time Series Forecasting Repository.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -516,6 +525,56 @@ document.write(`
 </dl>
 </dd></dl>
 
+</section>
+<section id="utilities">
+<h3>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.datasets.utils.windowing">
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.utils.</span></span><span class="sig-name descname"><span class="pre">windowing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_torch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/datasets/utils.html#windowing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.utils.windowing" title="Permalink to this definition">#</a></dt>
+<dd><p>Create sliding windows from input <cite>x</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input time series</p></li>
+<li><p><strong>L</strong> – Amount of lag to use</p></li>
+<li><p><strong>H</strong> – Forecast horizon</p></li>
+<li><p><strong>z</strong> – Step length</p></li>
+<li><p><strong>use_torch</strong> – Whether to return <cite>np.ndarray</cite> or <cite>torch.Tensor</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.datasets.utils.split_horizon">
+<span class="sig-prename descclassname"><span class="pre">tsx.datasets.utils.</span></span><span class="sig-name descname"><span class="pre">split_horizon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/datasets/utils.html#split_horizon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.datasets.utils.split_horizon" title="Permalink to this definition">#</a></dt>
+<dd><p>Split a time series into two parts, given a forecasting horizon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input time series</p></li>
+<li><p><strong>H</strong> – Forecast horizon</p></li>
+<li><p><strong>L</strong> – Amount of lag to use</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="id1">
+<h2>Utilities<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.utils.to_random_state">
+<span class="sig-prename descclassname"><span class="pre">tsx.utils.</span></span><span class="sig-name descname"><span class="pre">to_random_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.random.RandomState</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/utils.html#to_random_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.utils.to_random_state" title="Permalink to this definition">#</a></dt>
+<dd><p>Return <cite>np.random.RandomState</cite> object from input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rs</strong> – Either already a <cite>np.random.RandomState</cite> object or something that <cite>np.random.RandomState</cite> can process</p>
+</dd>
+</dl>
+</dd></dl>
+
 <!-- ### `tsx.datasets.jena` -->
 <!-- ```{eval-rst} -->
 <!-- .. automodule:: tsx.datasets.jena -->
@@ -530,7 +589,6 @@ document.write(`
 <!--    :undoc-members: -->
 <!--    :show-inheritance: -->
 <!-- ``` -->
-</section>
 </section>
 </section>
 
@@ -583,6 +641,15 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.jena.load_jena"><code class="docutils literal notranslate"><span class="pre">load_jena()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.utils.windowing"><code class="docutils literal notranslate"><span class="pre">windowing()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.datasets.utils.split_horizon"><code class="docutils literal notranslate"><span class="pre">split_horizon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.utils.to_random_state"><code class="docutils literal notranslate"><span class="pre">to_random_state()</span></code></a></li>
 </ul>
 </li>
 </ul>
