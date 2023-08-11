@@ -6,6 +6,7 @@ import zipfile
 from urllib.request import urlretrieve
 from os.path import join, basename, dirname
 from shutil import rmtree as remove_dir
+from typing import Union
 
 def download_and_unzip(url: str, name: str) -> str:
     """
@@ -31,7 +32,15 @@ def normalize(X):
     if isinstance(X[0], type(torch.zeros(1))):
         return ((X.T - torch.mean(X, axis=-1)) / torch.std(X, axis=-1)).T
 
-def split_horizon(x, H, L=None):
+def split_horizon(x: Union[np.ndarray, torch.Tensor], H: int, L: Union[None, int] = None):
+    ''' Split a time series into two parts, given a forecasting horizon
+
+    Args:
+        x: Input time series
+        H: Forecast horizon
+        L: Amount of lag to use
+
+    '''
     assert len(x.shape) == 1
     assert len(x) > H
 
@@ -40,7 +49,17 @@ def split_horizon(x, H, L=None):
 
     return x[:-(L+H)], x[-(L+H):]
 
-def windowing(x, L, z=1, H=1, use_torch=False):
+def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1, use_torch: bool = False):
+    ''' Create sliding windows from input `x`
+
+    Args:
+        x: Input time series
+        L: Amount of lag to use
+        H: Forecast horizon
+        z: Step length
+        use_torch: Whether to return `np.ndarray` or `torch.Tensor`
+
+    '''
     univariate = len(x.shape) == 1
 
     if univariate:

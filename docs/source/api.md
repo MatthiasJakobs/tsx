@@ -36,6 +36,17 @@ This page documents the classes and methods contained in the `tsx` package.
 .. autofunction:: tsx.datasets.jena.load_jena
 ```
 
+### Utilities
+```{eval-rst}
+.. autofunction:: tsx.datasets.utils.windowing
+.. autofunction:: tsx.datasets.utils.split_horizon
+```
+
+## Utilities
+```{eval-rst}
+.. autofunction:: tsx.utils.to_random_state
+```
+
 <!-- ### `tsx.datasets.jena` -->
 <!-- ```{eval-rst} -->
 <!-- .. automodule:: tsx.datasets.jena -->

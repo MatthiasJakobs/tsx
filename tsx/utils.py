@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 from tqdm import trange
 from itertools import combinations
+from typing import Union
 
 def to_float32(X):
     if isinstance(X, np.ndarray):
@@ -191,7 +192,13 @@ def prepare_for_pytorch(x, batch=True, channel=True):
 
     return x
 
-def to_random_state(rs):
+def to_random_state(rs: Union[np.random.RandomState, int, None]):
+    ''' Return `np.random.RandomState` object from input
+
+    Args:
+        rs: Either already a `np.random.RandomState` object or something that `np.random.RandomState` can process
+
+    '''
     if not isinstance(rs, np.random.RandomState):
         rs = np.random.RandomState(rs)
 

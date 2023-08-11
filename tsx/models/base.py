@@ -11,7 +11,7 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
 
     Args:
         module: A PyTorch model of type ``torch.nn.Module``
-        random_state (optional): Seed training with either a fixed seed or a ``np.random.RandomState`` object. Defaults to None.
+        random_state (optional): Seed training with either a fixed seed or None. Defaults to None.
         max_epochs (optional): How long to train for. Defaults to 10.
         device (optional): Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.
         lr (optional): Set learning rate. Defaults to 2e-3
@@ -21,7 +21,7 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
         **kwargs: Optional keyword arguments for skorch.NeuralNetRegressor
 
     """
-    def __init__(self, module: nn.Module, random_state: Union[None, np.random.RandomState, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
+    def __init__(self, module: nn.Module, random_state: Union[None, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
         self.random_state = random_state
         self.verbose = verbose
 
@@ -47,14 +47,13 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
             print('Run training on', self.device)
         with fixedseed([torch, np], seed=self.random_state):
             super().fit(X, y)
-        super().fit(X, y=y)
 
 class NeuralNetClassifier(skorch.NeuralNetClassifier):
     """ Classification wrapper for scikit-learn-like PyTorch training
 
     Args:
         module: A PyTorch model of type ``torch.nn.Module``
-        random_state (optional): Seed training with either a fixed seed or a ``np.random.RandomState`` object. Defaults to None.
+        random_state (optional): Seed training with either a fixed seed or None. Defaults to None.
         max_epochs (optional): How long to train for. Defaults to 10.
         device (optional): Indicate where the model should be trained. If None, it chooses the fastest available option automatically. Defaults to None.
         lr (optional): Set learning rate. Defaults to 2e-3
@@ -65,7 +64,7 @@ class NeuralNetClassifier(skorch.NeuralNetClassifier):
 
     """
 
-    def __init__(self, module: nn.Module, random_state: Union[None, np.random.RandomState, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
+    def __init__(self, module: nn.Module, random_state: Union[None, int] = None, max_epochs: int = 10, device: str = None, lr: float = 2e-3, batch_size: int = 32, verbose: bool = False, callbacks: skorch.callbacks.Callback = None, **kwargs):
         self.random_state = random_state
         self.verbose = verbose
 

@@ -62,13 +62,13 @@ multivariate_datasets = [
     'temperature_rain_nomissing',
 ]
 
-def possible_datasets() -> List[str]:
+def possible_datasets():
     """ Returns list of possible dataset names
     """
     return list(get_links_dict().keys())
 
 
-def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False, return_horizon: bool = False) -> pd.DataFrame | np.ndarray | torch.Tensor:
+def load_monash(dataset: str, return_pytorch: bool = False, return_numpy: bool = False, return_horizon: bool = False):
     """ Loads datasets from Monash Time Series Forecasting Repository.
 
     Args:
