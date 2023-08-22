@@ -6,14 +6,56 @@ from tslearn.clustering import TimeSeriesKMeans
 from tslearn.utils import to_time_series_dataset
 
 from tsx.attribution import simple_gradcam as gradcam
-from tsx.attribution import SAXEmpiricalDependent, SAXIndependent, KernelShap, SAXDecodingPerturbations
 from tsx.metrics import mse
 from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
+from tsx.model_selection import find_best_forecaster, ROC_Member
+
+def split_array_at_zero(arr):
+    indices = np.where(arr != 0)[0]
+    splits = []
+    i = 0
+    while i+1 < len(indices):
+        start = i
+        stop = start
+        j = i+1
+        while j < len(indices):
+            if indices[j] - indices[stop] == 1:
+                stop = j
+                j += 1
+            else:
+                break
+
+        if start != stop:
+            splits.append((indices[start], indices[stop]))
+            i = stop
+        else:
+            i += 1
+
+    return splits
+
+def split_zero(arr, min_size=1):
+    f, t = 0, 0
+    splits = []
+
+    for idx in range(len(arr)):
+        if arr[idx] == 0:
+            if (t-f) > min_size:
+                splits.append((f, t-1))
+            f = idx + 1
+            t = idx + 1
+        else:
+            t += 1
+
+    # If last salient segment extends to the end:
+    if t == len(arr) and (t-f) > min_size:
+        splits.append((f, t-1))
+
+    return splits
 
 class OS_PGSM:
 
-    def __init__(self, models, config, random_state=0, device='cpu'):
+    def __init__(self, models, config, random_state=0):
         self.models = models
         self.config = config
         self.lag = config.get("k", 5)
@@ -40,47 +82,11 @@ class OS_PGSM:
         self.skip_type2 = config.get("skip_type2", False)
         self.distance_measure = config.get("distance_measure", "euclidean")
         self.nr_select = config.get("nr_select", None)
-        self.explanation_method = config.get("explanation_method", "gradcam")
-        # SAX
-        self.sax_alphabet_size = config.get("sax_alphabet_size", 5)
-        self.sax_max_coalition_samples = config.get('sax_max_coalition_samples', 50)
-        self.sax_normalize = config.get('sax_normalize', False)
-
-    def save(self, path):
-        roc_list = []
-        for rocs in self.rocs:
-            if len(rocs) == 0:
-                roc_list.append([])
-                continue
-
-            roc_list.append([r.tolist() for r in rocs])
-
-        obj = {
-            "config": self.config,
-            "rocs": roc_list,
-            "random_state": self.random_state,
-            "test_forecasters": self.test_forecasters,
-            "drifts_detected": self.drifts_detected,
-        }
-
-        with open(path, "w") as fp:
-            json.dump(obj, fp, indent=4)
-
-    @staticmethod
-    def load(path, models):
-        if not exists(path):
-            raise Exception(f"No compositor saved under {path}")
-        with open(path, "w") as fp:
-            obj = json.load(fp)
-
-        comp = OS_PGSM(models, obj["config"], random_state=obj["random_state"])
-        comp.rocs = obj["rocs"]
-        comp.test_forecasters = obj["test_forecasters"]
-        comp.drifts_detected = obj["drifts_detected"]
-
-        return comp
+        self.explanation_method = 'gradcam'
 
     def ensemble_predict(self, x, subset=None):
+        if len(x.shape)==2:
+            x = x.unsqueeze(0)
         if subset is None:
             predictions = [m.predict(x) for m in self.models]
         else:
@@ -115,10 +121,10 @@ class OS_PGSM:
         for x, y in zip(x_c, y_c):
             losses, cams = self.evaluate_on_validation(x, y) # Return-shapes: n_models, (n_models, blag-lag, lag)
             best_model = self.compute_ranking(losses) # Return: int [0, n_models]
-            all_rocs = self.calculate_rocs(x, cams, best_model) # Return: List of vectors
+            all_rocs = self.calculate_rocs(x, cams) # Return: List of vectors
             if self.roc_take_only_best:
                 rocs_i = all_rocs[best_model]
-                if rocs_i is not None:
+                if rocs_i is not None and len(rocs_i) > 0:
                     self.rocs[best_model].extend(rocs_i)
             else:
                 for i, rocs_i in enumerate(all_rocs):
@@ -189,7 +195,6 @@ class OS_PGSM:
                     current_val = X_complete[val_start:val_stop]
                     residuals = []
                     means = [torch.mean(current_val).numpy()]
-                    self.prepare_explainability_methods(current_val, X_complete[val_stop:])
                     self.rebuild_rocs(current_val)
 
             best_model = self.find_best_forecaster(x)
@@ -208,7 +213,6 @@ class OS_PGSM:
         closest_rocs = []
         closest_models = []
 
-        length_to_cut = np.min([len(r) for model_r in rocs for r in model_r])
         for model in range(len(rocs)):
             rs = rocs[model]
             distances = [euclidean(x.squeeze(), r.squeeze()) for r in rs]
@@ -293,7 +297,6 @@ class OS_PGSM:
         predictions = []
         mean_residuals = []
         means = []
-        min_distances = []
         ensemble_residuals = []
         topm_buffer = []
 
@@ -358,7 +361,6 @@ class OS_PGSM:
                 current_val = X_complete[val_start:val_stop]
                 mean_residuals = []
                 means = [torch.mean(current_val).numpy()]
-                self.prepare_explainability_methods(current_val, X_complete[val_stop:])
                 self.rebuild_rocs(current_val)
                 self.roc_rejection_sampling()
 
@@ -376,64 +378,9 @@ class OS_PGSM:
 
         return np.concatenate([X_test[:self.lag].numpy(), np.array(predictions)])
 
-    def prepare_explainability_methods(self, X_val, X_test):
-        if self.explanation_method == 'kernelshap':
-            self.X_val_windowed = windowing(X_val, self.lag)[0]
-            self.explainer = KernelShap(self.X_val_windowed, max_coalition_samples=self.sax_max_coalition_samples, random_state=self.rng)
-            
-        if self.explanation_method == 'sax_dependent':
-            self.X_val_windowed = windowing(X_val, self.lag)[0]
-            self.explainer = SAXEmpiricalDependent(
-                self.X_val_windowed,
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                explain_loss=True,
-                random_state=self.rng,
-            )
-
-        if self.explanation_method == 'sax_dependent_pred':
-            self.X_val_windowed = windowing(X_val, self.lag)[0]
-            self.explainer = SAXEmpiricalDependent(
-                self.X_val_windowed,
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                explain_loss=False,
-                random_state=self.rng,
-            )
-
-
-        if self.explanation_method == 'sax_independent':
-            self.explainer = SAXIndependent(
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                explain_loss=True,
-                random_state=self.rng,
-            )
-
-        if self.explanation_method == 'sax_independent_pred':
-            self.explainer = SAXIndependent(
-                self.sax_alphabet_size, 
-                self.sax_max_coalition_samples,
-                normalize=self.sax_normalize,
-                explain_loss=False,
-                random_state=self.rng,
-            )
-
-        if self.explanation_method == 'ks_sax_perturbations':
-            self.explainer = SAXDecodingPerturbations(
-                self.sax_alphabet_size, 
-                nr_perturbations=50, # TODO: Hyperparameter
-                max_coalition_samples=self.sax_max_coalition_samples,
-                random_state=self.rng
-            )
-
     # TODO: No runtime reports
     def run(self, X_val, X_test, reuse_prediction=False):
         with fixedseed(torch, seed=self.random_state):
-            self.prepare_explainability_methods(X_val, X_test)
             self.rebuild_rocs(X_val)
             self.shrink_rocs()        
 
@@ -451,7 +398,7 @@ class OS_PGSM:
 
             return forecast
 
-    def cluster_rocs(self, best_models, clostest_rocs, nr_desired_clusters, metric="dtw"):
+    def cluster_rocs(self, best_models, clostest_rocs, nr_desired_clusters):
         if nr_desired_clusters == 1:
             return best_models, clostest_rocs
 
@@ -527,31 +474,20 @@ class OS_PGSM:
     #   model: Single model
     ###
     def compute_explanation(self, x, y, model):
-        if self.explanation_method == 'gradcam':
-            loss = 0
-            cams = []
-            for _x, _y in zip(x, y):
-                res = model.forward(_x.unsqueeze(0).unsqueeze(0), return_intermediate=True)
-                logits = res['logits'].squeeze()
-                feats = res['feats']
-                l = mse(logits, _y)
-                r = np.expand_dims(gradcam(l, feats), 0)
-                l = l.detach().item()
-                loss += l
-                cams.append(r)
+        loss = 0
+        cams = []
+        for _x, _y in zip(x, y):
+            res = model.forward(_x.unsqueeze(0).unsqueeze(0), return_intermediate=True)
+            logits = res['logits'].squeeze()
+            feats = res['feats']
+            l = mse(logits, _y)
+            r = np.expand_dims(gradcam(l, feats), 0)
+            l = l.detach().item()
+            loss += l
+            cams.append(r)
 
-            r = np.concatenate(cams, axis=0)
-            l = loss
-        else:
-            r = self.explainer.shap_values(model.predict, x, y, verbose=False)
-            try:
-                l = ((model.predict(x.unsqueeze(1)).reshape(-1) - y.numpy())**2).sum()
-            except ValueError:
-                l = ((model.predict(x).reshape(-1) - y.numpy())**2).sum()
-
-            if self.explanation_method == 'sax_dependent' or self.explanation_method == 'sax_independent':
-                # Convert shap values into saliency, because we explain the loss
-                r = np.maximum(r, 0)
+        r = np.concatenate(cams, axis=0)
+        l = loss
 
         return r, l
 
@@ -596,53 +532,25 @@ class OS_PGSM:
 
         return losses, all_cams
 
-    def calculate_rocs(self, x, cams, best_model): 
-        def split_array_at_zero(arr):
-            indices = np.where(arr != 0)[0]
-            splits = []
-            i = 0
-            while i+1 < len(indices):
-                start = i
-                stop = start
-                j = i+1
-                while j < len(indices):
-                    if indices[j] - indices[stop] == 1:
-                        stop = j
-                        j += 1
-                    else:
-                        break
-
-                if start != stop:
-                    splits.append((indices[start], indices[stop]))
-                    i = stop
-                else:
-                    i += 1
-
-            return splits
-
+    def calculate_rocs(self, x, cams): 
         all_rocs = []
         for i in range(len(cams)):
             rocs = []
             cams_i = cams[i] 
-            #cams_i = cams[best_model] 
 
             if len(cams_i.shape) == 1:
                 cams_i = np.expand_dims(cams_i, 0)
 
             for offset, cam in enumerate(cams_i):
                 # Normalize CAMs
-                if self.invert_relu:
-                    after_threshold = (cam == 0).astype(np.int8)
-                    condition = np.sum(after_threshold) > 0
-                else:
-                    max_r = np.max(cam)
-                    if max_r == 0:
-                        continue
-                    normalized = cam / max_r
+                max_r = np.max(cam)
+                if max_r == 0:
+                    continue
+                normalized = cam / max_r
 
-                    # Extract all subseries divided by zeros
-                    after_threshold = normalized * (normalized > self.threshold)
-                    condition = len(np.nonzero(after_threshold)[0]) > 0
+                # Extract all subseries divided by zeros
+                after_threshold = normalized * (normalized > self.threshold)
+                condition = len(np.nonzero(after_threshold)[0]) > 0
 
                 if condition:
                     indidces = split_array_at_zero(after_threshold)
@@ -680,3 +588,173 @@ class OS_PGSM:
             return top_models, closest_rocs
 
         return top_models
+
+class Vanilla_OS_PGSM:
+
+    def __init__(self, pool, L, context_size, detect_concept_drift=True, threshold=0.5, min_roc_size=2, random_state=0):
+        self.pool = pool
+        self.L = L
+        self.context_size = context_size
+        self.detect_concept_drift = detect_concept_drift
+        self.random_state = random_state
+        self.threshold = threshold
+        self.min_roc_size = min_roc_size
+
+    def run(self, X_val, X_test):
+        with fixedseed(torch, seed=self.random_state):
+            self.rebuild_rocs(X_val)
+            forecast = self.adaptive_online_forecast(X_val, X_test)
+            return forecast
+
+    def adaptive_online_forecast(self, X_val, X_test):
+        # Adaptive method from OS-PGSM
+        self.test_forecasters = []
+        self.drifts_detected = []
+        val_start = 0
+        val_stop = len(X_val) + self.L
+        X_complete = torch.cat([X_val, X_test])
+        current_val = X_complete[val_start:val_stop]
+
+        residuals = []
+        predictions = []
+        means = [torch.mean(current_val).numpy()]
+
+        for target_idx in range(self.L, len(X_test)):
+            f_test = (target_idx-self.L)
+            t_test = (target_idx)
+            x = X_test[f_test:t_test] 
+  
+            # TODO: Only sliding val, since default paramter
+            val_start += 1
+            val_stop += 1
+
+            current_val = X_complete[val_start:val_stop]
+            means.append(torch.mean(current_val).numpy())
+
+            residuals.append(means[-1]-means[-2])
+
+            if self.detect_concept_drift:
+                if len(residuals) > 1: 
+                    if self.concept_drift(residuals, len(current_val), len(X_test)):
+                        self.drifts_detected.append(target_idx)
+                        val_start = val_stop - len(X_val) - self.L
+                        current_val = X_complete[val_start:val_stop]
+                        residuals = []
+                        means = [torch.mean(current_val).numpy()]
+                        self.rebuild_rocs(current_val)
+
+            best_model = find_best_forecaster(x, self.rocs, self.pool, dtw)[0]
+            self.test_forecasters.append(best_model)
+
+            # TODO: Each model needs to reshape according to their needs. This will only be (batch, features)
+            if len(x.shape) == 1:
+                x = x.unsqueeze(0)
+            if len(x.shape) == 2:
+                x = x.unsqueeze(0)
+            predictions.append(self.pool[best_model].predict(x).squeeze())
+
+        return np.concatenate([X_test[:self.L].numpy(), np.array(predictions)])
+
+    def _calc_losses_and_cams(self, x):
+        losses = np.zeros((len(self.pool)))
+        all_cams = []
+
+        X, y = windowing(x, L=self.L, z=1, use_torch=True)
+        for n_m, m in enumerate(self.pool):
+
+            # New gradcam
+            feats = m.feature_extractor(X.unsqueeze(1))
+            J = torch.autograd.functional.jacobian(lambda _X: (m.forecaster(_X).squeeze() - y)**2, feats)
+            J = torch.einsum('bbjk->bjk', J)
+            feats = feats.detach()
+            loss = np.sum(((m.forecaster(feats).squeeze() - y)**2).detach().numpy())
+            w = torch.mean(J, axis=-1)
+            r = torch.nn.functional.relu((feats * w[..., None]).sum(1)).squeeze().numpy()
+
+            losses[n_m] = loss
+            all_cams.append(r)
+
+        all_cams = np.array(all_cams)
+
+        return losses, all_cams
+
+    def rebuild_rocs(self, X):
+        self.rocs = [ [] for _ in range(len(self.pool)) ]
+
+        x_c, y_c =  windowing(X, L=self.context_size, z=self.context_size, use_torch=True)
+
+        # Create RoCs
+        all_models = []
+        for x, y in zip(x_c, y_c):
+            losses, cams = self._calc_losses_and_cams(x)
+            cams = cams.squeeze()
+            best_model = np.argmin(losses)
+            all_models.append(best_model)
+
+            # Calculate ROCs from CAMs
+            rocs = []
+            cams_i = cams[best_model] 
+
+            if len(cams_i.shape) == 1:
+                cams_i = np.expand_dims(cams_i, 0)
+
+            for offset, cam in enumerate(cams_i):
+                # Normalize CAMs
+                max_r = np.max(cam)
+                if max_r == 0:
+                    continue
+                normalized = cam / max_r
+
+                # Extract all subseries divided by zeros
+                after_threshold = normalized * (normalized > self.threshold)
+                condition = len(np.nonzero(after_threshold)[0]) > 0
+
+                if condition:
+                    indices = split_zero(after_threshold, min_size=self.min_roc_size)
+                    for (f, t) in indices:
+                        salient_indices = np.arange(f+offset, t+offset+1)
+                        r = ROC_Member(x.numpy(), y.numpy(), salient_indices)
+                        rocs.append(r)
+
+            if len(rocs) > 0:
+                self.rocs[best_model].extend(rocs)
+
+        # Sanity check
+        if np.all([len(roc) == 0 for roc in self.rocs]):
+            raise RuntimeError('All Regions of Competence are empty. Predictions will always be NaN')
+
+    def forecast_on_test(self, x_test):
+        self.test_forecasters = []
+        predictions = np.zeros_like(x_test)
+
+        x = x_test[:self.L]
+        predictions[:self.L] = x
+
+        for x_i in range(self.L, len(x_test)):
+            x = x_test[x_i-self.L:x_i].unsqueeze(0)
+
+            # Find top-m model who contain the smallest distances to x in their RoC
+            best_models = find_best_forecaster(x, self.rocs, self.pool, dtw)
+
+            self.test_forecasters.append([int(m) for m in best_models])
+            for i in range(len(best_models)):
+                predictions[x_i] += self.pool[best_models[i]].predict(x.unsqueeze(0))
+
+            predictions[x_i] = predictions[x_i] / len(best_models)
+
+
+        return np.array(predictions)
+
+    def concept_drift(self, residuals, ts_length, test_length, drift_type=None, R=1):
+        residuals = np.array(residuals)
+
+        # Empirical range of residuals
+        #R = 1
+        #R = np.max(np.abs(residuals)) # R = 1 
+
+        epsilon = np.sqrt((R**2)*np.log(1/0.95) / (2*ts_length))
+
+        if np.abs(residuals[-1]) <= np.abs(epsilon):
+            return False
+        else:
+            return True
