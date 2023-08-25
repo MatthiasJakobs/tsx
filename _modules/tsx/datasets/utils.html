@@ -270,7 +270,10 @@ document.write(`
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input time series</span>
 <span class="sd">        H: Forecast horizon</span>
-<span class="sd">        L: Amount of lag to use</span>
+<span class="sd">        L (optional): Amount of lag to use</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Two arrays (type depends on the type of `x`), the first one corresponding to everything before `H`</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
@@ -290,6 +293,9 @@ document.write(`
 <span class="sd">        H: Forecast horizon</span>
 <span class="sd">        z: Step length</span>
 <span class="sd">        use_torch: Whether to return `np.ndarray` or `torch.Tensor`</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Windowed `X` and `y`, either as a Numpy array or PyTorch tensor</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">univariate</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
