@@ -11,15 +11,20 @@ from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
 from tsx.model_selection import find_best_forecaster, ROC_Member, roc_mean, roc_matrix, find_closest_rocs
 
+def _check_compatibility_pool(pool):
+    for m in pool:
+        is_pytorch = isinstance(m, torch.nn.Module)
+        has_feature_extractor = hasattr(m, 'feature_extractor')
+        has_forecaster = hasattr(m, 'forecaster')
+        if not (is_pytorch and has_feature_extractor and has_forecaster):
+            return False
+    return True
+
 def concept_drift(residuals, ts_length, test_length, drift_type=None, R=1):
     if len(residuals) <= 1:
         return False
     
     residuals = np.array(residuals)
-
-    # Empirical range of residuals
-    #R = 1
-    #R = np.max(np.abs(residuals)) # R = 1 
 
     epsilon = np.sqrt((R**2)*np.log(1/0.95) / (2*ts_length))
 
@@ -664,6 +669,10 @@ class OS_PGSM:
 class Vanilla_OS_PGSM:
 
     def __init__(self, pool, L, context_size, detect_concept_drift=True, threshold=0.5, min_roc_size=2, random_state=0):
+
+        if not _check_compatibility_pool(pool):
+            raise RuntimeError('One of the models in the pool does not comply with the needed specifications for this method')
+
         self.pool = pool
         self.L = L
         self.context_size = context_size
@@ -773,6 +782,10 @@ class Vanilla_OS_PGSM:
 class Vanilla_OEP_ROC:
 
     def __init__(self, pool, L, context_size, context_step, nr_clusters_ensemble=15, dist_fn=euclidean, detect_concept_drift=True, threshold=0.1, min_roc_size=2, random_state=0):
+
+        if not _check_compatibility_pool(pool):
+            raise RuntimeError('One of the models in the pool does not comply with the needed specifications for this method')
+
         self.pool = pool
         self.L = L
         self.context_size = context_size
@@ -843,7 +856,6 @@ class Vanilla_OEP_ROC:
             # Since the best_models (and closest_rocs) are sorted by distance to x (ascending), 
             # choosing the first one will always minimize distance
             if len(cluster_member_indices) > 0:
-                #idx = cluster_member_indices[-1]
                 idx = cluster_member_indices[0]
                 G.append(best_models[idx])
                 new_closest_rocs.append(clostest_rocs[idx])
@@ -904,29 +916,33 @@ class Vanilla_OEP_ROC:
 
         means = [torch.mean(current_val).numpy()]
 
-        # First iteration 
+        # --- First iteration ---
+        # -----------------------
         x = X_test[:self.L]
         x_unsqueezed = x.unsqueeze(0).unsqueeze(0)
+        
+        # Cluster RoCs and select top-m
         topm, _ = self.recluster_and_reselect(x, self.L)
 
-        # Compute min distance to x from the all models
+        # Compute min distance to x from the all models needed for Drift Type II
         _, closest_rocs = find_closest_rocs(x, self.rocs, dist_fn=self.dist_fn)
         mu_d = np.min([self.dist_fn(r.r, x) for r in closest_rocs])
 
-        # topm_buffer contains the models used for prediction
+        # If new selection is empty, keep the old one
         if len(topm) != 0:
             topm_buffer = topm
+
+        # In the first iteration, topm_buffer can be empty, so we might need to sample a start ensemble
         if len(topm_buffer) == 0:
             topm_buffer = self.rng.choice(len(self.pool), size=min(3, len(self.pool)), replace=False).tolist()
 
-        #predictions.append(self.ensemble_predict(x_unsqueezed, subset=topm_buffer))
+        # Do the actual prediction with the models in topm_buffer
         ensemble_prediction = np.mean([self.pool[i].predict(x_unsqueezed) for i in topm_buffer])
         predictions.append(ensemble_prediction)
         self.test_forecasters.append(topm_buffer)
 
-        # Subsequent iterations
+        # --- Subsequent iterations ---
         for target_idx in range(self.L+1, len(X_test)):
-            #print(f'--- {target_idx} ---')
             f_test = (target_idx-self.L)
             t_test = (target_idx)
             x = X_test[f_test:t_test] 
@@ -934,17 +950,20 @@ class Vanilla_OEP_ROC:
             val_start += 1
             val_stop += 1
             
+            # Residuals for Drift Type I detection
             current_val = X_complete[val_start:val_stop]
             means.append(torch.mean(current_val).numpy())
             mean_residuals.append(means[-1]-means[-2])
 
+            # Compute min distance to x from the all models needed for Drift Type II
             _, closest_rocs = find_closest_rocs(x, self.rocs, dist_fn=self.dist_fn)
             ensemble_residuals.append(mu_d - np.min([self.dist_fn(r.r, x) for r in closest_rocs]))
 
             drift_type_one = concept_drift(mean_residuals, len(current_val), len(X_test), drift_type="type1", R=1.5)
             drift_type_two = concept_drift(ensemble_residuals, len(current_val), len(X_test), drift_type="type2", R=100)
 
-            if drift_type_one:
+            if drift_type_one and self.detect_concept_drift:
+                # If Drift Type I, recreate Regions of Competence
                 self.drifts_type_1_detected.append(target_idx)
                 val_start = val_stop - len(X_val) - self.L
                 current_val = X_complete[val_start:val_stop]
@@ -952,19 +971,22 @@ class Vanilla_OEP_ROC:
                 means = [torch.mean(current_val).numpy()]
                 self.rebuild_rocs(current_val)
 
-            if drift_type_one or drift_type_two:
+            if (drift_type_one or drift_type_two) and self.detect_concept_drift:
+                # No matter which Drift Type triggered: Redo ensembling
                 topm, _ = self.recluster_and_reselect(x, target_idx)
+                
+                # If Drift Type II, reset residuals and recompute mu_d
                 if drift_type_two:
                     self.drifts_type_2_detected.append(target_idx)
                     _, closest_rocs = find_closest_rocs(x, self.rocs, dist_fn=self.dist_fn)
                     mu_d = np.min([self.dist_fn(r.r, x) for r in closest_rocs])
                     ensemble_residuals = []
 
+                # If new selection is empty, keep the old one
                 if len(topm) != 0:
                     topm_buffer = topm
-                if len(topm_buffer) == 0:
-                    topm_buffer = self.rng.choice(len(self.pool), size=min(3, len(self.pool)), replace=False).tolist()
 
+            # Do the actual prediction with the models in topm_buffer
             ensemble_prediction = np.mean([self.pool[i].predict(x_unsqueezed) for i in topm_buffer])
             predictions.append(ensemble_prediction)
             self.test_forecasters.append(topm_buffer)
