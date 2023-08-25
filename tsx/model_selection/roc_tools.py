@@ -1,6 +1,21 @@
+import torch
 import numpy as np
 
-def find_closest_rocs(x, rocs, dist_fn):
+from typing import List
+from tsx.model_selection import ROC_Member
+
+def find_closest_rocs(x: torch.Tensor, rocs: List[List[torch.Tensor]], dist_fn: callable):
+    ''' Given an input `x` and RoCs `rocs` return the closest RoC member for each model w.r.t. `dist_fn`
+
+    Args:
+        x: Input time series window
+        rocs: List of Regions of Competences
+        dist_fn: Distance function applicable for two time series windows
+
+    Returns:
+        A list of model indices and a list of correpsonding closest `ROC_Member` objects
+
+    '''
     closest_rocs = []
     closest_models = []
 
@@ -12,7 +27,20 @@ def find_closest_rocs(x, rocs, dist_fn):
             closest_models.append(model)
     return closest_models, closest_rocs
 
-def find_best_forecaster(x, rocs, pool, dist_fn, topm=1):
+def find_best_forecaster(x: torch.Tensor, rocs: List[List[ROC_Member]], pool: List[torch.nn.Module], dist_fn: callable, topm: int = 1):
+    ''' Given an input `x`, a pool of pretrained models `pool` and corresponding RoCs `rocs` return the `topm` best forecasters according to distance measure `dist_fn`
+
+    Args:
+        x: Input time series window
+        pool: List of pretrained models
+        rocs: List of Regions of Competences
+        dist_fn: Distance function applicable for two time series windows
+        topm: How many models to return
+
+    Returns:
+        A `np.ndarray` of the `topm` best model indices from `pool`
+
+    '''
     model_distances = np.ones(len(pool)) * 1e10
     closest_rocs_agg = [None]*len(pool)
 
@@ -26,11 +54,6 @@ def find_best_forecaster(x, rocs, pool, dist_fn, topm=1):
                 closest_rocs_agg[i] = r
 
     top_models = np.argsort(model_distances)[:topm]
-    closest_rocs = []
-    for i in top_models:
-        if closest_rocs_agg[i] is not None:
-            closest_rocs.append(closest_rocs_agg[i])
-
     return top_models[:topm]
 
 

@@ -2,12 +2,25 @@ from hashlib import md5
 
 class ROC_Member:
 
-    def __init__(self, x, y, indices, loss=None):
+    ''' Object representing a member of a Region of Competence
+
+    Args:
+        x (`np.ndarray`): Original time series values
+        y (`np.ndarray`): Corresponding true forecasting values
+        indices (`np.ndarray`): Indices indicating the salient region
+
+    Attributes:
+        r (`np.ndarray`): Most salient subseries of `x`
+        x (`np.ndarray`): Original time series values
+        y (`np.ndarray`): Corresponding true forecasting values
+        indices (`np.ndarray`): Indices indicating the salient region
+
+    '''
+    def __init__(self, x, y, indices):
         self.x = x
         self.y = y
         self.r = x[indices]
         self.indices = indices
-        self.loss = loss
 
     def __repr__(self):
         return ', '.join(str(v.round(4)) for v in self.r)

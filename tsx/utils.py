@@ -198,6 +198,9 @@ def to_random_state(rs: Union[np.random.RandomState, int, None]):
     Args:
         rs: Either already a `np.random.RandomState` object or something that `np.random.RandomState` can process
 
+    Returns:
+        A `np.random.RandomState` object 
+
     '''
     if not isinstance(rs, np.random.RandomState):
         rs = np.random.RandomState(rs)

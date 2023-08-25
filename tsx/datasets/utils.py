@@ -38,7 +38,10 @@ def split_horizon(x: Union[np.ndarray, torch.Tensor], H: int, L: Union[None, int
     Args:
         x: Input time series
         H: Forecast horizon
-        L: Amount of lag to use
+        L (optional): Amount of lag to use
+
+    Returns:
+        Two arrays (type depends on the type of `x`), the first one corresponding to everything before `H`
 
     '''
     assert len(x.shape) == 1
@@ -58,6 +61,9 @@ def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1
         H: Forecast horizon
         z: Step length
         use_torch: Whether to return `np.ndarray` or `torch.Tensor`
+
+    Returns:
+        Windowed `X` and `y`, either as a Numpy array or PyTorch tensor
 
     '''
     univariate = len(x.shape) == 1

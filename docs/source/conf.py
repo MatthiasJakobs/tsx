@@ -67,3 +67,4 @@ html_theme_options = {
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
 
 todo_include_todos = True
+napoleon_custom_sections = [('Attributes', 'params_style')]

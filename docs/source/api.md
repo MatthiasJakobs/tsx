@@ -23,6 +23,13 @@ This page documents the classes and methods contained in the `tsx` package.
    :members:
 ```
 
+```{eval-rst}
+.. autoclass:: tsx.models.forecaster.ospgsm.OS_PGSM
+   :members:
+.. autoclass:: tsx.models.forecaster.ospgsm.OEP_ROC
+   :members:
+```
+
 ## Datasets
 
 ### Monash Forecasting Repository
@@ -40,6 +47,19 @@ This page documents the classes and methods contained in the `tsx` package.
 ```{eval-rst}
 .. autofunction:: tsx.datasets.utils.windowing
 .. autofunction:: tsx.datasets.utils.split_horizon
+```
+
+## Model selection and ensembling
+```{eval-rst}
+.. autoclass:: tsx.model_selection.ROC_Member
+.. autofunction:: tsx.model_selection.roc_tools.find_best_forecaster
+.. autofunction:: tsx.model_selection.roc_tools.find_closest_rocs
+```
+
+## Distances
+```{eval-rst}
+.. autofunction:: tsx.distances.dtw
+.. autofunction:: tsx.distances.euclidean
 ```
 
 ## Utilities
