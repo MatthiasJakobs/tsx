@@ -62,6 +62,11 @@ multivariate_datasets = [
     'temperature_rain_nomissing',
 ]
 
+# From Cerqueira et al. 2023 "Model Selection for Time Series Forecasting An Empirical Analysis of Multiple Estimators"
+def load_m4_daily_bench(min_size=500):
+    time_series = load_monash('m4_daily')['series_value']
+    return [ts.to_numpy() for ts in time_series if len(ts) >= min_size]
+
 def possible_datasets():
     """ Returns list of possible dataset names
     """
