@@ -71,8 +71,8 @@ def load_m4_daily_bench(min_size=500, return_horizon=False):
     indices = np.where([len(ts) >= min_size for ts in data])[0]
 
     if return_horizon:
-        return [ts.to_numpy() for ts in data.iloc(indices)], horizons[indices]
-    return [ts.to_numpy() for ts in data.iloc(indices)]
+        return [ts.to_numpy() for idx, ts in enumerate(data) if idx in indices], horizons[indices]
+    return [ts.to_numpy() for idx, ts in enumerate(data) if idx in indices]
 
 def possible_datasets():
     """ Returns list of possible dataset names
