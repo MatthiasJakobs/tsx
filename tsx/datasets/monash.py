@@ -63,14 +63,16 @@ multivariate_datasets = [
 ]
 
 # From Cerqueira et al. 2023 "Model Selection for Time Series Forecasting An Empirical Analysis of Multiple Estimators"
-def load_m4_daily_bench(min_size=500):
+def load_m4_daily_bench(min_size=500, return_horizon=False):
     data, horizons = load_monash('m4_daily', return_horizon=True)
     horizons = np.array(horizons)
     data = data['series_value']
 
     indices = np.where([len(ts) >= min_size for ts in data])[0]
 
-    return [ts.to_numpy() for ts in data.iloc(indices)], horizons[indices]
+    if return_horizon:
+        return [ts.to_numpy() for ts in data.iloc(indices)], horizons[indices]
+    return [ts.to_numpy() for ts in data.iloc(indices)]
 
 def possible_datasets():
     """ Returns list of possible dataset names
