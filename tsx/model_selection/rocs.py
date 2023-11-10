@@ -1,4 +1,5 @@
 from hashlib import md5
+from tsx.distances import euclidean, dtw
 
 class ROC_Member:
 
@@ -28,4 +29,11 @@ class ROC_Member:
     def __hash__(self):
         representation = self.__repr__()
         return int(md5(representation.encode('utf-8')).hexdigest(), 16) & 0xffffffff
+
+    def euclidean_distance(self, x):
+        _x = x[self.indices]
+        return euclidean(self.r, _x)
+
+    def dtw_distance(self, x):
+        return dtw(self.r, x)
 
