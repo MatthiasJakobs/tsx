@@ -1,3 +1,4 @@
+import numpy as np
 from hashlib import md5
 from tsx.distances import euclidean, dtw
 
@@ -31,8 +32,12 @@ class ROC_Member:
         return int(md5(representation.encode('utf-8')).hexdigest(), 16) & 0xffffffff
 
     def euclidean_distance(self, x):
-        _x = x[self.indices]
-        return euclidean(self.r, _x)
+        s_r = self.r.reshape(1, -1)
+        if len(x.shape) <= 1:
+            x = x.reshape(1, -1)
+        _x = x[:, self.indices]
+        dists = np.sum((_x - s_r)**2, axis=1)
+        return dists.squeeze()
 
     def dtw_distance(self, x):
         return dtw(self.r, x)
