@@ -1,6 +1,7 @@
 import numpy as np
 from hashlib import md5
-from tsx.distances import euclidean, dtw
+
+from tsx.distances import dtw
 
 class ROC_Member:
 
@@ -40,5 +41,9 @@ class ROC_Member:
         return dists.squeeze()
 
     def dtw_distance(self, x):
-        return dtw(self.r, x)
+        if len(x.shape) <= 1:
+            x = x.reshape(1, -1)
+        _x = x[:, self.indices]
+        dists = np.array([dtw(__x, self.r) for __x in _x])
+        return dists.squeeze()
 
