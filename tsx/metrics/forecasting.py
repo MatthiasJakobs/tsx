@@ -29,3 +29,12 @@ def mse(a, b):
     if isinstance(b, np.ndarray):
         b = torch.from_numpy(b)
     return torch.mean((a-b)**2, axis=0)
+
+def mase(y_pred, y_true, X):
+    y_pred = y_pred.reshape(-1)
+    y_true = y_true.reshape(-1)
+
+    nom = np.mean(np.abs(y_pred-y_true))
+    denom = np.sum(np.abs(X[1:]-X[:-1])) / (len(X)-1)
+
+    return nom / denom
