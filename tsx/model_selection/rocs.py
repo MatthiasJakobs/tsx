@@ -11,6 +11,7 @@ class ROC_Member:
         x (`np.ndarray`): Original time series values
         y (`np.ndarray`): Corresponding true forecasting values
         indices (`np.ndarray`): Indices indicating the salient region
+        squared_error (`float`): Squared error achieved by the model
 
     Attributes:
         r (`np.ndarray`): Most salient subseries of `x`
@@ -19,11 +20,12 @@ class ROC_Member:
         indices (`np.ndarray`): Indices indicating the salient region
 
     '''
-    def __init__(self, x, y, indices):
+    def __init__(self, x, y, indices, squared_error):
         self.x = x
         self.y = y
         self.r = x[indices]
         self.indices = indices
+        self.squared_error = squared_error
 
     def __repr__(self):
         return ', '.join(str(v.round(4)) for v in self.r)
