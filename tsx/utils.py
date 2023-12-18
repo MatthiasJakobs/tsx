@@ -206,3 +206,20 @@ def to_random_state(rs: Union[np.random.RandomState, int, None]):
         rs = np.random.RandomState(rs)
 
     return rs
+
+def get_device():
+    ''' Return the "best" device in the following order:
+        If a GPU is available, return "cuda".
+        If Metal is available, return "mps"
+        Otherwise, return "cpu"
+
+    Returns:
+        String indicating best possible device for Torch Tensors
+    '''
+    device = 'cpu'
+    device = 'mps' if torch.backends.mps.is_available() and torch.backends.mps.is_built() else device
+    device = 'cuda' if torch.cuda.is_available() else device
+
+    return device
+
+

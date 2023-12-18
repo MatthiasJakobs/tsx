@@ -5,6 +5,7 @@ import skorch
 
 from seedpy import fixedseed
 from typing import Union
+from tsx.utils import get_device
 
 class NeuralNetRegressor(skorch.NeuralNetRegressor):
     """ Regression wrapper for scikit-learn-like PyTorch training
@@ -27,9 +28,7 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
 
         self.device = device
         if self.device is None:
-            self.device = 'cpu'
-            self.device = 'mps' if torch.backends.mps.is_available() and torch.backends.mps.is_built() else self.device
-            self.device = 'cuda' if torch.cuda.is_available() else self.device
+            self.device = get_device()
 
         super().__init__(
             module, 
@@ -47,6 +46,11 @@ class NeuralNetRegressor(skorch.NeuralNetRegressor):
             print('Run training on', self.device)
         with fixedseed([torch, np], seed=self.random_state):
             super().fit(X, y)
+
+    def __call__(self, X):
+        if not self.initialized_:
+            self.initialize()
+        return self.forward(X)
 
 class NeuralNetClassifier(skorch.NeuralNetClassifier):
     """ Classification wrapper for scikit-learn-like PyTorch training
@@ -70,9 +74,7 @@ class NeuralNetClassifier(skorch.NeuralNetClassifier):
 
         self.device = device
         if self.device is None:
-            self.device = 'cpu'
-            self.device = 'mps' if torch.backends.mps.is_available() and torch.backends.mps.is_built() else self.device
-            self.device = 'cuda' if torch.cuda.is_available() else self.device
+            self.device = get_device()
 
         super().__init__(
             module, 
