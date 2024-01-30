@@ -113,3 +113,43 @@ def split_proportion(X, proportions):
 
     return splits
 
+def random_sample(dataset, random_state, L, H=1, test_precentage_for_train=0.1):
+
+    # generate lists to save als train and test datasets in one array
+    X_train_all = list()
+    y_train_all = list()
+    X_test_all = list()
+    y_test_all = list()
+
+    for ts in dataset:
+        # load data from time series (50% train, 50% test)
+        X_train = ts[:int(0.5 * len(ts))]
+
+        # normalize data
+        mus, stds = np.mean(X_train, axis=0), np.std(X_train, axis=0)
+        if stds == 0: stds = 1 
+        X_norm = (ts-mus)/stds
+        X_train = X_norm[:int(0.5 * len(ts))]
+        X_test = X_norm[len(X_train):]
+        assert np.all(np.isclose(np.concatenate([X_train, X_test], axis=0), X_norm))
+
+        # windowing
+        X_train,y_train = windowing(X_train, L, H)
+        X_test,y_test = windowing(X_test, L, H)
+
+        # add windows to whole train set
+        X_train_all.append(X_train)
+        y_train_all.append(y_train)
+        X_test_all.append(X_test)
+        y_test_all.append(y_test)
+
+    # generate list for random sample indices
+    X_train = np.concatenate(X_train_all)
+    y_train = np.concatenate(y_train_all)
+    X_test = np.concatenate(X_test_all)
+    y_test = np.concatenate(y_test_all)
+    
+    # collect num_samples random indices from whole train data
+    indices = random_state.choice(range(len(X_train)), size=int(X_train.shape[0]*test_precentage_for_train), replace=False)
+
+    return X_train[indices], y_train[indices], X_test, y_test
