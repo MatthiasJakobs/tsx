@@ -43,10 +43,10 @@ class DETS:
             # Use current committee to predict
             if only_best:
                 highest_weight_index = committee_indices[0]
-                preds = train_preds[highest_weight_index, t].squeeze()
+                preds = test_preds[highest_weight_index, t].squeeze()
                 weights[t, highest_weight_index] = 1.0
             else:
-                preds = train_preds[committee_indices, t]
+                preds = test_preds[committee_indices, t]
                 local_weights = emase_errors[committee_indices] / emase_errors[committee_indices].sum()
                 preds = (local_weights * preds).sum()
                 weights[t, committee_indices] = local_weights
