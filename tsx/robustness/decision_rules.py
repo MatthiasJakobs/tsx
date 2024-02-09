@@ -2,9 +2,11 @@ import numpy as np
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
+from tsx.utils import to_random_state
+
 def test_rules(model, thresholds, n_features, x_min=-1e3, x_max=1e3, n_samples=10000):
 
-    rng = np.random.RandomState(0)
+    rng = to_random_state(0)
     samples = np.zeros((n_samples, n_features))
 
     # In case there are +- inf boundaries
