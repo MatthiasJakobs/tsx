@@ -4,10 +4,30 @@ from tsx.utils import to_random_state
 from itertools import product
 
 def n_uniques(A, L):
+    ''' Get the number of unique scale-invariant time series concepts of length `L` and alphabet size `A`
+
+    Args:
+        A: Alphabet size
+        L: Length of time series
+
+    Returns:
+        Number of unique scale-invariant concepts
+
+    '''
     return A**L - (A-1)**L
 
 # TODO: This surely can be constructed cleverly
 def generate_unique_concepts(L, A):
+    ''' Generate all unique scale-invariant time series concepts as string representation given `L` and `A`
+
+    Args:
+        A: Alphabet size
+        L: Length of time series
+
+    Returns:
+        List of unique scale-invariant concepts as string representations
+
+    '''
     # Create all combinations
     alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[:A]
     combs_string = np.array(list(product(alphabet, repeat=L)))
@@ -32,6 +52,16 @@ def generate_unique_concepts(L, A):
     return [ ''.join(x) for x in uniques ] 
 
 def generate_all_concepts(L, A):
+    ''' Generate all time series concepts as string representation given `L` and `A`
+
+    Args:
+        A: Alphabet size
+        L: Length of time series
+
+    Returns:
+        List of all possible concepts as string representations
+
+    '''
     alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[:A]
     return [ ''.join(x) for x in product(alphabet, repeat=L) ] 
 
@@ -53,10 +83,22 @@ def _get_bounds(n_alphabet):
     return np.array(bounds)
 
 # Generate datapoints for a given concept
-def generate_samples(concept_key, size, n_alphabet, random_state=None):
+def generate_samples(concept_key, size, A, random_state=None):
+    ''' Generate `size` random samples for given concept `concept_key`
+
+    Args:
+        concept_key: String representation of desired concept
+        size: Number of desired samples
+        A: Alphabet size
+        random_state: Valid input to `to_random_state`
+
+    Returns:
+        Numpy array of size `size` of samples from concept `concept_key`
+
+    '''
     rng = to_random_state(random_state)
     concept_indices = _map_key_to_indices(concept_key)
-    bounds = _get_bounds(n_alphabet)
+    bounds = _get_bounds(A)
     samples = np.zeros((size, len(concept_indices)))
     for _i, idx in enumerate(concept_indices):
         low, high = bounds[idx]
@@ -86,6 +128,16 @@ def sample_balanced(X, y, class_idx=1, random_state=None):
     return X[all_indices], y[all_indices]
 
 def find_closest_concepts(X, concepts):
+    ''' Find closest concepts in `concepts` for each time series in `X`
+
+    Args:
+        X: 2d numpy array of time series datapoints
+        concepts: 2d numpy array of concept samples
+
+    Returns:
+        List of indices into concepts of size `len(X)`, indicating closest concept for each entry
+
+    '''
     # Normalize X and concepts (for good measure)
     mu, std = np.mean(X, axis=-1), np.std(X, axis=-1)
     std[std == 0] = 1
@@ -104,6 +156,17 @@ def find_closest_concepts(X, concepts):
 
 # X.shape = (batch_size, L)
 def get_concept_distributions(X, concepts, normalize=True):
+    ''' Calculate empricial distribution, given `concepts`, over `X`
+
+    Args:
+        X: 2d numpy array of time series datapoints
+        concepts: 2d numpy array of concept samples
+        normalize: Whether or not the distribution should be normalized or should encode total counts
+
+    Returns:
+        List of indices into concepts of size `len(X)`, indicating closest concept for each entry
+
+    '''
     concept_dist = np.zeros((len(concepts)))
     probable_concepts = find_closest_concepts(X, concepts)
     for c in probable_concepts:

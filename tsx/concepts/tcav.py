@@ -8,14 +8,29 @@ from sklearn.metrics import f1_score
 
 from tsx.concepts import generate_in_out_sets, sample_balanced
 
-def get_cavs(model, concepts, n_alphabet, size_per_concept=20, return_lms=False, verbose=False, random_state=None):
+def get_cavs(model, concepts, A, size_per_concept=20, return_lms=False, verbose=False, random_state=None):
+    ''' Get Class Activation Vectors of `concepts` for `model` 
+
+    Args:
+        model: Pytorch model with method `get_activation`, returning a latent representation
+        concepts: 2d numpy array of concept samples
+        A: Alphabet size
+        size_per_concept: How many samples per concept to generate for training linear models 
+        return_lms: If True, return list of `sklearn.linear_model.LogisticRegression` instead of just CAVs (default: False)
+        verbose: If True, print linear model F1 score per concept (default: False)
+        random_state: Input to `to_random_state`
+
+    Returns:
+        Either a list of Class Activation Vectors or a list of `sklearn.linear_model.LogisticRegression` models
+
+    '''
     if not hasattr(model, 'get_activation'):
         raise AttributeError(f'Model {model} has no method get_activation')
 
     rng = to_random_state(random_state)
     model.eval()
 
-    X, y = generate_in_out_sets(concepts, n_alphabet, size_per_concept=size_per_concept, random_state=rng)
+    X, y = generate_in_out_sets(concepts, A, size_per_concept=size_per_concept, random_state=rng)
     X = X.astype(np.float32)
 
     cavs = []
@@ -51,6 +66,19 @@ def get_cavs(model, concepts, n_alphabet, size_per_concept=20, return_lms=False,
     return cavs
 
 def get_tcav(model, cavs, X, y=None, aggregate='tcav_original'):
+    ''' Get TCAV values of `cavs` for `model` 
+
+    Args:
+        model: Pytorch model with method `get_activation`, returning a latent representation and `model.predictor` returning a point forecast
+        cavs: List of Class Activation Vectors from `get_cavs`
+        X: 2D numpy array of input data
+        y: If not None, return TCAV values for squared error (default: None)
+        aggregate: How to aggregate TCAV values. Possible values: `[tcav_original, none]` (default: `tcav_original`, which counts number of positive TCAV values)
+
+    Returns:
+        (Aggregated) TCAV scores
+
+    '''
     if not (hasattr(model, 'feature_extractor') and hasattr(model, 'predictor')):
         raise AttributeError(f'model needs to have an attribute to extract latent features and a separate predictor. Make sure the attributes `feature_extractor` and `predictor` are present')
     
