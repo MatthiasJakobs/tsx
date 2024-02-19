@@ -12,9 +12,9 @@ sys.path.insert(0, os.path.abspath('../..'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'tsx'
-copyright = '2023, Matthias Jakobs'
+copyright = '2024, Matthias Jakobs'
 author = 'Matthias Jakobs'
-release = '0.2'
+release = '0.3'
 
 
 # -- General configuration ---------------------------------------------------
