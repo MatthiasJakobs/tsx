@@ -336,7 +336,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.distances.dtw"><code class="docutils literal notranslate"><span class="pre">dtw()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.distances.euclidean"><code class="docutils literal notranslate"><span class="pre">euclidean()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics">Metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.metrics.mase"><code class="docutils literal notranslate"><span class="pre">mase()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.metrics.entropy"><code class="docutils literal notranslate"><span class="pre">entropy()</span></code></a></li>
@@ -627,6 +631,39 @@ document.write(`
 </section>
 <section id="distances">
 <h2>Distances<a class="headerlink" href="#distances" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.distances.dtw">
+<span class="sig-prename descclassname"><span class="pre">tsx.distances.</span></span><span class="sig-name descname"><span class="pre">dtw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/distances/dtw.html#dtw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.distances.dtw" title="Permalink to this definition">#</a></dt>
+<dd><p>Dynamic Time Warping from <cite>fastdtw</cite> package</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – First input</p></li>
+<li><p><strong>t</strong> – Second input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated distance (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.distances.euclidean">
+<span class="sig-prename descclassname"><span class="pre">tsx.distances.</span></span><span class="sig-name descname"><span class="pre">euclidean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/distances/lp.html#euclidean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.distances.euclidean" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – First input</p></li>
+<li><p><strong>t</strong> – Second input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated distance (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="metrics">
 <h2>Metrics<a class="headerlink" href="#metrics" title="Permalink to this heading">#</a></h2>
@@ -766,7 +803,11 @@ Otherwise, return “cpu”</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.distances.dtw"><code class="docutils literal notranslate"><span class="pre">dtw()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.distances.euclidean"><code class="docutils literal notranslate"><span class="pre">euclidean()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics">Metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.metrics.mase"><code class="docutils literal notranslate"><span class="pre">mase()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.metrics.entropy"><code class="docutils literal notranslate"><span class="pre">entropy()</span></code></a></li>
