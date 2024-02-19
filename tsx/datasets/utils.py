@@ -97,3 +97,29 @@ def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1
         return torch.from_numpy(X).float(), torch.from_numpy(y)
 
     return X, y
+
+def split_proportion(X, proportions):
+    ''' Split a time series into `|proportion|` pieces, given the fractions in `proportion`
+
+    Args:
+        X: Input time series
+        proportions: List of fractions for each split. Must sum up to one and be of at least size `2`
+
+    Returns:
+        List of splits of X
+
+    '''
+    assert len(proportions) >= 2
+    assert sum(proportions) == 1
+
+    n = len(X)
+
+    l = int(proportions[0] * n)
+    splits = [X[0:l]]
+    for prop in proportions[1:]:
+        l = int(prop * n)
+        start = sum([len(x) for x in splits])
+        splits.append(X[start:(start+l)])
+
+    return splits
+

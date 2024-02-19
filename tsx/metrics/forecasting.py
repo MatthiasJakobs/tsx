@@ -29,3 +29,23 @@ def mse(a, b):
     if isinstance(b, np.ndarray):
         b = torch.from_numpy(b)
     return torch.mean((a-b)**2, axis=0)
+
+def mase(y_pred, y_true, X):
+    ''' Compute MASE value
+
+    Args:
+        y_pred: Predicted values
+        y_true: True values
+        X: Background time series to compute one-step-ahead repeated forecasts
+
+    Returns:
+        MASE value that is 1 if forecast is equal to repeated value baseline, <1 if better. Always >= 0.
+
+    '''
+    y_pred = y_pred.reshape(-1)
+    y_true = y_true.reshape(-1)
+
+    nom = np.mean(np.abs(y_pred-y_true))
+    denom = np.sum(np.abs(X[1:]-X[:-1])) / (len(X)-1)
+
+    return nom / denom

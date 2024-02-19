@@ -192,17 +192,32 @@ def prepare_for_pytorch(x, batch=True, channel=True):
 
     return x
 
-def to_random_state(rs: Union[np.random.RandomState, int, None]):
-    ''' Return `np.random.RandomState` object from input
+def to_random_state(rs: Union[int, None, np.random.Generator]):
+    ''' Return `np.random.Generator` object from input
 
     Args:
-        rs: Either already a `np.random.RandomState` object or something that `np.random.RandomState` can process
+        rs: Something that `np.random.default_rng` can process.
 
     Returns:
-        A `np.random.RandomState` object 
+        A `np.random.default_rng` object 
 
     '''
-    if not isinstance(rs, np.random.RandomState):
-        rs = np.random.RandomState(rs)
-
+    rs = np.random.default_rng(rs)
     return rs
+
+def get_device():
+    ''' Return the "best" device in the following order:
+        If a GPU is available, return "cuda".
+        If Metal is available, return "mps"
+        Otherwise, return "cpu"
+
+    Returns:
+        String indicating best possible device for Torch Tensors
+    '''
+    device = 'cpu'
+    device = 'mps' if torch.backends.mps.is_available() and torch.backends.mps.is_built() else device
+    device = 'cuda' if torch.cuda.is_available() else device
+
+    return device
+
+
