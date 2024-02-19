@@ -244,7 +244,10 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for tsx.model_selection.rocs</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
+
+<span class="kn">from</span> <span class="nn">tsx.distances</span> <span class="kn">import</span> <span class="n">dtw</span>
 
 <div class="viewcode-block" id="ROC_Member"><a class="viewcode-back" href="../../../api.html#tsx.model_selection.ROC_Member">[docs]</a><span class="k">class</span> <span class="nc">ROC_Member</span><span class="p">:</span>
 
@@ -254,6 +257,7 @@ document.write(`
 <span class="sd">        x (`np.ndarray`): Original time series values</span>
 <span class="sd">        y (`np.ndarray`): Corresponding true forecasting values</span>
 <span class="sd">        indices (`np.ndarray`): Indices indicating the salient region</span>
+<span class="sd">        squared_error (`float`): Squared error achieved by the model</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        r (`np.ndarray`): Most salient subseries of `x`</span>
@@ -262,18 +266,52 @@ document.write(`
 <span class="sd">        indices (`np.ndarray`): Indices indicating the salient region</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">squared_error</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">squared_error</span> <span class="o">=</span> <span class="n">squared_error</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">representation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">md5</span><span class="p">(</span><span class="n">representation</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xffffffff</span></div>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">md5</span><span class="p">(</span><span class="n">representation</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xffffffff</span>
+
+<div class="viewcode-block" id="ROC_Member.euclidean_distance"><a class="viewcode-back" href="../../../api.html#tsx.model_selection.ROC_Member.euclidean_distance">[docs]</a>    <span class="k">def</span> <span class="nf">euclidean_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Return euclidean distances of self to x</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input array to compare against</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of euclidean distances between salient parts of self.x and x </span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">s_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">_x</span> <span class="o">-</span> <span class="n">s_r</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dists</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ROC_Member.dtw_distance"><a class="viewcode-back" href="../../../api.html#tsx.model_selection.ROC_Member.dtw_distance">[docs]</a>    <span class="k">def</span> <span class="nf">dtw_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Return DTW distances of self to x</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input array to compare against</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of DTW distances between salient parts of self.x and x </span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dtw</span><span class="p">(</span><span class="n">__x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">__x</span> <span class="ow">in</span> <span class="n">_x</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dists</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div></div>
 
 </pre></div>
 
@@ -307,7 +345,7 @@ By Matthias Jakobs
 
   <p class="copyright">
     
-      © Copyright 2023, Matthias Jakobs.
+      © Copyright 2024, Matthias Jakobs.
       <br/>
     
   </p>

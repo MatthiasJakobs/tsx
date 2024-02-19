@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tsx.models.forecaster.ospgsm &#8212; tsx</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/tsx/models/forecaster/ospgsm';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/tsx_logo_light.svg" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../../../_static/tsx_logo_dark.svg" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">tsx</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for tsx.models.forecaster.ospgsm</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">seedpy</span> <span class="kn">import</span> <span class="n">fixedseed</span>
+<span class="kn">from</span> <span class="nn">tslearn.clustering</span> <span class="kn">import</span> <span class="n">TimeSeriesKMeans</span>
+<span class="kn">from</span> <span class="nn">tslearn.utils</span> <span class="kn">import</span> <span class="n">to_time_series_dataset</span>
+
+<span class="kn">from</span> <span class="nn">tsx.distances</span> <span class="kn">import</span> <span class="n">dtw</span><span class="p">,</span> <span class="n">euclidean</span>
+<span class="kn">from</span> <span class="nn">tsx.datasets</span> <span class="kn">import</span> <span class="n">windowing</span>
+<span class="kn">from</span> <span class="nn">tsx.model_selection.roc_tools</span> <span class="kn">import</span> <span class="n">find_best_forecaster</span><span class="p">,</span> <span class="n">roc_mean</span><span class="p">,</span> <span class="n">roc_matrix</span><span class="p">,</span> <span class="n">find_closest_rocs</span>
+<span class="kn">from</span> <span class="nn">tsx.model_selection</span> <span class="kn">import</span> <span class="n">ROC_Member</span>
+<span class="kn">from</span> <span class="nn">tsx.utils</span> <span class="kn">import</span> <span class="n">to_random_state</span>
+
+<span class="k">def</span> <span class="nf">_check_compatibility_pool</span><span class="p">(</span><span class="n">pool</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">is_pytorch</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span>
+        <span class="n">has_feature_extractor</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;feature_extractor&#39;</span><span class="p">)</span>
+        <span class="n">has_forecaster</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;forecaster&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">is_pytorch</span> <span class="ow">and</span> <span class="n">has_feature_extractor</span> <span class="ow">and</span> <span class="n">has_forecaster</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">concept_drift</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">ts_length</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">0.95</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ts_length</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">residuals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">epsilon</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_calc_losses_and_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">context_size</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">apply_roc_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">apply_roc_mean</span><span class="p">:</span>
+        <span class="n">all_cams</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">),</span> <span class="n">context_size</span><span class="p">))</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">all_cams</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">),</span> <span class="n">context_size</span> <span class="o">-</span> <span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">))</span>
+
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">windowing</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_torch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n_m</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pool</span><span class="p">):</span>
+
+        <span class="c1"># New gradcam</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_X</span><span class="p">:</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">forecaster</span><span class="p">(</span><span class="n">_X</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;bbjk-&gt;bjk&#39;</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="n">m</span><span class="o">.</span><span class="n">forecaster</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">relu</span><span class="p">((</span><span class="n">feats</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">apply_roc_mean</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">roc_mean</span><span class="p">(</span><span class="n">roc_matrix</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">losses</span><span class="p">[</span><span class="n">n_m</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss</span>
+        <span class="n">all_cams</span><span class="p">[</span><span class="n">n_m</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="k">return</span> <span class="n">losses</span><span class="p">,</span> <span class="n">all_cams</span>
+
+<span class="k">def</span> <span class="nf">rocs_from_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cams</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">min_roc_size</span><span class="p">):</span>
+    <span class="n">rocs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cams_i</span> <span class="o">=</span> <span class="n">cams</span> 
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cams_i</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cams_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">cams_i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">offset</span><span class="p">,</span> <span class="n">cam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cams_i</span><span class="p">):</span>
+        <span class="c1"># Normalize CAMs</span>
+        <span class="n">max_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cam</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">cam</span> <span class="o">/</span> <span class="n">max_r</span>
+
+        <span class="c1"># Extract all subseries divided by zeros</span>
+        <span class="n">after_threshold</span> <span class="o">=</span> <span class="n">normalized</span> <span class="o">*</span> <span class="p">(</span><span class="n">normalized</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">after_threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">split_zero</span><span class="p">(</span><span class="n">after_threshold</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">min_roc_size</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+                <span class="n">salient_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">f</span><span class="o">+</span><span class="n">offset</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="n">offset</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">ROC_Member</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">salient_indices</span><span class="p">)</span>
+                <span class="n">rocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rocs</span>
+
+<span class="k">def</span> <span class="nf">split_zero</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">min_size</span><span class="p">:</span>
+                <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># If last salient segment extends to the end:</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">min_size</span><span class="p">:</span>
+        <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">splits</span>
+
+<div class="viewcode-block" id="OS_PGSM"><a class="viewcode-back" href="../../../../api.html#tsx.models.forecaster.ospgsm.OS_PGSM">[docs]</a><span class="k">class</span> <span class="nc">OS_PGSM</span><span class="p">:</span>
+
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Improved version of the OS-PGSM algorithm originally presented in Saadallah, A., Jakobs, M., Morik, K. (2021). Explainable Online Deep Neural Network Selection Using Adaptive Saliency Maps for Time Series Forecasting. In: Machine Learning and Knowledge Discovery in Databases. Research Track. ECML PKDD 2021. https://doi.org/10.1007/978-3-030-86486-6_25</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pool (List of `nn.Module`): List of pretrained neural network models. Each model must contain a `feature_extractor` and `forecaster` submodule for OS-PGSM to work.</span>
+<span class="sd">        L (int): The amount of lag used to train the pool models</span>
+<span class="sd">        context_size (int): Size of the chunks from which Regions of Competence are created</span>
+<span class="sd">        detect_concept_drift (bool): Whether or not to enable concept drift detection</span>
+<span class="sd">        threshold (float): Minimum value indicating when a step is salient enough to be part of the Region of Competence</span>
+<span class="sd">        min_roc_size (int): RoC member smaller than this value are not added to the RoC</span>
+<span class="sd">        random_state (int): Random state seeding the `run` method</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">context_size</span><span class="p">,</span> <span class="n">detect_concept_drift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">min_roc_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_check_compatibility_pool</span><span class="p">(</span><span class="n">pool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;One of the models in the pool does not comply with the needed specifications for this method&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_size</span> <span class="o">=</span> <span class="n">context_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detect_concept_drift</span> <span class="o">=</span> <span class="n">detect_concept_drift</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_roc_size</span> <span class="o">=</span> <span class="n">min_roc_size</span>
+
+<div class="viewcode-block" id="OS_PGSM.run"><a class="viewcode-back" href="../../../../api.html#tsx.models.forecaster.ospgsm.OS_PGSM.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Main method for running the prediction</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_val (`torch.Tensor`): Univariate validation time series from which the Regions of Competence are created</span>
+<span class="sd">            X_test (`torch.Tensor`): Univariate test time series which should be forecasted</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Prediction tensor with the same length as `X_test`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="n">fixedseed</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebuild_rocs</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+            <span class="n">forecast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_online_forecast</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">forecast</span></div>
+
+    <span class="k">def</span> <span class="nf">adaptive_online_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+        <span class="c1"># Adaptive method from OS-PGSM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drifts_detected</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">val_start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">val_stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+        <span class="n">X_complete</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">])</span>
+        <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+
+        <span class="n">residuals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>
+
+        <span class="k">for</span> <span class="n">target_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)):</span>
+            <span class="n">f_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_idx</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+            <span class="n">t_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="n">f_test</span><span class="p">:</span><span class="n">t_test</span><span class="p">]</span> 
+  
+            <span class="c1"># TODO: Only sliding val, since default paramter</span>
+            <span class="n">val_start</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">val_stop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+            <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+
+            <span class="n">residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">means</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_concept_drift</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">concept_drift</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_val</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">drifts_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+                    <span class="n">val_start</span> <span class="o">=</span> <span class="n">val_stop</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+                    <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+                    <span class="n">residuals</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rebuild_rocs</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span>
+
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">find_best_forecaster</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">,</span> <span class="n">dtw</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_model</span><span class="p">)</span>
+
+            <span class="c1"># TODO: Each model needs to reshape according to their needs. This will only be (batch, features)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="n">best_model</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_test</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">rebuild_rocs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">))</span> <span class="p">]</span>
+
+        <span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span> <span class="o">=</span>  <span class="n">windowing</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context_size</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context_size</span><span class="p">,</span> <span class="n">use_torch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Create RoCs</span>
+        <span class="n">all_models</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="p">):</span>
+            <span class="n">losses</span><span class="p">,</span> <span class="n">cams</span> <span class="o">=</span> <span class="n">_calc_losses_and_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">apply_roc_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">cams</span> <span class="o">=</span> <span class="n">cams</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+            <span class="n">all_models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_model</span><span class="p">)</span>
+
+            <span class="c1"># Calculate ROCs from CAMs for best model</span>
+            <span class="n">rocs</span> <span class="o">=</span> <span class="n">rocs_from_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cams</span><span class="p">[</span><span class="n">best_model</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_roc_size</span><span class="p">)</span> 
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rocs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">[</span><span class="n">best_model</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">rocs</span><span class="p">)</span>
+
+        <span class="c1"># Sanity check</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">roc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">roc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All Regions of Competence are empty. Predictions will always be NaN&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forecast_on_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_test</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">]</span>
+        <span class="n">predictions</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">)):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[</span><span class="n">x_i</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">:</span><span class="n">x_i</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Find top-m model who contain the smallest distances to x in their RoC</span>
+            <span class="n">best_models</span> <span class="o">=</span> <span class="n">find_best_forecaster</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">,</span> <span class="n">dtw</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">best_models</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">best_models</span><span class="p">)):</span>
+                <span class="n">predictions</span><span class="p">[</span><span class="n">x_i</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="n">best_models</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">predictions</span><span class="p">[</span><span class="n">x_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">x_i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">best_models</span><span class="p">)</span>
+
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OEP_ROC"><a class="viewcode-back" href="../../../../api.html#tsx.models.forecaster.ospgsm.OEP_ROC">[docs]</a><span class="k">class</span> <span class="nc">OEP_ROC</span><span class="p">:</span>
+
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Improved version of the OEP-ROC algorithm originally presented in Saadallah, A., Jakobs, M. &amp; Morik, K. Explainable online ensemble of deep neural network pruning for time series forecasting. Mach Learn 111, 3459–3487 (2022)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pool (List of `nn.Module`): List of pretrained neural network models. Each model must contain a `feature_extractor` and `forecaster` submodule for OS-PGSM to work.</span>
+<span class="sd">        L (int): The amount of lag used to train the pool models</span>
+<span class="sd">        context_size (int): Size of the chunks from which Regions of Competence are created</span>
+<span class="sd">        context_step (int): Step size between the `context_size` chunks</span>
+<span class="sd">        nr_clusters_ensemble (int): How many cluster centers to use</span>
+<span class="sd">        dist_fn (callable): A distance function defined on two time series windows</span>
+<span class="sd">        detect_concept_drift (bool): Whether or not to enable concept drift detection</span>
+<span class="sd">        threshold (float): Minimum value indicating when a step is salient enough to be part of the Region of Competence</span>
+<span class="sd">        min_roc_size (int): RoC member smaller than this value are not added to the RoC</span>
+<span class="sd">        random_state (int): Random state seeding the `run` method</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">context_size</span><span class="p">,</span> <span class="n">context_step</span><span class="p">,</span> <span class="n">nr_clusters_ensemble</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">dist_fn</span><span class="o">=</span><span class="n">euclidean</span><span class="p">,</span> <span class="n">detect_concept_drift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_roc_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_check_compatibility_pool</span><span class="p">(</span><span class="n">pool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;One of the models in the pool does not comply with the needed specifications for this method&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_size</span> <span class="o">=</span> <span class="n">context_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_roc_size</span> <span class="o">=</span> <span class="n">min_roc_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_step</span> <span class="o">=</span> <span class="n">context_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detect_concept_drift</span> <span class="o">=</span> <span class="n">detect_concept_drift</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nr_clusters_ensemble</span> <span class="o">=</span> <span class="n">nr_clusters_ensemble</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span> <span class="o">=</span> <span class="n">dist_fn</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">to_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OEP_ROC.run"><a class="viewcode-back" href="../../../../api.html#tsx.models.forecaster.ospgsm.OEP_ROC.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Main method for running the prediction</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_val (`torch.Tensor`): Univariate validation time series from which the Regions of Competence are created</span>
+<span class="sd">            X_test (`torch.Tensor`): Univariate test time series which should be forecasted</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Prediction tensor with the same length as `X_test`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="n">fixedseed</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebuild_rocs</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+            <span class="n">forecast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_monitor_min_distance</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">forecast</span></div>
+
+    <span class="k">def</span> <span class="nf">rebuild_rocs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">))</span> <span class="p">]</span>
+
+        <span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span> <span class="o">=</span>  <span class="n">windowing</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context_size</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context_step</span><span class="p">,</span> <span class="n">use_torch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Create RoCs</span>
+        <span class="n">all_models</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_c</span><span class="p">,</span> <span class="n">y_c</span><span class="p">):</span>
+            <span class="n">losses</span><span class="p">,</span> <span class="n">cams</span> <span class="o">=</span> <span class="n">_calc_losses_and_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">apply_roc_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">cams</span> <span class="o">=</span> <span class="n">cams</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+            <span class="n">all_models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_model</span><span class="p">)</span>
+
+            <span class="c1"># Calculate all ROCs from all CAMs</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cams</span><span class="p">)):</span>
+                <span class="n">rocs</span> <span class="o">=</span> <span class="n">rocs_from_cams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cams</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_roc_size</span><span class="p">)</span> 
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rocs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># Reject all samples that are not equal to length self.L</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">rm</span> <span class="k">for</span> <span class="n">rm</span> <span class="ow">in</span> <span class="n">rocs</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rm</span><span class="o">.</span><span class="n">r</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">])</span>
+
+        <span class="c1"># Sanity check</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">roc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">roc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All Regions of Competence are empty. Predictions will always be NaN&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">cluster_rocs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">best_models</span><span class="p">,</span> <span class="n">clostest_rocs</span><span class="p">,</span> <span class="n">nr_desired_clusters</span><span class="p">,</span> <span class="n">dist_fn</span><span class="p">):</span>
+        <span class="n">dist_fn_dict</span> <span class="o">=</span> <span class="p">{</span>
+           <span class="s1">&#39;euclidean&#39;</span><span class="p">:</span> <span class="n">euclidean</span><span class="p">,</span> 
+           <span class="s1">&#39;dtw&#39;</span><span class="p">:</span> <span class="n">dtw</span><span class="p">,</span> 
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">nr_desired_clusters</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">best_models</span><span class="p">,</span> <span class="n">clostest_rocs</span>
+
+        <span class="n">new_closest_rocs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Cluster into the desired number of left-over models.</span>
+        <span class="n">tslearn_formatted</span> <span class="o">=</span> <span class="n">to_time_series_dataset</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">clostest_rocs</span><span class="p">])</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">dist_fn_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">dist_fn</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">km</span> <span class="o">=</span> <span class="n">TimeSeriesKMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">nr_desired_clusters</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">tslearn_formatted</span><span class="p">)</span>
+        <span class="n">C_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+        <span class="c1"># Final model selection</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C_count</span><span class="p">)):</span>
+            <span class="c1"># Under all cluster members, find the one maximizing distance to current point</span>
+            <span class="n">cluster_member_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C</span> <span class="o">==</span> <span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Since the best_models (and closest_rocs) are sorted by distance to x (ascending), </span>
+            <span class="c1"># choosing the first one will always minimize distance</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_member_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">cluster_member_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_models</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+                <span class="n">new_closest_rocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clostest_rocs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">new_closest_rocs</span>
+
+    <span class="k">def</span> <span class="nf">select_topm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">rocs</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">):</span>
+        <span class="c1"># Select top-m until their distance is outside of the upper bounds</span>
+        <span class="n">topm_models</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">topm_rocs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">distances_to_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rocs</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rocs</span><span class="p">):</span>
+            <span class="n">distance_to_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">distances_to_x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_to_x</span>
+
+            <span class="k">if</span> <span class="n">distance_to_x</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">:</span>
+                <span class="n">topm_models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+                <span class="n">topm_rocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">topm_models</span><span class="p">,</span> <span class="n">topm_rocs</span>
+
+    <span class="k">def</span> <span class="nf">recluster_and_reselect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">iteration</span><span class="p">):</span>
+        <span class="c1"># Find closest time series in each models RoC to x</span>
+        <span class="n">models</span><span class="p">,</span> <span class="n">rocs</span> <span class="o">=</span> <span class="n">find_closest_rocs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="n">dist_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">)</span>
+
+        <span class="c1"># Cluster all RoCs into nr_clusters_ensemble clusters</span>
+        <span class="n">models</span><span class="p">,</span> <span class="n">rocs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_rocs</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">rocs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nr_clusters_ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clustered_rocs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">iteration</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">rocs</span><span class="p">))</span>
+
+        <span class="c1"># Calculate upper and lower bound of delta (radius of circle)</span>
+        <span class="n">numpy_regions</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rocs</span><span class="p">]</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">numpy_regions</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">numpy_regions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">nr_clusters_ensemble</span><span class="p">)</span>
+        <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">numpy_regions</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">nr_clusters_ensemble</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="s2">&quot;Lower bound bigger than upper bound&quot;</span>
+
+        <span class="c1"># Select topm models according to upper bound</span>
+        <span class="n">selected_models</span><span class="p">,</span> <span class="n">selected_rocs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_topm</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">rocs</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topm_selection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">iteration</span><span class="p">,</span> <span class="n">selected_models</span><span class="p">,</span> <span class="n">selected_rocs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">selected_models</span><span class="p">,</span> <span class="n">selected_rocs</span>
+
+    <span class="k">def</span> <span class="nf">adaptive_monitor_min_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clustered_rocs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topm_selection</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drifts_type_1_detected</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drifts_type_2_detected</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mean_residuals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ensemble_residuals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">topm_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">val_start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">val_stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+        <span class="n">X_complete</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">])</span>
+        <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+
+        <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>
+
+        <span class="c1"># --- First iteration ---</span>
+        <span class="c1"># -----------------------</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">]</span>
+        <span class="n">x_unsqueezed</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Cluster RoCs and select top-m</span>
+        <span class="n">topm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recluster_and_reselect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+
+        <span class="c1"># Compute min distance to x from the all models needed for Drift Type II</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">closest_rocs</span> <span class="o">=</span> <span class="n">find_closest_rocs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="n">dist_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">)</span>
+        <span class="n">mu_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">closest_rocs</span><span class="p">])</span>
+
+        <span class="c1"># If new selection is empty, keep the old one</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topm</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">topm_buffer</span> <span class="o">=</span> <span class="n">topm</span>
+
+        <span class="c1"># In the first iteration, topm_buffer can be empty, so we might need to sample a start ensemble</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topm_buffer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">topm_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">)),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="c1"># Do the actual prediction with the models in topm_buffer</span>
+        <span class="n">ensemble_prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_unsqueezed</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">topm_buffer</span><span class="p">])</span>
+        <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ensemble_prediction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topm_buffer</span><span class="p">)</span>
+
+        <span class="c1"># --- Subsequent iterations ---</span>
+        <span class="k">for</span> <span class="n">target_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)):</span>
+            <span class="n">f_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_idx</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+            <span class="n">t_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="n">f_test</span><span class="p">:</span><span class="n">t_test</span><span class="p">]</span> 
+            <span class="n">x_unsqueezed</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">val_start</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">val_stop</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Residuals for Drift Type I detection</span>
+            <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+            <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+            <span class="n">mean_residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">means</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+            <span class="c1"># Compute min distance to x from the all models needed for Drift Type II</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">closest_rocs</span> <span class="o">=</span> <span class="n">find_closest_rocs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="n">dist_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">)</span>
+            <span class="n">ensemble_residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mu_d</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">closest_rocs</span><span class="p">]))</span>
+
+            <span class="n">drift_type_one</span> <span class="o">=</span> <span class="n">concept_drift</span><span class="p">(</span><span class="n">mean_residuals</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_val</span><span class="p">),</span> <span class="n">R</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+            <span class="n">drift_type_two</span> <span class="o">=</span> <span class="n">concept_drift</span><span class="p">(</span><span class="n">ensemble_residuals</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_val</span><span class="p">),</span> <span class="n">R</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">drift_type_one</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_concept_drift</span><span class="p">:</span>
+                <span class="c1"># If Drift Type I, recreate Regions of Competence</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">drifts_type_1_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+                <span class="n">val_start</span> <span class="o">=</span> <span class="n">val_stop</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+                <span class="n">current_val</span> <span class="o">=</span> <span class="n">X_complete</span><span class="p">[</span><span class="n">val_start</span><span class="p">:</span><span class="n">val_stop</span><span class="p">]</span>
+                <span class="n">mean_residuals</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rebuild_rocs</span><span class="p">(</span><span class="n">current_val</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">drift_type_one</span> <span class="ow">or</span> <span class="n">drift_type_two</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_concept_drift</span><span class="p">:</span>
+                <span class="c1"># No matter which Drift Type triggered: Redo ensembling</span>
+                <span class="n">topm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recluster_and_reselect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_idx</span><span class="p">)</span>
+                
+                <span class="c1"># If Drift Type II, reset residuals and recompute mu_d</span>
+                <span class="k">if</span> <span class="n">drift_type_two</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">drifts_type_2_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_idx</span><span class="p">)</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">closest_rocs</span> <span class="o">=</span> <span class="n">find_closest_rocs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rocs</span><span class="p">,</span> <span class="n">dist_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">)</span>
+                    <span class="n">mu_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_fn</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">closest_rocs</span><span class="p">])</span>
+                    <span class="n">ensemble_residuals</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># If new selection is empty, keep the old one</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topm</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">topm_buffer</span> <span class="o">=</span> <span class="n">topm</span>
+
+            <span class="c1"># Do the actual prediction with the models in topm_buffer</span>
+            <span class="n">ensemble_prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_unsqueezed</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">topm_buffer</span><span class="p">])</span>
+            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ensemble_prediction</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_forecasters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topm_buffer</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_test</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)])</span></div>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthias Jakobs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Matthias Jakobs.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

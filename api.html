@@ -310,6 +310,14 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleRegressor.predict"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleRegressor.predict()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OS_PGSM"><code class="docutils literal notranslate"><span class="pre">OS_PGSM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OS_PGSM.run"><code class="docutils literal notranslate"><span class="pre">OS_PGSM.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OEP_ROC"><code class="docutils literal notranslate"><span class="pre">OEP_ROC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OEP_ROC.run"><code class="docutils literal notranslate"><span class="pre">OEP_ROC.run()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
@@ -330,10 +338,47 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-selection-and-ensembling">Model selection and ensembling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-selection-and-ensembling">Model selection and ensembling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member"><code class="docutils literal notranslate"><span class="pre">ROC_Member</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member.dtw_distance"><code class="docutils literal notranslate"><span class="pre">ROC_Member.dtw_distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member.euclidean_distance"><code class="docutils literal notranslate"><span class="pre">ROC_Member.euclidean_distance()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.roc_tools.find_best_forecaster"><code class="docutils literal notranslate"><span class="pre">find_best_forecaster()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.roc_tools.find_closest_rocs"><code class="docutils literal notranslate"><span class="pre">find_closest_rocs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ADE"><code class="docutils literal notranslate"><span class="pre">ADE</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ADE.run"><code class="docutils literal notranslate"><span class="pre">ADE.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.DETS"><code class="docutils literal notranslate"><span class="pre">DETS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.DETS.run"><code class="docutils literal notranslate"><span class="pre">DETS.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.KNNRoC"><code class="docutils literal notranslate"><span class="pre">KNNRoC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.KNNRoC.run"><code class="docutils literal notranslate"><span class="pre">KNNRoC.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.OMS_ROC"><code class="docutils literal notranslate"><span class="pre">OMS_ROC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.OMS_ROC.run"><code class="docutils literal notranslate"><span class="pre">OMS_ROC.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-functions">Base functions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-functions">Base functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.n_uniques"><code class="docutils literal notranslate"><span class="pre">n_uniques()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_unique_concepts"><code class="docutils literal notranslate"><span class="pre">generate_unique_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_all_concepts"><code class="docutils literal notranslate"><span class="pre">generate_all_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_samples"><code class="docutils literal notranslate"><span class="pre">generate_samples()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.find_closest_concepts"><code class="docutils literal notranslate"><span class="pre">find_closest_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_concept_distributions"><code class="docutils literal notranslate"><span class="pre">get_concept_distributions()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_cavs"><code class="docutils literal notranslate"><span class="pre">get_cavs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_tcav"><code class="docutils literal notranslate"><span class="pre">get_tcav()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a><ul class="nav section-nav flex-column">
@@ -511,6 +556,81 @@ document.write(`
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.forecaster.ospgsm.OS_PGSM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.forecaster.ospgsm.</span></span><span class="sig-name descname"><span class="pre">OS_PGSM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_concept_drift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_roc_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/forecaster/ospgsm.html#OS_PGSM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.forecaster.ospgsm.OS_PGSM" title="Permalink to this definition">#</a></dt>
+<dd><p>Improved version of the OS-PGSM algorithm originally presented in Saadallah, A., Jakobs, M., Morik, K. (2021). Explainable Online Deep Neural Network Selection Using Adaptive Saliency Maps for Time Series Forecasting. In: Machine Learning and Knowledge Discovery in Databases. Research Track. ECML PKDD 2021. <a class="reference external" href="https://doi.org/10.1007/978-3-030-86486-6_25">https://doi.org/10.1007/978-3-030-86486-6_25</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pool</strong> (List of <cite>nn.Module</cite>) – List of pretrained neural network models. Each model must contain a <cite>feature_extractor</cite> and <cite>forecaster</cite> submodule for OS-PGSM to work.</p></li>
+<li><p><strong>L</strong> (<em>int</em>) – The amount of lag used to train the pool models</p></li>
+<li><p><strong>context_size</strong> (<em>int</em>) – Size of the chunks from which Regions of Competence are created</p></li>
+<li><p><strong>detect_concept_drift</strong> (<em>bool</em>) – Whether or not to enable concept drift detection</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – Minimum value indicating when a step is salient enough to be part of the Region of Competence</p></li>
+<li><p><strong>min_roc_size</strong> (<em>int</em>) – RoC member smaller than this value are not added to the RoC</p></li>
+<li><p><strong>random_state</strong> (<em>int</em>) – Random state seeding the <cite>run</cite> method</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.models.forecaster.ospgsm.OS_PGSM.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/forecaster/ospgsm.html#OS_PGSM.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.forecaster.ospgsm.OS_PGSM.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Main method for running the prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_val</strong> (<cite>torch.Tensor</cite>) – Univariate validation time series from which the Regions of Competence are created</p></li>
+<li><p><strong>X_test</strong> (<cite>torch.Tensor</cite>) – Univariate test time series which should be forecasted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prediction tensor with the same length as <cite>X_test</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.models.forecaster.ospgsm.OEP_ROC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.models.forecaster.ospgsm.</span></span><span class="sig-name descname"><span class="pre">OEP_ROC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nr_clusters_ensemble=15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_fn=&lt;function</span> <span class="pre">euclidean&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_concept_drift=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold=0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_roc_size=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/forecaster/ospgsm.html#OEP_ROC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.forecaster.ospgsm.OEP_ROC" title="Permalink to this definition">#</a></dt>
+<dd><p>Improved version of the OEP-ROC algorithm originally presented in Saadallah, A., Jakobs, M. &amp; Morik, K. Explainable online ensemble of deep neural network pruning for time series forecasting. Mach Learn 111, 3459–3487 (2022)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pool</strong> (List of <cite>nn.Module</cite>) – List of pretrained neural network models. Each model must contain a <cite>feature_extractor</cite> and <cite>forecaster</cite> submodule for OS-PGSM to work.</p></li>
+<li><p><strong>L</strong> (<em>int</em>) – The amount of lag used to train the pool models</p></li>
+<li><p><strong>context_size</strong> (<em>int</em>) – Size of the chunks from which Regions of Competence are created</p></li>
+<li><p><strong>context_step</strong> (<em>int</em>) – Step size between the <cite>context_size</cite> chunks</p></li>
+<li><p><strong>nr_clusters_ensemble</strong> (<em>int</em>) – How many cluster centers to use</p></li>
+<li><p><strong>dist_fn</strong> (<em>callable</em>) – A distance function defined on two time series windows</p></li>
+<li><p><strong>detect_concept_drift</strong> (<em>bool</em>) – Whether or not to enable concept drift detection</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – Minimum value indicating when a step is salient enough to be part of the Region of Competence</p></li>
+<li><p><strong>min_roc_size</strong> (<em>int</em>) – RoC member smaller than this value are not added to the RoC</p></li>
+<li><p><strong>random_state</strong> (<em>int</em>) – Random state seeding the <cite>run</cite> method</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.models.forecaster.ospgsm.OEP_ROC.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/models/forecaster/ospgsm.html#OEP_ROC.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.models.forecaster.ospgsm.OEP_ROC.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Main method for running the prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_val</strong> (<cite>torch.Tensor</cite>) – Univariate validation time series from which the Regions of Competence are created</p></li>
+<li><p><strong>X_test</strong> (<cite>torch.Tensor</cite>) – Univariate test time series which should be forecasted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prediction tensor with the same length as <cite>X_test</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="datasets">
 <h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">#</a></h2>
@@ -619,14 +739,380 @@ document.write(`
 </section>
 <section id="model-selection-and-ensembling">
 <h2>Model selection and ensembling<a class="headerlink" href="#model-selection-and-ensembling" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.model_selection.ROC_Member">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.model_selection.</span></span><span class="sig-name descname"><span class="pre">ROC_Member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squared_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/rocs.html#ROC_Member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.ROC_Member" title="Permalink to this definition">#</a></dt>
+<dd><p>Object representing a member of a Region of Competence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<cite>np.ndarray</cite>) – Original time series values</p></li>
+<li><p><strong>y</strong> (<cite>np.ndarray</cite>) – Corresponding true forecasting values</p></li>
+<li><p><strong>indices</strong> (<cite>np.ndarray</cite>) – Indices indicating the salient region</p></li>
+<li><p><strong>squared_error</strong> (<cite>float</cite>) – Squared error achieved by the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>r</strong> (<cite>np.ndarray</cite>) – Most salient subseries of <cite>x</cite></p></li>
+<li><p><strong>x</strong> (<cite>np.ndarray</cite>) – Original time series values</p></li>
+<li><p><strong>y</strong> (<cite>np.ndarray</cite>) – Corresponding true forecasting values</p></li>
+<li><p><strong>indices</strong> (<cite>np.ndarray</cite>) – Indices indicating the salient region</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.ROC_Member.dtw_distance">
+<span class="sig-name descname"><span class="pre">dtw_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/rocs.html#ROC_Member.dtw_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.ROC_Member.dtw_distance" title="Permalink to this definition">#</a></dt>
+<dd><p>Return DTW distances of self to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Input array to compare against</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of DTW distances between salient parts of self.x and x</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.ROC_Member.euclidean_distance">
+<span class="sig-name descname"><span class="pre">euclidean_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/rocs.html#ROC_Member.euclidean_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.ROC_Member.euclidean_distance" title="Permalink to this definition">#</a></dt>
+<dd><p>Return euclidean distances of self to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Input array to compare against</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of euclidean distances between salient parts of self.x and x</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.model_selection.roc_tools.find_best_forecaster">
+<span class="sig-prename descclassname"><span class="pre">tsx.model_selection.roc_tools.</span></span><span class="sig-name descname"><span class="pre">find_best_forecaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rocs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tsx.model_selection.ROC_Member" title="tsx.model_selection.rocs.ROC_Member"><span class="pre">ROC_Member</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/roc_tools.html#find_best_forecaster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.roc_tools.find_best_forecaster" title="Permalink to this definition">#</a></dt>
+<dd><p>Given an input <cite>x</cite>, a pool of pretrained models <cite>pool</cite> and corresponding RoCs <cite>rocs</cite> return the <cite>topm</cite> best forecasters according to distance measure <cite>dist_fn</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input time series window</p></li>
+<li><p><strong>pool</strong> – List of pretrained models</p></li>
+<li><p><strong>rocs</strong> – List of Regions of Competences</p></li>
+<li><p><strong>dist_fn</strong> – Distance function applicable for two time series windows</p></li>
+<li><p><strong>topm</strong> – How many models to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>np.ndarray</cite> of the <cite>topm</cite> best model indices from <cite>pool</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.model_selection.roc_tools.find_closest_rocs">
+<span class="sig-prename descclassname"><span class="pre">tsx.model_selection.roc_tools.</span></span><span class="sig-name descname"><span class="pre">find_closest_rocs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rocs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/roc_tools.html#find_closest_rocs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.roc_tools.find_closest_rocs" title="Permalink to this definition">#</a></dt>
+<dd><p>Given an input <cite>x</cite> and RoCs <cite>rocs</cite> return the closest RoC member for each model w.r.t. <cite>dist_fn</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input time series window</p></li>
+<li><p><strong>rocs</strong> – List of Regions of Competences</p></li>
+<li><p><strong>dist_fn</strong> – Distance function applicable for two time series windows</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of model indices and a list of correpsonding closest <cite>ROC_Member</cite> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.model_selection.ADE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.model_selection.</span></span><span class="sig-name descname"><span class="pre">ADE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/ade.html#ADE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.ADE" title="Permalink to this definition">#</a></dt>
+<dd><p>Reimplementation of ADE from from <a class="reference external" href="https://link.springer.com/article/10.1007/s10994-018-05774-y">https://link.springer.com/article/10.1007/s10994-018-05774-y</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>random_state</strong> – Input to <cite>to_random_state</cite></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.ADE.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_omega</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_best</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/ade.html#ADE.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.ADE.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute model selection and prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> – Input for training meta learners</p></li>
+<li><p><strong>y_train</strong> – Label for training meta learners</p></li>
+<li><p><strong>train_preds</strong> – shape (n_learner, T_train) predictions on training data for each model            X_test: Test input data</p></li>
+<li><p><strong>X_test</strong> – Test inputs</p></li>
+<li><p><strong>y_test</strong> – Test labels</p></li>
+<li><p><strong>test_preds</strong> – shape (n_learner, T_test) predictions on test data for each model</p></li>
+<li><p><strong>_omega</strong> – Committee ratio</p></li>
+<li><p><strong>_lambda</strong> – Window size (how much old data timesteps to include for penalty)</p></li>
+<li><p><strong>only_best</strong> – If True, return only best model. Otherwise, return ensemble weights (default: False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of <cite>predictions</cite> and <cite>weights</cite>. <cite>weights</cite> is a list of indices if <cite>only_best==True</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.model_selection.DETS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.model_selection.</span></span><span class="sig-name descname"><span class="pre">DETS</span></span><a class="reference internal" href="_modules/tsx/model_selection/dets.html#DETS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.DETS" title="Permalink to this definition">#</a></dt>
+<dd><p>Reimplementation of DETS from from <a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/8259783?casa_token=yA69YjHH3OEAAAAA:KSJg6CPyOOOC2KkbypuUA0BEPjuUNsqcgHVHDCM3sxHH4p0jMfnq8Ev1-JYGEHy56x7CI1gCZQ">https://ieeexplore.ieee.org/abstract/document/8259783?casa_token=yA69YjHH3OEAAAAA:KSJg6CPyOOOC2KkbypuUA0BEPjuUNsqcgHVHDCM3sxHH4p0jMfnq8Ev1-JYGEHy56x7CI1gCZQ</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.DETS.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_best</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/dets.html#DETS.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.DETS.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute model selection and prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> – Input for training meta learners</p></li>
+<li><p><strong>y_train</strong> – Label for training meta learners</p></li>
+<li><p><strong>train_preds</strong> – shape (n_learner, T_train) predictions on training data for each model            X_test: Test input data</p></li>
+<li><p><strong>X_test</strong> – Test input</p></li>
+<li><p><strong>y_test</strong> – Test labels</p></li>
+<li><p><strong>test_preds</strong> – shape (n_learner, T_test) predictions on test data for each model</p></li>
+<li><p><strong>_lambda</strong> – Committee ratio</p></li>
+<li><p><strong>P</strong> – Window size (how much old data timesteps to include for penalty)</p></li>
+<li><p><strong>only_best</strong> – If True, return only best model. Otherwise, return ensemble weights (default: False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of <cite>predictions</cite> and <cite>weights</cite>. <cite>weights</cite> is a list of indices if <cite>only_best==True</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.model_selection.KNNRoC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.model_selection.</span></span><span class="sig-name descname"><span class="pre">KNNRoC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/knnroc.html#KNNRoC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.KNNRoC" title="Permalink to this definition">#</a></dt>
+<dd><p>Train KNN classifier based on Regions of Competence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pool</strong> – Pool of pretrained models to do forecasting</p></li>
+<li><p><strong>random_state</strong> – Valid input to <cite>to_random_state</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.KNNRoC.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/knnroc.html#KNNRoC.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.KNNRoC.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute model selection and prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_val</strong> – Input for training KNN</p></li>
+<li><p><strong>y_val</strong> – Label for training KNN</p></li>
+<li><p><strong>x_test</strong> – Input to forecast</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of <cite>predictions</cite> and <cite>selection</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tsx.model_selection.OMS_ROC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tsx.model_selection.</span></span><span class="sig-name descname"><span class="pre">OMS_ROC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/oms.html#OMS_ROC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.OMS_ROC" title="Permalink to this definition">#</a></dt>
+<dd><p>RoC-based model-agnostic selection method utilizing K-Means clustering of validation data to build Regions of Competence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pool</strong> – Pool of pretrained models to do forecasting</p></li>
+<li><p><strong>random_state</strong> – Valid input to <cite>to_random_state</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tsx.model_selection.OMS_ROC.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/model_selection/oms.html#OMS_ROC.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.model_selection.OMS_ROC.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute model selection and prediction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_val</strong> – Input for training KNN</p></li>
+<li><p><strong>y_val</strong> – Label for training KNN</p></li>
+<li><p><strong>x_test</strong> – Input to forecast</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of <cite>predictions</cite> and <cite>selection</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="concepts">
 <h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this heading">#</a></h2>
 <section id="base-functions">
 <h3>Base functions<a class="headerlink" href="#base-functions" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.n_uniques">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">n_uniques</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#n_uniques"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.n_uniques" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the number of unique scale-invariant time series concepts of length <cite>L</cite> and alphabet size <cite>A</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> – Alphabet size</p></li>
+<li><p><strong>L</strong> – Length of time series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of unique scale-invariant concepts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.generate_unique_concepts">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">generate_unique_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#generate_unique_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.generate_unique_concepts" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate all unique scale-invariant time series concepts as string representation given <cite>L</cite> and <cite>A</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> – Alphabet size</p></li>
+<li><p><strong>L</strong> – Length of time series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unique scale-invariant concepts as string representations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.generate_all_concepts">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">generate_all_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#generate_all_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.generate_all_concepts" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate all time series concepts as string representation given <cite>L</cite> and <cite>A</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> – Alphabet size</p></li>
+<li><p><strong>L</strong> – Length of time series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of all possible concepts as string representations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.generate_samples">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">generate_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concept_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#generate_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.generate_samples" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate <cite>size</cite> random samples for given concept <cite>concept_key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concept_key</strong> – String representation of desired concept</p></li>
+<li><p><strong>size</strong> – Number of desired samples</p></li>
+<li><p><strong>A</strong> – Alphabet size</p></li>
+<li><p><strong>random_state</strong> – Valid input to <cite>to_random_state</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Numpy array of size <cite>size</cite> of samples from concept <cite>concept_key</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.find_closest_concepts">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">find_closest_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concepts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#find_closest_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.find_closest_concepts" title="Permalink to this definition">#</a></dt>
+<dd><p>Find closest concepts in <cite>concepts</cite> for each time series in <cite>X</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – 2d numpy array of time series datapoints</p></li>
+<li><p><strong>concepts</strong> – 2d numpy array of concept samples</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of indices into concepts of size <cite>len(X)</cite>, indicating closest concept for each entry</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.get_concept_distributions">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">get_concept_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concepts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/concepts.html#get_concept_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.get_concept_distributions" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate empricial distribution, given <cite>concepts</cite>, over <cite>X</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – 2d numpy array of time series datapoints</p></li>
+<li><p><strong>concepts</strong> – 2d numpy array of concept samples</p></li>
+<li><p><strong>normalize</strong> – Whether or not the distribution should be normalized or should encode total counts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of indices into concepts of size <cite>len(X)</cite>, indicating closest concept for each entry</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="tcav">
 <h3>TCAV<a class="headerlink" href="#tcav" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.get_cavs">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">get_cavs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concepts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_per_concept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_lms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/tcav.html#get_cavs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.get_cavs" title="Permalink to this definition">#</a></dt>
+<dd><p>Get Class Activation Vectors of <cite>concepts</cite> for <cite>model</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Pytorch model with method <cite>get_activation</cite>, returning a latent representation</p></li>
+<li><p><strong>concepts</strong> – 2d numpy array of concept samples</p></li>
+<li><p><strong>A</strong> – Alphabet size</p></li>
+<li><p><strong>size_per_concept</strong> – How many samples per concept to generate for training linear models</p></li>
+<li><p><strong>return_lms</strong> – If True, return list of <cite>sklearn.linear_model.LogisticRegression</cite> instead of just CAVs (default: False)</p></li>
+<li><p><strong>verbose</strong> – If True, print linear model F1 score per concept (default: False)</p></li>
+<li><p><strong>random_state</strong> – Input to <cite>to_random_state</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either a list of Class Activation Vectors or a list of <cite>sklearn.linear_model.LogisticRegression</cite> models</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tsx.concepts.get_tcav">
+<span class="sig-prename descclassname"><span class="pre">tsx.concepts.</span></span><span class="sig-name descname"><span class="pre">get_tcav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cavs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tcav_original'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tsx/concepts/tcav.html#get_tcav"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tsx.concepts.get_tcav" title="Permalink to this definition">#</a></dt>
+<dd><p>Get TCAV values of <cite>cavs</cite> for <cite>model</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Pytorch model with method <cite>get_activation</cite>, returning a latent representation and <cite>model.predictor</cite> returning a point forecast</p></li>
+<li><p><strong>cavs</strong> – List of Class Activation Vectors from <cite>get_cavs</cite></p></li>
+<li><p><strong>X</strong> – 2D numpy array of input data</p></li>
+<li><p><strong>y</strong> – If not None, return TCAV values for squared error (default: None)</p></li>
+<li><p><strong>aggregate</strong> – How to aggregate TCAV values. Possible values: <cite>[tcav_original, none]</cite> (default: <cite>tcav_original</cite>, which counts number of positive TCAV values)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Aggregated) TCAV scores</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 <section id="distances">
@@ -777,6 +1263,14 @@ Otherwise, return “cpu”</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.sdt.SoftEnsembleRegressor.predict"><code class="docutils literal notranslate"><span class="pre">SoftEnsembleRegressor.predict()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OS_PGSM"><code class="docutils literal notranslate"><span class="pre">OS_PGSM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OS_PGSM.run"><code class="docutils literal notranslate"><span class="pre">OS_PGSM.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OEP_ROC"><code class="docutils literal notranslate"><span class="pre">OEP_ROC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.models.forecaster.ospgsm.OEP_ROC.run"><code class="docutils literal notranslate"><span class="pre">OEP_ROC.run()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets">Datasets</a><ul class="nav section-nav flex-column">
@@ -797,10 +1291,47 @@ Otherwise, return “cpu”</p>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-selection-and-ensembling">Model selection and ensembling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-selection-and-ensembling">Model selection and ensembling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member"><code class="docutils literal notranslate"><span class="pre">ROC_Member</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member.dtw_distance"><code class="docutils literal notranslate"><span class="pre">ROC_Member.dtw_distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ROC_Member.euclidean_distance"><code class="docutils literal notranslate"><span class="pre">ROC_Member.euclidean_distance()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.roc_tools.find_best_forecaster"><code class="docutils literal notranslate"><span class="pre">find_best_forecaster()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.roc_tools.find_closest_rocs"><code class="docutils literal notranslate"><span class="pre">find_closest_rocs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ADE"><code class="docutils literal notranslate"><span class="pre">ADE</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.ADE.run"><code class="docutils literal notranslate"><span class="pre">ADE.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.DETS"><code class="docutils literal notranslate"><span class="pre">DETS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.DETS.run"><code class="docutils literal notranslate"><span class="pre">DETS.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.KNNRoC"><code class="docutils literal notranslate"><span class="pre">KNNRoC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.KNNRoC.run"><code class="docutils literal notranslate"><span class="pre">KNNRoC.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.OMS_ROC"><code class="docutils literal notranslate"><span class="pre">OMS_ROC</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.model_selection.OMS_ROC.run"><code class="docutils literal notranslate"><span class="pre">OMS_ROC.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-functions">Base functions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-functions">Base functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.n_uniques"><code class="docutils literal notranslate"><span class="pre">n_uniques()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_unique_concepts"><code class="docutils literal notranslate"><span class="pre">generate_unique_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_all_concepts"><code class="docutils literal notranslate"><span class="pre">generate_all_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.generate_samples"><code class="docutils literal notranslate"><span class="pre">generate_samples()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.find_closest_concepts"><code class="docutils literal notranslate"><span class="pre">find_closest_concepts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_concept_distributions"><code class="docutils literal notranslate"><span class="pre">get_concept_distributions()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tcav">TCAV</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_cavs"><code class="docutils literal notranslate"><span class="pre">get_cavs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tsx.concepts.get_tcav"><code class="docutils literal notranslate"><span class="pre">get_tcav()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distances">Distances</a><ul class="nav section-nav flex-column">
