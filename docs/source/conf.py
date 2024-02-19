@@ -46,9 +46,9 @@ autodoc_mock_imports = [
     'matplotlib',
     'tqdm',
     'scipy',
-    'scikit-learn',
+    'sklearn',
     'tslearn',
-    'fastdtw'
+    'fastdtw',
 ]
 
 # -- Options for HTML output -------------------------------------------------
