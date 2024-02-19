@@ -2,4 +2,4 @@ from .ucr import UCR_UEA_Dataset, load_adiac, load_arrowhead, load_beef, load_be
 from .ett_small import ETTSmall
 #from .monash import *
 from .utils import windowing, split_horizon, split_proportion
-#from .m5 import load_m5_accuracy
+from .M5 import load_m5
