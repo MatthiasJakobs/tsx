@@ -438,20 +438,35 @@ document.write(`
 
     <span class="k">return</span> <span class="n">x</span>
 
-<div class="viewcode-block" id="to_random_state"><a class="viewcode-back" href="../../api.html#tsx.utils.to_random_state">[docs]</a><span class="k">def</span> <span class="nf">to_random_state</span><span class="p">(</span><span class="n">rs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39; Return `np.random.RandomState` object from input</span>
+<div class="viewcode-block" id="to_random_state"><a class="viewcode-back" href="../../api.html#tsx.utils.to_random_state">[docs]</a><span class="k">def</span> <span class="nf">to_random_state</span><span class="p">(</span><span class="n">rs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Return `np.random.Generator` object from input</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        rs: Either already a `np.random.RandomState` object or something that `np.random.RandomState` can process</span>
+<span class="sd">        rs: Something that `np.random.default_rng` can process.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A `np.random.RandomState` object </span>
+<span class="sd">        A `np.random.default_rng` object </span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">):</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
-
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rs</span></div>
+
+<div class="viewcode-block" id="get_device"><a class="viewcode-back" href="../../api.html#tsx.utils.get_device">[docs]</a><span class="k">def</span> <span class="nf">get_device</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Return the &quot;best&quot; device in the following order:</span>
+<span class="sd">        If a GPU is available, return &quot;cuda&quot;.</span>
+<span class="sd">        If Metal is available, return &quot;mps&quot;</span>
+<span class="sd">        Otherwise, return &quot;cpu&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String indicating best possible device for Torch Tensors</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_built</span><span class="p">()</span> <span class="k">else</span> <span class="n">device</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="n">device</span>
+
+    <span class="k">return</span> <span class="n">device</span></div>
+
+
 </pre></div>
 
                 </article>
