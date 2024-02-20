@@ -35,6 +35,15 @@ class ROC_Member:
         return int(md5(representation.encode('utf-8')).hexdigest(), 16) & 0xffffffff
 
     def euclidean_distance(self, x):
+        ''' Return euclidean distances of self to x
+
+        Args:
+            x: Input array to compare against
+
+        Returns:
+            A list of euclidean distances between salient parts of self.x and x 
+
+        '''
         s_r = self.r.reshape(1, -1)
         if len(x.shape) <= 1:
             x = x.reshape(1, -1)
@@ -43,6 +52,15 @@ class ROC_Member:
         return dists.squeeze()
 
     def dtw_distance(self, x):
+        ''' Return DTW distances of self to x
+
+        Args:
+            x: Input array to compare against
+
+        Returns:
+            A list of DTW distances between salient parts of self.x and x 
+
+        '''
         if len(x.shape) <= 1:
             x = x.reshape(1, -1)
         _x = x[:, self.indices]

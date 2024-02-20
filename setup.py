@@ -4,7 +4,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(name='tsx',
-      version='0.2',
+      version='0.3',
       description='Library containing code for time series experiments regarding explainability',
       long_description=long_description,
       long_description_content_type='text/markdown',

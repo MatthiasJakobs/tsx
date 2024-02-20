@@ -9,6 +9,7 @@ from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
 from tsx.model_selection.roc_tools import find_best_forecaster, roc_mean, roc_matrix, find_closest_rocs
 from tsx.model_selection import ROC_Member
+from tsx.utils import to_random_state
 
 def _check_compatibility_pool(pool):
     for m in pool:
@@ -273,7 +274,7 @@ class OEP_ROC:
         self.dist_fn = dist_fn
 
         self.random_state = random_state
-        self.rng = np.random.RandomState(random_state)
+        self.rng = to_random_state(random_state)
 
     def run(self, X_val, X_test):
         ''' Main method for running the prediction

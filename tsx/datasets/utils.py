@@ -101,6 +101,16 @@ def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1
     return X, y
 
 def split_proportion(X, proportions):
+    ''' Split a time series into `|proportion|` pieces, given the fractions in `proportion`
+
+    Args:
+        X: Input time series
+        proportions: List of fractions for each split. Must sum up to one and be of at least size `2`
+
+    Returns:
+        List of splits of X
+
+    '''
     assert len(proportions) >= 2
     assert sum(proportions) == 1
 

@@ -6,15 +6,33 @@ from scipy.special import erfc
 def EMASE(_mase):
     return erfc(2*_mase)
 
-# Paper
-#   - https://ieeexplore.ieee.org/abstract/document/8259783?casa_token=yA69YjHH3OEAAAAA:KSJg6CPyOOOC2KkbypuUA0BEPjuUNsqcgHVHDCM3sxHH4p0jMfnq8Ev1-JYGEHy56x7CI1gCZQ
 class DETS:
+    ''' Reimplementation of DETS from from https://ieeexplore.ieee.org/abstract/document/8259783?casa_token=yA69YjHH3OEAAAAA:KSJg6CPyOOOC2KkbypuUA0BEPjuUNsqcgHVHDCM3sxHH4p0jMfnq8Ev1-JYGEHy56x7CI1gCZQ
+    
+    '''
 
     # Lambda: Committee size (top-lambda percent)
     # P: Window size (how much old data to include for penalty)
     # train_preds: shape (n_learner, T_train) predictions on training data for each model
     # test_preds: shape (n_learner, T_test) predictions on test data for each model
     def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds, P=50, _lambda=0.5, only_best=False):
+        ''' Compute model selection and prediction
+
+        Args:
+            X_train: Input for training meta learners
+            y_train: Label for training meta learners
+            train_preds: shape (n_learner, T_train) predictions on training data for each model            X_test: Test input data
+            X_test: Test input
+            y_test: Test labels
+            test_preds: shape (n_learner, T_test) predictions on test data for each model
+            _lambda: Committee ratio
+            P: Window size (how much old data timesteps to include for penalty)
+            only_best: If True, return only best model. Otherwise, return ensemble weights (default: False)
+
+        Returns:
+           Tuple of `predictions` and `weights`. `weights` is a list of indices if `only_best==True` 
+
+        '''
         n_learner = len(train_preds)
 
         prediction_history = train_preds.copy()
@@ -43,10 +61,10 @@ class DETS:
             # Use current committee to predict
             if only_best:
                 highest_weight_index = committee_indices[0]
-                preds = train_preds[highest_weight_index, t].squeeze()
+                preds = test_preds[highest_weight_index, t].squeeze()
                 weights[t, highest_weight_index] = 1.0
             else:
-                preds = train_preds[committee_indices, t]
+                preds = test_preds[committee_indices, t]
                 local_weights = emase_errors[committee_indices] / emase_errors[committee_indices].sum()
                 preds = (local_weights * preds).sum()
                 weights[t, committee_indices] = local_weights
