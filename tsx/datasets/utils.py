@@ -115,7 +115,7 @@ def split_proportion(X, proportions):
 
     return splits
 
-def random_sample(dataset, lag, random_state= None, H=1, test_precentage_for_train=0.1, split = [0.5,0.5]):
+def global_subsample_train(dataset, lag, random_state= None, H=1, subsample_percent=0.1, split = [0.5,0.5]):
 
     rng = to_random_state(random_state)
 
@@ -139,7 +139,7 @@ def random_sample(dataset, lag, random_state= None, H=1, test_precentage_for_tra
         X = [(x-mus)/stds for x in X]
 
         # windowing
-        w = [windowing(x,lag,H=H) for x in X]
+        w = [windowing(x, lag, H=H) for x in X]
 
         # add windows to whole train set
         [X_all[index].append(w[index][0]) for index in range(len(split))]
@@ -152,7 +152,7 @@ def random_sample(dataset, lag, random_state= None, H=1, test_precentage_for_tra
     
     # collect num_samples random indices from whole train data
     for index in range(len(split)-1):
-        indices = rng.choice(range(len(X_all[index])), size=int(X_all[index].shape[0]*test_precentage_for_train), replace=False)
+        indices = rng.choice(range(len(X_all[index])), size=int(X_all[index].shape[0]*subsample_percent), replace=False)
         X_all[index] = X_all[index][indices]
         y_all[index] = y_all[index][indices]
 
