@@ -125,7 +125,24 @@ def split_proportion(X, proportions):
 
     return splits
 
-def global_subsample_train(dataset, lag, random_state= None, H=1, subsample_percent=0.1, split = [0.5,0.5]):
+def global_subsample_train(dataset, L, random_state=None, H=1, subsample_percent=0.1, split=None):
+    ''' Split a time series into `|proportion|` pieces, given the fractions in `proportion`
+
+    Args:
+        dataset: Iterable of time series datapoints
+        L: Amount of lag for windowing each time series
+        proportions: List of fractions for each split. Must sum up to one and be of at least size `2`
+        random_state: Valid input to `to_random_state`
+        H: Horizon used for windowing (default: 1)
+        subsample_percent: How much train/val data to keep (in percent) (default: 0.1)
+        split: Proportion of each split for each time series (default: None, which is equivalent to 50/50)
+
+    Returns:
+        List of splits of X
+
+    '''
+    if split is None:
+        split = [0.5, 0.5]
 
     rng = to_random_state(random_state)
 
@@ -149,7 +166,7 @@ def global_subsample_train(dataset, lag, random_state= None, H=1, subsample_perc
         X = [(x-mus)/stds for x in X]
 
         # windowing
-        w = [windowing(x, lag, H=H) for x in X]
+        w = [windowing(x, L=L, H=H) for x in X]
 
         # add windows to whole train set
         [X_all[index].append(w[index][0]) for index in range(len(split))]

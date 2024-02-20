@@ -48,6 +48,7 @@ This page documents the classes and methods contained in the `tsx` package.
 .. autofunction:: tsx.datasets.utils.windowing
 .. autofunction:: tsx.datasets.utils.split_horizon
 .. autofunction:: tsx.datasets.utils.split_proportion
+.. autofunction:: tsx.datasets.utils.global_subsample_train
 ```
 
 ## Model selection and ensembling
