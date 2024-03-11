@@ -1,7 +1,6 @@
 import numpy as np
 
 from sklearn.neighbors import KNeighborsClassifier
-from tsx.utils import to_random_state
 
 class KNNRoC:
 
@@ -12,8 +11,7 @@ class KNNRoC:
         random_state: Valid input to `to_random_state`
     '''
 
-    def __init__(self, pool, random_state=None):
-        self.rng = to_random_state(random_state)
+    def __init__(self, pool):
         self.pool = pool
 
     def build_rocs(self, x_val, y_val):
