@@ -68,7 +68,11 @@ class DETS:
             mase_errors = np.array([mase(last_predictions[i], last_labels, last_inputs) for i in range(n_learner)])
             # min-max norm errors
             _min, _max = min(mase_errors), max(mase_errors)
-            mase_errors = (mase_errors - _min) / (_max - _min)
+            if _min == _max:
+                # TODO: How to handle the case of equal values correctly?
+                mase_errors = np.array([0.5, 0.5])
+            else:
+                mase_errors = (mase_errors - _min) / (_max - _min)
             assert np.all(mase_errors >= 0) and np.all(mase_errors <= 1)
             emase_errors = EMASE(mase_errors)
             # Pick top _lambda percent

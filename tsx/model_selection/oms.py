@@ -8,16 +8,17 @@ from tsx.utils import to_random_state
 
 class OMS_ROC:
 
-    def __init__(self, pool, random_state=None):
+    def __init__(self, pool, nc_max=15, random_state=None):
         self.rng = to_random_state(random_state)
         self.pool = pool
+        self.nc_max = nc_max
 
     # Simple version to determine K
-    def _find_nr_clusters(self, x, nc_max=15):
-        ks = (np.arange(nc_max-2)+2).astype(np.int8)
+    def _find_nr_clusters(self, x):
+        ks = (np.arange(self.nc_max-2)+2).astype(np.int8)
         sscores = []
         for k in ks:
-            km = KMeans(n_clusters=k, random_state=self.rng.integers(0, 10_000, 1)[0])
+            km = KMeans(n_init='auto', n_clusters=k, random_state=self.rng.integers(0, 10_000, 1)[0])
             _x = km.fit_predict(x)
             sscores.append(silhouette_score(x, _x))
 
@@ -27,7 +28,7 @@ class OMS_ROC:
     def run(self, x_val, y_val, x_test):
         K = self._find_nr_clusters(x_val)
 
-        km = KMeans(n_clusters=K, random_state=self.rng.integers(0, 10_000, 1)[0])
+        km = KMeans(n_init='auto', n_clusters=K, random_state=self.rng.integers(0, 10_000, 1)[0])
         C = km.fit_predict(x_val)
 
         cluster_experts = {}
@@ -37,7 +38,7 @@ class OMS_ROC:
             _x = x_val[indices]
             _y = y_val[indices]
 
-            best_model = np.argmin([mean_squared_error(m.predict(_x), _y) for m in self.pool])
+            best_model = np.argmin([mean_squared_error(m.predict(_x).reshape(_x.shape[0]), _y) for m in self.pool])
             cluster_experts[c] = best_model
 
         # Inference

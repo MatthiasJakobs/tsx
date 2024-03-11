@@ -21,7 +21,7 @@ class ADE:
         n_learner = len(train_preds)
 
         # Initialize meta learner
-        self.meta_learner = [RandomForestRegressor(random_state=self.rng) for _ in range(n_learner)]
+        self.meta_learner = [RandomForestRegressor(random_state=self.rng.integers(0, 10_000, 1)[0]) for _ in range(n_learner)]
 
         # Train meta learner on absolute error of training data
         for idx in range(n_learner):
@@ -51,7 +51,11 @@ class ADE:
             # loss_predictions = (loss_predictions - _min) / (_max - _min)
             # local_weights = -loss_predictions / (-loss_predictions).sum()
             # weights[t, committee_indices] = local_weights
-            # TODO: Use exp instead of min-max
+
+            # Just in case we get numerical problems with large loss predictions...
+            if np.exp(-loss_predictions).sum() == 0:
+                loss_predictions = loss_predictions / loss_predictions.sum()
+            
             local_weights = np.exp(-loss_predictions) / (np.exp(-loss_predictions)).sum()
             weights[t, committee_indices] = local_weights
 
@@ -65,7 +69,12 @@ class ADE:
                         continue
                     w_j = weights[t, j]
 
-                    penalty = pearsonr(prediction_history[i][-_lambda:], prediction_history[j][-_lambda:]).statistic * w_j * w_i
+                    ph_i = prediction_history[i][_lambda:]
+                    ph_j = prediction_history[j][_lambda:]
+                    if (ph_i[0] == ph_i).all() and (ph_j[0] == ph_j).all():
+                        penalty = 0
+                    else:
+                        penalty = pearsonr(ph_i, ph_j).statistic * w_j * w_i
                     w_j += penalty
                     w_i -= penalty
                     weights[t, i] = w_i

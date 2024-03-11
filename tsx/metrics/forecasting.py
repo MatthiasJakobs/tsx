@@ -36,5 +36,7 @@ def mase(y_pred, y_true, X):
 
     nom = np.mean(np.abs(y_pred-y_true))
     denom = np.sum(np.abs(X[1:]-X[:-1])) / (len(X)-1)
+    if denom == 0:
+        denom = 1e-5
 
     return nom / denom
