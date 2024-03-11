@@ -39,7 +39,7 @@ class ADE:
         n_learner = len(train_preds)
 
         # Initialize meta learner
-        self.meta_learner = [RandomForestRegressor(random_state=self.rng.integers(0, 10_000, 1)) for _ in range(n_learner)]
+        self.meta_learner = [RandomForestRegressor(random_state=self.rng.integers(0, 10_000, 1)[0]) for _ in range(n_learner)]
 
         # Train meta learner on absolute error of training data
         for idx in range(n_learner):
