@@ -45,7 +45,7 @@ class OMS_ROC:
         '''
         K = self._find_nr_clusters(x_val)
 
-        km = KMeans(n_clusters=K, random_state=self.rng.integers(0, 10_000, 1)[0])
+        km = KMeans(n_clusters=K, n_init='auto', random_state=self.rng.integers(0, 10_000, 1)[0])
         C = km.fit_predict(x_val)
 
         cluster_experts = {}
