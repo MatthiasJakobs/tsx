@@ -20,7 +20,7 @@ class OMS_ROC:
         self.pool = pool
 
     # Simple version to determine K
-    def _find_nr_clusters(self, x, nc_max=15):
+    def _find_nr_clusters(self, x, nc_max=10):
         ks = (np.arange(nc_max-2)+2).astype(np.int8)
         sscores = []
         for k in ks:
