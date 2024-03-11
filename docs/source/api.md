@@ -47,13 +47,41 @@ This page documents the classes and methods contained in the `tsx` package.
 ```{eval-rst}
 .. autofunction:: tsx.datasets.utils.windowing
 .. autofunction:: tsx.datasets.utils.split_horizon
+.. autofunction:: tsx.datasets.utils.split_proportion
+.. autofunction:: tsx.datasets.utils.global_subsample_train
 ```
 
 ## Model selection and ensembling
 ```{eval-rst}
 .. autoclass:: tsx.model_selection.ROC_Member
+    :members:
 .. autofunction:: tsx.model_selection.roc_tools.find_best_forecaster
 .. autofunction:: tsx.model_selection.roc_tools.find_closest_rocs
+.. autoclass:: tsx.model_selection.ADE
+    :members:
+.. autoclass:: tsx.model_selection.DETS
+    :members:
+.. autoclass:: tsx.model_selection.KNNRoC
+    :members:
+.. autoclass:: tsx.model_selection.OMS_ROC
+    :members:
+```
+
+## Concepts
+
+### Base functions
+```{eval-rst}
+.. autofunction:: tsx.concepts.n_uniques
+.. autofunction:: tsx.concepts.generate_unique_concepts
+.. autofunction:: tsx.concepts.generate_all_concepts
+.. autofunction:: tsx.concepts.generate_samples
+.. autofunction:: tsx.concepts.find_closest_concepts
+.. autofunction:: tsx.concepts.get_concept_distributions
+```
+### TCAV
+```{eval-rst}
+.. autofunction:: tsx.concepts.get_cavs
+.. autofunction:: tsx.concepts.get_tcav
 ```
 
 ## Distances
@@ -62,26 +90,14 @@ This page documents the classes and methods contained in the `tsx` package.
 .. autofunction:: tsx.distances.euclidean
 ```
 
+## Metrics
+```{eval-rst}
+.. autofunction:: tsx.metrics.mase
+.. autofunction:: tsx.metrics.entropy
+```
+
 ## Utilities
 ```{eval-rst}
 .. autofunction:: tsx.utils.to_random_state
+.. autofunction:: tsx.utils.get_device
 ```
-
-<!-- ### `tsx.datasets.jena` -->
-<!-- ```{eval-rst} -->
-<!-- .. automodule:: tsx.datasets.jena -->
-<!--    :members: -->
-<!--    :undoc-members: -->
-<!--    :show-inheritance: -->
-<!-- ``` -->
-
-
-<!-- ```{eval-rst} -->
-<!-- .. automodule:: tsx.models.base -->
-<!--    :members: -->
-<!--    :inherited-members: -->
-<!--    :undoc-members: -->
-<!--    :show-inheritance: -->
-<!-- ``` -->
-
-

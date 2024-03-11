@@ -1,12 +1,17 @@
 import numpy as np
 
 from sklearn.neighbors import KNeighborsClassifier
-from tsx.utils import to_random_state
 
 class KNNRoC:
 
-    def __init__(self, pool, random_state=None):
-        self.rng = to_random_state(random_state)
+    ''' Train KNN classifier based on Regions of Competence
+
+    Args:
+        pool: Pool of pretrained models to do forecasting
+        random_state: Valid input to `to_random_state`
+    '''
+
+    def __init__(self, pool):
         self.pool = pool
 
     def build_rocs(self, x_val, y_val):
@@ -26,6 +31,17 @@ class KNNRoC:
         self.knn.fit(x, y)
 
     def run(self, x_val, y_val, x_test):
+        ''' Compute model selection and prediction
+
+        Args:
+            x_val: Input for training KNN
+            y_val: Label for training KNN
+            x_test: Input to forecast
+
+        Returns:
+           Tuple of `predictions` and `selection`
+
+        '''
         self.build_rocs(x_val, y_val)
         self.train_knn()
 

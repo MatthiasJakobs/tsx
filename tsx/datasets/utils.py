@@ -8,6 +8,8 @@ from os.path import join, basename, dirname
 from shutil import rmtree as remove_dir
 from typing import Union
 
+from tsx.utils import to_random_state
+
 def download_and_unzip(url: str, name: str) -> str:
     """
     downloads a given dataset url and unzips it
@@ -99,6 +101,16 @@ def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1
     return X, y
 
 def split_proportion(X, proportions):
+    ''' Split a time series into `|proportion|` pieces, given the fractions in `proportion`
+
+    Args:
+        X: Input time series
+        proportions: List of fractions for each split. Must sum up to one and be of at least size `2`
+
+    Returns:
+        List of splits of X
+
+    '''
     assert len(proportions) >= 2
     assert sum(proportions) == 1
 
@@ -113,3 +125,62 @@ def split_proportion(X, proportions):
 
     return splits
 
+def global_subsample_train(dataset, L, random_state=None, H=1, subsample_percent=0.1, split=None):
+    ''' Split a time series into `|proportion|` pieces, given the fractions in `proportion`
+
+    Args:
+        dataset: Iterable of time series datapoints
+        L: Amount of lag for windowing each time series
+        proportions: List of fractions for each split. Must sum up to one and be of at least size `2`
+        random_state: Valid input to `to_random_state`
+        H: Horizon used for windowing (default: 1)
+        subsample_percent: How much train/val data to keep (in percent) (default: 0.1)
+        split: Proportion of each split for each time series (default: None, which is equivalent to 50/50)
+
+    Returns:
+        List of splits of X
+
+    '''
+    if split is None:
+        split = [0.5, 0.5]
+
+    rng = to_random_state(random_state)
+
+    # generate lists to save als train and test datasets in one array
+    X_all = list()
+    y_all = list()
+    for i in range(len(split)):
+        X_all.append(list())
+        y_all.append(list())
+    
+    for ts in dataset:
+        # split data in train, (val), test
+        X = split_proportion(ts, split)
+
+        # if all values are the same, skip ts
+        if np.max(X[0]) == np.min(X[0]):
+            continue
+
+        # normalize data
+        mus, stds = np.mean(X[0], axis=0), np.std(X[0], axis=0)
+        X = [(x-mus)/stds for x in X]
+
+        # windowing
+        w = [windowing(x, L=L, H=H) for x in X]
+
+        # add windows to whole train set
+        [X_all[index].append(w[index][0]) for index in range(len(split))]
+        [y_all[index].append(w[index][1]) for index in range(len(split))]
+
+
+    # generate list for random sample indices
+    X_all = [np.concatenate(x) for x in X_all]
+    y_all = [np.concatenate(y) for y in y_all]
+    
+    # collect num_samples random indices from whole train data
+    for index in range(len(split)-1):
+        indices = rng.choice(range(len(X_all[index])), size=int(X_all[index].shape[0]*subsample_percent), replace=False)
+        X_all[index] = X_all[index][indices]
+        y_all[index] = y_all[index][indices]
+
+    return X_all, y_all

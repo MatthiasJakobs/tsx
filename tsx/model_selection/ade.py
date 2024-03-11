@@ -8,15 +8,33 @@ from scipy.stats import pearsonr
 #   - https://link.springer.com/article/10.1007/s10994-018-05774-y
 #   - https://link.springer.com/chapter/10.1007/978-3-319-71246-8_29
 class ADE:
+    ''' Reimplementation of ADE from from https://link.springer.com/article/10.1007/s10994-018-05774-y
+
+    Args:
+        random_state : Input to `to_random_state`
+    
+    '''
 
     def __init__(self, random_state=None):
         self.rng = to_random_state(random_state)
 
-    # Omega: Committee ratio
-    # Lambda: Window size (how much old data to include for penalty)
-    # train_preds: shape (n_learner, T_train) predictions on training data for each model
-    # test_preds: shape (n_learner, T_test) predictions on test data for each model
     def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds, _omega=0.5, _lambda=50, only_best=False):
+        ''' Compute model selection and prediction
+
+        Args:
+            X_train: Input for training meta learners
+            y_train: Label for training meta learners
+            train_preds: shape (n_learner, T_train) predictions on training data for each model            X_test: Test input data
+            X_test: Test inputs
+            y_test: Test labels
+            test_preds: shape (n_learner, T_test) predictions on test data for each model
+            _omega: Committee ratio
+            _lambda: Window size (how much old data timesteps to include for penalty)
+            only_best: If True, return only best model. Otherwise, return ensemble weights (default: False)
+
+        Returns:
+           Tuple of `predictions` and `weights`. `weights` is a list of indices if `only_best==True` 
+        '''
 
         n_learner = len(train_preds)
 
@@ -95,11 +113,3 @@ class ADE:
         if only_best:
             return predictions, np.argmax(weights, axis=1)
         return predictions, weights
-
-
-
-
-
-
-
-
