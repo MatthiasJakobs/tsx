@@ -55,8 +55,9 @@ class DLinear(nn.Module):
             self.trend = nn.Linear(self.L, self.H)
 
 
+    # x: [Batch, channel, Input length]
     def forward(self, x):
-        # x: [Batch, Input length, Channel]
+        x = x.permute(0, 2, 1)
         if self.normalize:
             seq_last = x[:,-1:,:].detach()
             x = x - seq_last            
@@ -102,8 +103,11 @@ class NLinear(nn.Module):
         else:
             self.Linear = nn.Linear(self.seq_len, self.pred_len)
 
+    # x: [Batch, Channel, input length]
     def forward(self, x):
-        # x: [Batch, Input length, Channel]
+        x = x.permute(0, 2, 1)
+        if len(x.shape) == 2:
+            x = x.unsqueeze(-1)
         seq_last = x[:,-1:,:].detach()
         x = x - seq_last
         if self.individual:
@@ -114,5 +118,6 @@ class NLinear(nn.Module):
         else:
             x = self.Linear(x.permute(0,2,1)).permute(0,2,1)
         x = x + seq_last
-        return x # [Batch, Output length, Channel]
+        x = x.permute(0, 2, 1)
+        return x # [Batch, Channel, Output length]
 
