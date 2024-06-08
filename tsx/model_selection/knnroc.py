@@ -50,6 +50,7 @@ class KNNRoC:
         preds = np.zeros((len(x_test)))
         for m_idx, m in enumerate(self.pool):
             to_predict = np.where(selection == m_idx)[0]
-            preds[to_predict] = m.predict(x_test[to_predict]).squeeze()
+            if len(to_predict) > 0:
+                preds[to_predict] = m.predict(x_test[to_predict]).squeeze()
 
         return preds, selection
