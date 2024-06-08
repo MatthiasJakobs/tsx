@@ -81,7 +81,7 @@ class DLinear(nn.Module):
         if self.normalize:
             x = x + seq_last   
         
-        return x.permute(0,2,1) 
+        return x
 
 class NLinear(nn.Module):
     """
