@@ -92,3 +92,18 @@ class NeuralNetClassifier(skorch.NeuralNetClassifier):
             print('Run training on', self.device)
         with fixedseed([torch, np], seed=self.random_state):
             super().fit(X, y=y)
+
+class TSValidSplit:
+
+    def __init__(self, valid_percent=0.3):
+        self.valid_percent = valid_percent
+
+    def __call__(self, dataset, y, **fit_params):
+        n_batches = dataset.X.shape[0]
+        n_valid = int(n_batches * self.valid_percent)
+        n_train = n_batches - n_valid
+
+        train_ds = skorch.dataset.Dataset(dataset.X[:n_train], dataset.y[:n_train])
+        val_ds = skorch.dataset.Dataset(dataset.X[n_train:], dataset.y[n_train:])
+        return train_ds, val_ds
+
