@@ -87,10 +87,10 @@ def windowing(x: Union[np.ndarray, torch.Tensor], L: int, z: int = 1, H: int = 1
 
     for i in range(0, len(x)-H-L+1, z):
         X.append(x[i:(i+L)].reshape(1, -1, n_features))
-        y.append(x[(i+L):(i+L+H)])
+        y.append(x[(i+L):(i+L+H)].reshape(1, -1, n_features))
 
     X = np.concatenate(X, axis=0)
-    y = np.array(y)
+    y = np.concatenate(y, axis=0)
     if X.shape[-1] == 1 and y.shape[-1] == 1:
         X = X.squeeze()
         y = y.squeeze()

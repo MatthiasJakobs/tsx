@@ -202,6 +202,8 @@ def to_random_state(rs: Union[int, None, np.random.Generator]):
         A `np.random.default_rng` object 
 
     '''
+    if isinstance(rs, np.random.RandomState):
+        return rs
     rs = np.random.default_rng(rs)
     return rs
 

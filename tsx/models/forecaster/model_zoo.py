@@ -29,21 +29,26 @@ def get_1d_cnn(L, H, n_channels=1, depth_feature=2, depth_classification=2, n_hi
     for i in range(depth_feature):
         if i == 0:
             model.append(nn.Conv1d(n_channels, n_hidden_channels, kernel_size=3, padding='same'))
+            model.append(nn.BatchNorm1d(n_hidden_channels))
             model.append(nn.ReLU())
         else:
             model.append(nn.Conv1d(n_hidden_channels, n_hidden_channels, kernel_size=3, padding='same'))
+            model.append(nn.BatchNorm1d(n_hidden_channels))
             model.append(nn.ReLU())
 
     model.append(nn.Flatten())
 
-    for i in range(depth_classification):
-        if i == 0:
-            model.append(nn.Linear(L * n_hidden_channels, n_hidden_neurons))
-            model.append(nn.ReLU())
-        elif i == depth_classification-1:
-            model.append(nn.Linear(n_hidden_neurons, H))
-        else:
-            model.append(nn.Linear(n_hidden_neurons, n_hidden_neurons))
-            model.append(nn.ReLU())
+    if depth_classification == 1:
+        model.append(nn.Linear(L * n_hidden_channels, H))
+    else:
+        for i in range(depth_classification):
+            if i == 0:
+                model.append(nn.Linear(L * n_hidden_channels, n_hidden_neurons))
+                model.append(nn.ReLU())
+            elif i == depth_classification-1:
+                model.append(nn.Linear(n_hidden_neurons, H))
+            else:
+                model.append(nn.Linear(n_hidden_neurons, n_hidden_neurons))
+                model.append(nn.ReLU())
 
     return nn.Sequential(*model)
