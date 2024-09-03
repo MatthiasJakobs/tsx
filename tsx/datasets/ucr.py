@@ -39,7 +39,7 @@ class UCR_UEA_Dataset:
 
         if self.download:
             if not exists(self.path):
-                url = "http://timeseriesclassification.com/Downloads/{}.zip".format(self.name)
+                url = "https://timeseriesclassification.com/aeon-toolkit/{}.zip".format(self.name)
                 dl_dir = tempfile.mkdtemp()
                 zip_file_name = join(dl_dir, basename(url))
                 urlretrieve(url, zip_file_name)
