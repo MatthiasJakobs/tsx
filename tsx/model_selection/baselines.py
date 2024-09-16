@@ -1,42 +1,46 @@
 import numpy as np
 from tsx.datasets import windowing
 
-class BestCaseSelector:
+class BaseSelector:
 
-    def __init__(self, models, lag=5):
+    def __init__(self, models, L=5):
         self.models = models
-        self.lag = lag
+        self.L = L
 
-    def run(self, X_train, X_val, X_test):
-        X, y = windowing(X_test, lag=self.lag)
+    def run(self, X_train, X_val, X_test, return_predictors=False):
+        X, y = windowing(X_test, L=self.L, H=1)
         self.test_predictors = []
 
         preds = []
-        for _x, _y in zip(X, y):
-            _x = _x.reshape(1, -1)
-            model_losses = [((m.predict(_x).squeeze() - _y)**2).sum() for m in self.models]
-            best_forecaster = np.argmin(model_losses)
-            self.test_predictors.append(best_forecaster)
-            preds.append(self.models[best_forecaster].predict(_x).squeeze())
 
-        return np.concatenate([X_test[:self.lag], np.array(preds)])
+        model_preds = np.array([m.predict(X).squeeze() for m in self.models]).T
 
-class WorstCaseSelector:
+        losses = (model_preds - y[:, None])**2
+        test_predictors = self.choose_based_on_loss(losses)
 
-    def __init__(self, models, lag=5):
-        self.models = models
-        self.lag = lag
+        for y_idx in range(len(y)):
+            m_idx = test_predictors[y_idx]
+            preds.append(model_preds[y_idx, m_idx])
 
-    def run(self, X_train, X_val, X_test):
-        X, y = windowing(X_test, lag=self.lag)
-        self.test_predictors = []
+        preds = np.array(preds)
 
-        preds = []
-        for _x, _y in zip(X, y):
-            _x = _x.reshape(1, -1)
-            model_losses = [((m.predict(_x).squeeze() - _y)**2).sum() for m in self.models]
-            worst_forecaster = np.argmax(model_losses)
-            self.test_predictors.append(worst_forecaster)
-            preds.append(self.models[worst_forecaster].predict(_x).squeeze())
+        if return_predictors:
+            return preds, test_predictors
 
-        return np.concatenate([X_test[:self.lag], np.array(preds)])
+        return preds
+
+# TODO: Only support H=1 right now
+class BestCaseSelector(BaseSelector):
+
+    def choose_based_on_loss(self, losses):
+        best_forecaster = np.argmin(losses, axis=1)
+        best_forecaster = best_forecaster.squeeze()
+        return best_forecaster
+
+# TODO: Only support H=1 right now
+class WorstCaseSelector(BaseSelector):
+
+    def choose_based_on_loss(self, losses):
+        worst_forecaster = np.argmax(losses, axis=1)
+        worst_forecaster = worst_forecaster.squeeze()
+        return worst_forecaster

@@ -18,7 +18,7 @@ class ADE:
     def __init__(self, random_state=None):
         self.rng = to_random_state(random_state)
 
-    def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds, _omega=0.5, _lambda=50, only_best=False):
+    def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds, _omega=0.5, sequential_reweight=False, aggregation='softmax', _lambda=50, only_best=False):
         ''' Compute model selection and prediction
 
         Args:
@@ -39,7 +39,7 @@ class ADE:
         n_learner = len(train_preds)
 
         # Initialize meta learner
-        self.meta_learner = [RandomForestRegressor(random_state=self.rng.integers(0, 10_000, 1)[0]) for _ in range(n_learner)]
+        self.meta_learner = [RandomForestRegressor(random_state=self.rng) for _ in range(n_learner)]
 
         # Train meta learner on absolute error of training data
         for idx in range(n_learner):
@@ -64,44 +64,44 @@ class ADE:
             # Get loss predictions
             loss_predictions = np.array([_ml.predict(_X).squeeze() for _ml in ML])
 
-            # TODO: Weighting correct?
-            # _min, _max = loss_predictions.min(), loss_predictions.max()
-            # loss_predictions = (loss_predictions - _min) / (_max - _min)
-            # local_weights = -loss_predictions / (-loss_predictions).sum()
-            # weights[t, committee_indices] = local_weights
-
             # Just in case we get numerical problems with large loss predictions...
             if np.exp(-loss_predictions).sum() == 0:
                 loss_predictions = loss_predictions / loss_predictions.sum()
             
-            local_weights = np.exp(-loss_predictions) / (np.exp(-loss_predictions)).sum()
+            if aggregation == 'softmax':
+                local_weights = np.exp(-loss_predictions) / (np.exp(-loss_predictions)).sum()
+            else:
+                raise NotImplementedError('Did not implement aggregation strategy', aggregation)
+
             weights[t, committee_indices] = local_weights
 
             # Sequential reweighting
-            weight_sorting = committee_indices[np.argsort(-local_weights)]
+            if sequential_reweight:
+                weight_sorting = committee_indices[np.argsort(-local_weights)]
 
-            for idx, i in enumerate(weight_sorting):
-                w_i = weights[t, i]
-                for j in weight_sorting[idx:]:
-                    if i == j:
-                        continue
-                    w_j = weights[t, j]
+                for idx, i in enumerate(weight_sorting):
+                    w_i = weights[t, i]
+                    for j in weight_sorting[idx:]:
+                        if i == j:
+                            continue
+                        w_j = weights[t, j]
 
-                    ph_i = prediction_history[i][_lambda:]
-                    ph_j = prediction_history[j][_lambda:]
-                    if (ph_i[0] == ph_i).all() and (ph_j[0] == ph_j).all():
-                        penalty = 0
-                    else:
-                        penalty = pearsonr(ph_i, ph_j).statistic * w_j * w_i
-                    w_j += penalty
-                    w_i -= penalty
-                    weights[t, i] = w_i
-                    weights[t, j] = w_j
+                        ph_i = prediction_history[i][_lambda:]
+                        ph_j = prediction_history[j][_lambda:]
+                        if (ph_i[0] == ph_i).all() and (ph_j[0] == ph_j).all():
+                            penalty = 0
+                        else:
+                            # TODO: What if none? Probably set pearsonr to 1?
+                            penalty = pearsonr(ph_i, ph_j).statistic * w_j * w_i
+                        w_j += penalty
+                        w_i -= penalty
+                        weights[t, i] = w_i
+                        weights[t, j] = w_j
 
             # Prediction 
             if only_best:
                 highest_weight_index = np.argmax(weights[t])
-                current_prediction = weights[t, highest_weight_index] * test_preds[highest_weight_index, t]
+                current_prediction = test_preds[highest_weight_index, t]
             else:
                 current_prediction = (weights[t] * test_preds[:, t]).sum()
             predictions[t] = current_prediction
