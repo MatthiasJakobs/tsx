@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import skorch
 
 from seedpy import fixedseed
 from tslearn.clustering import TimeSeriesKMeans
@@ -7,13 +8,22 @@ from tslearn.utils import to_time_series_dataset
 
 from tsx.distances import dtw, euclidean
 from tsx.datasets import windowing
+from tsx.models.forecaster.model_zoo import get_1d_cnn
 from tsx.model_selection.roc_tools import find_best_forecaster, roc_mean, roc_matrix, find_closest_rocs
 from tsx.model_selection import ROC_Member
 from tsx.utils import to_random_state
 
+def _get_dummy_models(L):
+    models = [
+        get_1d_cnn(L=L, H=1),
+        get_1d_cnn(L=L, H=1, depth_feature=2),
+        get_1d_cnn(L=L, H=1, depth_feature=4, n_hidden_channels=32)
+    ]
+    return models
+
 def _check_compatibility_pool(pool):
     for m in pool:
-        is_pytorch = isinstance(m, torch.nn.Module)
+        is_pytorch = isinstance(m, torch.nn.Module) or isinstance(m, skorch.NeuralNetRegressor)
         has_feature_extractor = hasattr(m, 'feature_extractor')
         has_forecaster = hasattr(m, 'forecaster')
         if not (is_pytorch and has_feature_extractor and has_forecaster):
@@ -34,14 +44,16 @@ def concept_drift(residuals, ts_length, R=1):
         return True
 
 
-def _calc_losses_and_cams(x, pool, context_size, L, apply_roc_mean=False):
+def _calc_losses_and_cams(x, pool, context_size, L, H, apply_roc_mean=False):
     losses = np.zeros((len(pool)))
     if apply_roc_mean:
         all_cams = np.zeros((len(pool), context_size)) 
     else:
-        all_cams = np.zeros((len(pool), context_size - L, L))
+        all_cams = np.zeros((len(pool), context_size - L - H + 1, L))
 
-    X, y = windowing(x, L=L, z=1, use_torch=True)
+    X, y = windowing(x, L=L, H=H, z=1, use_torch=True)
+    if H != 1:
+        y = y[..., -1]
     for n_m, m in enumerate(pool):
 
         # New gradcam
@@ -83,7 +95,7 @@ def rocs_from_cams(x, y, cams, threshold, min_roc_size):
             indices = split_zero(after_threshold, min_size=min_roc_size)
             for (f, t) in indices:
                 salient_indices = np.arange(f+offset, t+offset+1)
-                r = ROC_Member(x.numpy(), y.numpy(), salient_indices)
+                r = ROC_Member(x.numpy(), y.numpy(), salient_indices, squared_error=0)
                 rocs.append(r)
 
     return rocs
@@ -115,19 +127,21 @@ class OS_PGSM:
         pool (List of `nn.Module`): List of pretrained neural network models. Each model must contain a `feature_extractor` and `forecaster` submodule for OS-PGSM to work.
         L (int): The amount of lag used to train the pool models
         context_size (int): Size of the chunks from which Regions of Competence are created
+        H (int): Horizon (i.e., which value to forecast)
         detect_concept_drift (bool): Whether or not to enable concept drift detection
         threshold (float): Minimum value indicating when a step is salient enough to be part of the Region of Competence
         min_roc_size (int): RoC member smaller than this value are not added to the RoC
         random_state (int): Random state seeding the `run` method
     
     '''
-    def __init__(self, pool, L, context_size, detect_concept_drift=True, threshold=0.5, min_roc_size=2, random_state=0):
+    def __init__(self, pool, L,context_size, H=1, detect_concept_drift=True, threshold=0.5, min_roc_size=2, random_state=0):
 
         if not _check_compatibility_pool(pool):
             raise RuntimeError('One of the models in the pool does not comply with the needed specifications for this method')
 
         self.pool = pool
         self.L = L
+        self.H = H
         self.context_size = context_size
         self.detect_concept_drift = detect_concept_drift
         self.random_state = random_state
@@ -154,7 +168,13 @@ class OS_PGSM:
         self.test_forecasters = []
         self.drifts_detected = []
         val_start = 0
-        val_stop = len(X_val) + self.L
+        val_stop = len(X_val) + self.L + self.H - 1
+
+        if isinstance(X_val, np.ndarray):
+            X_val = torch.from_numpy(X_val).float()
+        if isinstance(X_test, np.ndarray):
+            X_test = torch.from_numpy(X_test).float()
+
         X_complete = torch.cat([X_val, X_test])
         current_val = X_complete[val_start:val_stop]
 
@@ -179,7 +199,7 @@ class OS_PGSM:
             if self.detect_concept_drift:
                 if concept_drift(residuals, len(current_val)):
                     self.drifts_detected.append(target_idx)
-                    val_start = val_stop - len(X_val) - self.L
+                    val_start = val_stop - len(X_val) - self.L + self.H - 1
                     current_val = X_complete[val_start:val_stop]
                     residuals = []
                     means = [torch.mean(current_val).numpy()]
@@ -195,7 +215,7 @@ class OS_PGSM:
                 x = x.unsqueeze(0)
             predictions.append(self.pool[best_model].predict(x).squeeze())
 
-        return np.concatenate([X_test[:self.L].numpy(), np.array(predictions)])
+        return np.array(predictions)
 
     def rebuild_rocs(self, X):
         self.rocs = [ [] for _ in range(len(self.pool)) ]
@@ -205,7 +225,7 @@ class OS_PGSM:
         # Create RoCs
         all_models = []
         for x, y in zip(x_c, y_c):
-            losses, cams = _calc_losses_and_cams(x, self.pool, self.context_size, self.L, apply_roc_mean=False)
+            losses, cams = _calc_losses_and_cams(x, self.pool, self.context_size, self.L, self.H, apply_roc_mean=False)
             cams = cams.squeeze()
             best_model = np.argmin(losses)
             all_models.append(best_model)
