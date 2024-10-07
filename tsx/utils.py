@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import trange
 from itertools import combinations
 from typing import Union
+from hashlib import md5
 
 def to_float32(X):
     if isinstance(X, np.ndarray):
@@ -221,5 +222,9 @@ def get_device():
     device = 'cuda' if torch.cuda.is_available() else device
 
     return device
+
+def string_to_randomstate(s):
+    seed = int(md5(s.encode('utf-8')).hexdigest(), 16) & 0xffffffff
+    return np.random.RandomState(seed)
 
 
