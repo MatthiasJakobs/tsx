@@ -2,6 +2,8 @@ import numpy as np
 
 from tsx.utils import to_random_state
 from tsx.quantizers import SAX, z_norm
+from tsx.models.transformations import SummaryStatistics
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 
 class LastValueRepeat:
@@ -107,3 +109,14 @@ class ProbQuant:
         y_hat = std * y_hat + mu
 
         return y_hat
+
+class TableForestRegressor(RandomForestRegressor):
+
+    def fit(self, X, y, **kwargs):
+        X = SummaryStatistics().fit_transform(X)
+        return super().fit(X, y, **kwargs)
+
+    def predict(self, X):
+        X = SummaryStatistics().fit_transform(X)
+        return super().predict(X)
+
