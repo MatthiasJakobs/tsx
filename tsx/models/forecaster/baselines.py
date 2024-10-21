@@ -112,11 +112,23 @@ class ProbQuant:
 
 class TableForestRegressor(RandomForestRegressor):
 
+    def __init__(self, *args, include_raw=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.include_raw = include_raw
+
     def fit(self, X, y, **kwargs):
-        X = SummaryStatistics().fit_transform(X)
+        _X = SummaryStatistics().fit_transform(X)
+        if self.include_raw:
+            X = np.concatenate([X, _X], axis=1)
+        else:
+            X = _X
         return super().fit(X, y, **kwargs)
 
     def predict(self, X):
-        X = SummaryStatistics().fit_transform(X)
+        _X = SummaryStatistics().fit_transform(X)
+        if self.include_raw:
+            X = np.concatenate([X, _X], axis=1)
+        else:
+            X = _X
         return super().predict(X)
 
