@@ -223,8 +223,53 @@ def get_device():
 
     return device
 
-def string_to_randomstate(s):
+def string_to_randomstate(s, return_seed=False):
     seed = int(md5(s.encode('utf-8')).hexdigest(), 16) & 0xffffffff
+    if return_seed:
+        return seed
     return np.random.RandomState(seed)
 
 
+class EarlyStopping:
+    def __init__(self, patience: int = 10, lower_is_better: bool = True):
+        """
+        Initializes the EarlyStopping object.
+        
+        Args:
+            patience (int): Number of updates to wait for improvement before stopping.
+            lower_is_better (bool): If True, lower values are considered better. If False, higher values are better.
+        """
+        self.patience = patience
+        self.lower_is_better = lower_is_better
+        self.best_score = None
+        self.counter = 0
+        self.stop = False
+
+    def update(self, metric: float):
+        """
+        Updates the early stopping counter based on the provided metric.
+        
+        Args:
+            metric (float): The latest metric value to evaluate.
+        """
+        # Determine if we have a new best score
+        if self.best_score is None:
+            self.best_score = metric
+        elif (self.lower_is_better and metric < self.best_score) or (not self.lower_is_better and metric > self.best_score):
+            self.best_score = metric
+            self.counter = 0  # Reset counter when improvement is seen
+        else:
+            self.counter += 1  # Increment counter if no improvement
+
+        # Set stop flag if patience is exceeded
+        if self.counter >= self.patience:
+            self.stop = True
+
+    def should_stop(self) -> bool:
+        """
+        Checks if training should be stopped based on patience and metric improvement.
+        
+        Returns:
+            bool: True if training should stop, False otherwise.
+        """
+        return self.stop
