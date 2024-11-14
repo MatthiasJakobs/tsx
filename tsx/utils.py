@@ -1,3 +1,4 @@
+import copy
 import torch
 import pandas as pd
 import numpy as np
@@ -242,21 +243,25 @@ class EarlyStopping:
         self.patience = patience
         self.lower_is_better = lower_is_better
         self.best_score = None
+        self.best_checkpoint = None
         self.counter = 0
         self.stop = False
 
-    def update(self, metric: float):
+    def update(self, metric: float, checkpoint: object):
         """
         Updates the early stopping counter based on the provided metric.
         
         Args:
             metric (float): The latest metric value to evaluate.
+            checkpoint (object): Any object to save as the best checkpoint when an improvement is seen.
         """
         # Determine if we have a new best score
         if self.best_score is None:
             self.best_score = metric
+            self.best_checkpoint = copy.deepcopy(checkpoint)
         elif (self.lower_is_better and metric < self.best_score) or (not self.lower_is_better and metric > self.best_score):
             self.best_score = metric
+            self.best_checkpoint = copy.deepcopy(checkpoint)
             self.counter = 0  # Reset counter when improvement is seen
         else:
             self.counter += 1  # Increment counter if no improvement
@@ -273,3 +278,12 @@ class EarlyStopping:
             bool: True if training should stop, False otherwise.
         """
         return self.stop
+
+    def get_checkpoint(self): 
+        """
+        Retrieves the best checkpoint saved when an improvement was last seen.
+        
+        Returns:
+            object: The best checkpoint saved.
+        """
+        return self.best_checkpoint
