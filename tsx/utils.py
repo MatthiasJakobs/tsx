@@ -223,8 +223,10 @@ def get_device():
 
     return device
 
-def string_to_randomstate(s):
+def string_to_randomstate(s, return_seed=False):
     seed = int(md5(s.encode('utf-8')).hexdigest(), 16) & 0xffffffff
+    if return_seed:
+        return seed
     return np.random.RandomState(seed)
 
 
