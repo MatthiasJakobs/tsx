@@ -6,6 +6,30 @@ from tsx.models.transformations import SummaryStatistics
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 
+class NPTS:
+
+    def __init__(self, random_state=None):
+        self.rng = to_random_state(random_state)
+
+    def fit(self, X, y):
+        return
+
+    def predict(self, X, size=1, n_samples=1, _lambda=0.5):
+        X = X.squeeze()
+
+        preds = []
+        _X = X.copy()
+        for t in range(size):
+            T = len(_X.squeeze())
+            p_t = np.exp(-_lambda*np.arange(T+1)[1:][::-1])
+            p_t = p_t / np.sum(p_t)
+            indices = self.rng.choice(np.arange(T), p=p_t, size=n_samples)
+            print(t, T, indices)
+            pred = _X[indices].mean()
+            preds.append(pred)
+            _X = np.concatenate([X, preds])[-T:]
+        return np.array(preds)
+
 class LastValueRepeat:
 
     def fit(self, X, y):
