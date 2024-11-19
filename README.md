@@ -8,6 +8,15 @@ The latest release version of `tsx` can be installed via
 pip install git+https://github.com/MatthiasJakobs/tsx.git
 ```
 
+This will only install some dependencies.
+Keep in mind that, for full support, you also need to run
+
+```
+pip install git+https://github.com/MatthiasJakobs/shap
+pip install torch tslearn fastdtw h5py skorch
+
+``
+
 # Documentation
 The documentation for the latest release version is available [here](https://matthiasjakobs.github.io/tsx). 
 Notice that this code base is heavily work in progress and APIs might change and break.

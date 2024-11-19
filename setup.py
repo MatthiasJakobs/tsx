@@ -15,17 +15,17 @@ setuptools.setup(name='tsx',
       license='GNU GPLv3',
       packages=setuptools.find_packages(),
       install_requires=[
-        'torch>=1.13.1',
+        #'torch>=1.13.1',
         'pandas>=1.5.0',
         'matplotlib>=3.6.1',
         'tqdm>=4.64.1',
         'scipy>=1.9.2',
-        'shap @ git+https://github.com/MatthiasJakobs/shap',
+        #'shap @ git+https://github.com/MatthiasJakobs/shap',
         'seedpy>=0.3',
-        'tslearn>=0.5.2',
-        'fastdtw>=0.3.4',
-        'h5py>=3.8.0',
-        'skorch>=0.12.1'
+        #'tslearn>=0.5.2',
+        #'fastdtw>=0.3.4',
+        #'h5py>=3.8.0',
+        #'skorch>=0.12.1'
       ],
       python_requires='>=3.8',
       extras_require={
