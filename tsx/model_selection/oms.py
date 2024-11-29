@@ -24,6 +24,8 @@ class OMS_ROC:
         ks = (np.arange(self.nc_max-2)+2).astype(np.int8)
         sscores = []
         for k in ks:
+            if k >= x.shape[0]:
+                break
             km = KMeans(n_init='auto', n_clusters=k, random_state=self.rng)
             _x = km.fit_predict(x)
             sscores.append(silhouette_score(x, _x))
