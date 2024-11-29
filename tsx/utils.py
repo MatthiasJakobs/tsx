@@ -206,7 +206,7 @@ def to_random_state(rs: Union[int, None, np.random.Generator]):
     '''
     if isinstance(rs, np.random.RandomState):
         return rs
-    rs = np.random.default_rng(rs)
+    rs = np.random.RandomState(rs)
     return rs
 
 def get_device():

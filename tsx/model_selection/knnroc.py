@@ -8,17 +8,15 @@ class KNNRoC:
 
     Args:
         pool: Pool of pretrained models to do forecasting
-        random_state: Valid input to `to_random_state`
     '''
 
-    def __init__(self, pool):
-        self.pool = pool
-
-    def build_rocs(self, x_val, y_val):
-        val_losses = np.vstack([(m.predict(x_val).squeeze() - y_val.squeeze())**2 for m in self.pool])
-        self.rocs = [ [] for _ in range(len(self.pool)) ]
+    def build_rocs(self, x_val, y_val, val_preds):
+        n_learner = val_preds.shape[0]
+        y_val = y_val.squeeze()
+        val_losses = (val_preds - y_val[None, :])**2
+        self.rocs = [ [] for _ in range(n_learner) ]
         best_models = np.argmin(val_losses, axis=0)
-        for m_idx in range(len(self.pool)):
+        for m_idx in range(n_learner):
             self.rocs[m_idx] = x_val[np.where(best_models == m_idx)]
 
     # TODO: Support DTW
@@ -30,27 +28,32 @@ class KNNRoC:
         
         self.knn.fit(x, y)
 
-    def run(self, x_val, y_val, x_test):
+    def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds):
         ''' Compute model selection and prediction
 
         Args:
-            x_val: Input for training KNN
-            y_val: Label for training KNN
-            x_test: Input to forecast
+            X_train: Input for training meta learners
+            y_train: Label for training meta learners
+            train_preds: shape (n_learner, T_train) predictions on training data for each model
+            X_test: Test inputs
+            y_test: Test labels
+            test_preds: shape (n_learner, T_test) predictions on test data for each model
 
         Returns:
            Tuple of `predictions` and `selection`
 
         '''
-        self.build_rocs(x_val, y_val)
+        self.build_rocs(X_train, y_train, train_preds)
         self.train_knn()
 
-        selection = self.knn.predict(x_test).astype(np.int8)
+        n_learner = len(self.rocs)
 
-        preds = np.zeros((len(x_test)))
-        for m_idx, m in enumerate(self.pool):
+        selection = self.knn.predict(X_test).astype(np.int8)
+
+        preds = np.zeros((len(X_test)))
+        for m_idx in range(n_learner):
             to_predict = np.where(selection == m_idx)[0]
             if len(to_predict) > 0:
-                preds[to_predict] = m.predict(x_test[to_predict]).squeeze()
+                preds[to_predict] = test_preds[m_idx, to_predict].squeeze()
 
         return preds, selection

@@ -15,9 +15,8 @@ class OMS_ROC:
         random_state: Valid input to `to_random_state`
     '''
 
-    def __init__(self, pool, nc_max=15, random_state=None):
+    def __init__(self, nc_max=15, random_state=None):
         self.rng = to_random_state(random_state)
-        self.pool = pool
         self.nc_max = nc_max
 
     # Simple version to determine K
@@ -32,40 +31,45 @@ class OMS_ROC:
         return ks[np.argmax(sscores)]
 
 
-    def run(self, x_val, y_val, x_test):
+    def run(self, X_train, y_train, train_preds, X_test, y_test, test_preds):
         ''' Compute model selection and prediction
 
         Args:
-            x_val: Input for training KNN
-            y_val: Label for training KNN
-            x_test: Input to forecast
+            X_train: Input for training meta learners
+            y_train: Label for training meta learners
+            train_preds: shape (n_learner, T_train) predictions on training data for each model
+            X_test: Test inputs
+            y_test: Test labels
+            test_preds: shape (n_learner, T_test) predictions on test data for each model
 
         Returns:
            Tuple of `predictions` and `selection`
 
         '''
-        K = self._find_nr_clusters(x_val)
+        n_learner = len(train_preds)
+        K = self._find_nr_clusters(X_train)
 
         km = KMeans(n_clusters=K, n_init='auto', random_state=self.rng)
-        C = km.fit_predict(x_val)
+        C = km.fit_predict(X_train)
 
         cluster_experts = {}
 
         for c in range(K):
             indices = np.where(C == c)[0]
-            _x = x_val[indices]
-            _y = y_val[indices]
+            _x = X_train[indices]
+            _y = y_train[indices]
 
-            best_model = np.argmin([mean_squared_error(m.predict(_x).reshape(_x.shape[0]), _y) for m in self.pool])
+            #best_model = np.argmin([mean_squared_error(m.predict(_x).reshape(_x.shape[0]), _y) for m in self.pool])
+            best_model = np.argmin([np.mean((_y - train_preds[m_idx][indices])**2) for m_idx in range(n_learner)])
             cluster_experts[c] = best_model
 
         # Inference
-        selection = np.zeros((len(x_test)))
-        preds = np.zeros((len(x_test)))
-        for idx, x in enumerate(x_test):
+        selection = np.zeros((len(X_test)))
+        preds = np.zeros((len(X_test)))
+        for idx, x in enumerate(X_test):
             c = int(np.argmin(np.mean((km.cluster_centers_ - x[None, :])**2, axis=1)))
             selection[idx] = cluster_experts[c]
-            preds[idx] = self.pool[cluster_experts[c]].predict(x.reshape(1, -1)).squeeze()
+            preds[idx] = test_preds[cluster_experts[c]][idx]
 
         return preds, selection.astype(np.int8)
 
